@@ -4,6 +4,7 @@
 
 package com.greymagic27;
 
+import java.util.Locale;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -29,7 +30,8 @@ public class EventClick implements Listener {
     @EventHandler
     public void clickEvent(@NotNull InventoryClickEvent e) {
         //Check if click occured with xrayer vault gui view open:
-        if (PlainTextComponentSerializer.plainText().serialize(e.getView().title()).contains(mainClassAccess.vault.GetGUITitle())) {
+        String title = PlainTextComponentSerializer.plainText().serialize(e.getView().title());
+        if (title.toLowerCase(Locale.ROOT).startsWith("Xrayer".toLowerCase(Locale.ROOT))) {
             //A non-null, non AIR, upper window slot was clicked
             if (e.getCurrentItem() != null && e.getRawSlot() < e.getView().getTopInventory().getSize() && e.getCurrentItem().getType() != Material.AIR) {
                 //An item was clicked
