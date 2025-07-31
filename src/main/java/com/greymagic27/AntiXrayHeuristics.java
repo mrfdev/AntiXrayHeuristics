@@ -48,7 +48,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         this.api = new APIAntiXrayHeuristicsImpl(this);
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&5[&bAntiXrayHeuristics&5] &aHas enabled successfully"));
+        Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&5[&b1MB Xray&5] &aHas enabled successfully"));
         ConfigurationSerialization.registerClass(BlockWeightInfo.class);
         LocaleManager.setup(getName());
         LocaleManager.get().options().copyDefaults(true);
