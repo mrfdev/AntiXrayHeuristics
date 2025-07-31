@@ -21,19 +21,23 @@ TrackWorlds:
 #There are various internal factors that may increment or ignore these weights depending on certain player behaviour.
 CoalWeight: 5.0
 IronWeight: 5.0
+CopperWeight: 5.0
 GoldWeight: 5.0
-LapisWeight: 8.0
 RedstoneWeight: 9.0
 EmeraldWeight: 22.0
+LapisWeight: 8.0
 DiamondWeight: 15.0
-QuartzWeight: 5.0
-NetherGoldWeight: 5.0
-AncientDebrisWeight: 22.0
-DeepslateDiamond: 22.0
-DeepslateGold: 5.0
+DeepslateCoal: 5.0
 DeepslateIron: 5.0
-DeepslateLapis: 8.0
+DeepslateCopper: 5.0
+DeepslateGold: 5.0
 DeepslateRedstone: 9.0
+DeepslateEmerald: 22.0
+DeepslateLapis: 8.0
+DeepslateDiamond: 22.0
+NetherGoldWeight: 5.0
+QuartzWeight: 5.0
+AncientDebrisWeight: 22.0
 
 #You can use these reducers for certain biomes where ores are more abundant. They are used internally in order to
 
