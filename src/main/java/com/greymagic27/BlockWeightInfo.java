@@ -21,7 +21,7 @@ public class BlockWeightInfo implements ConfigurationSerializable {
 
     /*Constructor used when deserializing*/
     public BlockWeightInfo(@NotNull Map<String, Object> deserializedProperties) {
-        blockMaterial = (Material) deserializedProperties.get("Material");
+        blockMaterial = Material.valueOf((String) deserializedProperties.get("Material"));
         blockHeight = (int) deserializedProperties.get("Height");
         blockWeight = (float) deserializedProperties.get("Weight");
     }
@@ -30,7 +30,7 @@ public class BlockWeightInfo implements ConfigurationSerializable {
     /*Method used when serializing*/
     public final @NotNull Map<String, Object> serialize() {
         Map<String, Object> serializedProperties = new HashMap<>();
-        serializedProperties.put("Material", blockMaterial.ordinal());
+        serializedProperties.put("Material", blockMaterial.toString());
         serializedProperties.put("Height", blockHeight);
         serializedProperties.put("Weight", blockWeight);
 
