@@ -20,18 +20,18 @@ public class LocaleManager {
     private static void SetDefaultFileEntries() //Sets the default language entries in english
     {
         //Messages prefix:
-        localeConfiguration.addDefault("MessagesPrefix", "&5[&bAntiXrayHeuristics&5]");
+        localeConfiguration.addDefault("MessagesPrefix", "&5[&b1MB Xray&5]");
 
         //Commands:
         localeConfiguration.addDefault("NoPermissionForCommand", "&bYou do not have permission to execute this command.");
-        localeConfiguration.addDefault("PlayerOnlyCommand", "&bYou need to be a player in order to execute this command without arguments.");
+        localeConfiguration.addDefault("PlayerOnlyCommand", "&bYou need to be a player to execute this command without arguments.");
         localeConfiguration.addDefault("InvalidCMDArg", "&bInvalid command argument.");
         localeConfiguration.addDefault("PlayerNotOnlineOnHandle", "&bPlayer named &e{PlayerName} &bwas not found while attempting to handle as Xrayer. Player must be online.");
         localeConfiguration.addDefault("Reloaded", "&bAntiXrayHeuristics has reloaded.");
         localeConfiguration.addDefault("PlayerAbsolved", "&bAbsolving player, sending confiscated items back to owner and removing from vault.");
-        localeConfiguration.addDefault("PlayerNotOnlineOnAbsolution", "&bPlayer wasn't online. You can only absolve online players in order to return their items.");
+        localeConfiguration.addDefault("PlayerNotOnlineOnAbsolution", "&bPlayer wasn't online. You can only absolve online players to return their items.");
         localeConfiguration.addDefault("PlayerDataPurged", "&bThe Xrayer's data was purged from the xrayer vault.");
-        localeConfiguration.addDefault("PurgeCommandLimit", "&bPurging players through command is currently impossible for players that are not currently connected to the server. You CAN however purge individual players that are offline through the ingame XrayerVault GUI: /axh v");
+        localeConfiguration.addDefault("PurgeCommandLimit", "&bPurging players through command is currently impossible for players that are not currently connected to the server. You CAN however, purge individual players that are offline through the ingame XrayerVault GUI: /axh v");
         localeConfiguration.addDefault("OwnSuspicionNullified", "&bYour suspicion has been nullified.");
         localeConfiguration.addDefault("PlayerSuspicionNullified", "&a{PlayerName} &b's suspicion has been nullified.");
         localeConfiguration.addDefault("NoOwnSuspicionReset", "&bYou are not suspicious of Xray usage. No suspicion reset applied.");
@@ -40,10 +40,10 @@ public class LocaleManager {
 
         //Plugin Actions:
         localeConfiguration.addDefault("AutoHandledPlayer", "&a{PlayerName} &bwas automatically registered and handled for xraying.");
-        localeConfiguration.addDefault("PlayerMessageOnXray", "&bYou where punished for Xraying, uninstall Xrays immediately. Resume your gameplay only after you have uninstalled Xrays.");
-        localeConfiguration.addDefault("ForcedPageZero", "&bYou where automatically sent to XrayerVault page 0 since one or various players where either purged or absolved.");
+        localeConfiguration.addDefault("PlayerMessageOnXray", "&bYou were punished for Xraying, uninstall Xrays immediately. Resume your gameplay only after you have uninstalled Xrays.");
+        localeConfiguration.addDefault("ForcedPageZero", "&bYou were automatically sent to XrayerVault page 0 since one or various players were either purged or absolved.");
         localeConfiguration.addDefault("VaultRefreshed", "&bShowing latest xrayer information.");
-        localeConfiguration.addDefault("TeleportToHandleLocation", "&bYou where teleported to the location where the player was handled for xrays.");
+        localeConfiguration.addDefault("TeleportToHandleLocation", "&bYou were teleported to the location where the player was handled for xrays.");
 
         //Persistent memory:
         localeConfiguration.addDefault("SQLDisconError", "&bThere was an error when attempting to disconnect from SQL database.");
