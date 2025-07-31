@@ -1,86 +1,44 @@
-# Git
-*.orig
-!.gitignore
-
-# Windows
-Thumbs.db
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-# Linux
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
-
-# MacOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Java
-*.class
-*.log
-*.ctxt
-.mtj.tmp/
-*.jar
-*.war
-*.nar
-*.ear
-hs_err_pid*
-
-# Maven
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Intellij
-*.iml
-*.java___jb_tmp___
-.idea/*
-*.ipr
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+/.idea/misc.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/encodings.xml
+/.idea/CoverUsage.xml
 *.iws
-/out/
-.idea_modules/
+*.iml
+*.ipr
 
-# Eclipse
-*.pydevproject
-.metadata
-.gradle
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-.project
-.externalToolBuilders/
-*.launch
-.cproject
+### Eclipse ###
+.apt_generated
 .classpath
-.buildpath
-.target
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# NetBeans
-nbproject/private/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 build/
-nbbuild/
-dist/
-nbdist/
-nbactions.xml
-nb-configuration.xml
-.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store

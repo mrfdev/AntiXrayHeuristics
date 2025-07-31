@@ -23,18 +23,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2876e9f1-3d67-41cc-8b94-448fa827feed" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/AntiXrayHeuristics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/AntiXrayHeuristics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXH.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXH.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXHAutoCompleter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXHAutoCompleter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/XrayerVault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/XrayerVault.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/es/mithrandircraft/antixrayheuristics/AntiXrayHeuristics.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/mithrandircraft/antixrayheuristics/AntiXrayHeuristics.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/APIAntiXrayHeuristics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/APIAntiXrayHeuristics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/APIAntiXrayHeuristicsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/APIAntiXrayHeuristicsImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/AntiXrayHeuristics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/AntiXrayHeuristics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/BukkitSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/BukkitSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CallbackAddXrayerHeadToCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CallbackAddXrayerHeadToCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CallbackGetAllBaseXrayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CallbackGetAllBaseXrayerData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CallbackGetXrayerBelongings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CallbackGetXrayerBelongings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CallbackGetXrayerHandleLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CallbackGetXrayerHandleLocation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CallbackUpdateXrayerHeadCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CallbackUpdateXrayerHeadCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGAbsolvePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGAbsolvePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGPurgePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGPurgePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGReload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGReload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGResetSuspicion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGResetSuspicion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGSuspicion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGSuspicion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGVault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGVault.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandARGXrayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandARGXrayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXH.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandAXH.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/CommandAXHAutoCompleter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/CommandAXHAutoCompleter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/DelayedInventoryCloseExecution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/DelayedInventoryCloseExecution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventBlockBreak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventBlockBreak.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventBlockPlace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventBlockPlace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventClick.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventClick.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventInventoryClose.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventInventoryClose.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventItemDrag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventItemDrag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/EventPlayerChangedWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/EventPlayerChangedWorld.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/HandlingXrayerEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/HandlingXrayerEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/HeadManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/HeadManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/IntVector3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/IntVector3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/LocaleManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/LocaleManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/MadeUpEquipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/MadeUpEquipment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/MadeUpInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/MadeUpInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/MathFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/MathFunctions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/MemoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/MemoryManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/MiningSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/MiningSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/PlaceholderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/PlaceholderManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/PlayerViewInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/PlayerViewInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/RandomItemStackGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/RandomItemStackGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/SpigotVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/SpigotVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/StorePlayerDataCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/StorePlayerDataCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/WeightsCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/WeightsCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/Xrayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/Xrayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/XrayerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/XrayerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/XrayerVault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/greymagic27/XrayerVault.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +86,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Greymagic27&quot;
+  }
+}</component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
       <filtered-out-file-type name="LOCAL_BRANCH" />
@@ -60,6 +100,12 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Greymagic27/AntiXrayHeuristics.git&quot;,
+    &quot;accountId&quot;: &quot;dfd299d4-f3f9-4101-af51-1f75247b6750&quot;
+  }
+}</component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -68,6 +114,10 @@
       </MavenImportingSettings>
     </option>
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="1PZ2tIaBarV6lp54ZuebdkWfXv0" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -78,6 +128,8 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Oscar/Documents/INCore&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
@@ -103,6 +155,7 @@
         <option name="myRunnerSettings" />
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
+            <option name="cmdOptions" />
             <option name="profiles">
               <set />
             </option>
@@ -111,9 +164,13 @@
                 <option value="package" />
               </list>
             </option>
+            <option name="multimoduleDir" />
             <option name="pomFileName" value="pom.xml" />
             <option name="profilesMap">
               <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
             </option>
             <option name="resolveToWorkspace" value="false" />
             <option name="workingDirPath" value="$PROJECT_DIR$" />
@@ -128,6 +185,7 @@
         <option name="myRunnerSettings" />
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
+            <option name="cmdOptions" />
             <option name="profiles">
               <set />
             </option>
@@ -137,9 +195,13 @@
                 <option value="package" />
               </list>
             </option>
+            <option name="multimoduleDir" />
             <option name="pomFileName" />
             <option name="profilesMap">
               <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
             </option>
             <option name="resolveToWorkspace" value="false" />
             <option name="workingDirPath" value="$PROJECT_DIR$" />
@@ -207,7 +269,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/es/mithrandircraft/antixrayheuristics/APIAntiXrayHeuristics.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/com/greymagic27/APIAntiXrayHeuristics.java</url>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
