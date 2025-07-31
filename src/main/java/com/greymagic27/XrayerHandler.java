@@ -3,10 +3,8 @@ package com.greymagic27;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,13 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class XrayerHandler {
-
-    private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
-    private static final Logger log = LoggerFactory.getLogger(XrayerHandler.class);
 
     private static void XrayerWarn(String xrayername) {
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -29,7 +22,7 @@ public class XrayerHandler {
                 String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
                 String rawMsg = LocaleManager.get().getString("AutoHandledPlayer");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
-                Component message = legacySerializer.deserialize(prefix + " " + substituted);
+                Component message = LegacyComponentSerializer.legacyAmpersand().deserialize(prefix + " " + substituted);
                 player.sendMessage(message);
             }
         }
@@ -47,7 +40,7 @@ public class XrayerHandler {
                 if (mainClass.getConfig().getBoolean("SendMessageToPlayer")) {
                     String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
                     String playerMessageRaw = Objects.requireNonNull(LocaleManager.get().getString("PlayerMessageOnXray"));
-                    Component playerMessage = legacySerializer.deserialize(prefix + " " + playerMessageRaw);
+                    Component playerMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(prefix + " " + playerMessageRaw);
                     player.sendMessage(playerMessage);
                 }
 
@@ -62,7 +55,7 @@ public class XrayerHandler {
                             player.getInventory().clear();
                             player.getEquipment().clear();
                         } catch (Exception e) {
-                            log.error("Failed to remove player {}'s equipment while attempting to handle as Xrayer.", xrayername);
+                            Bukkit.getConsoleSender().sendMessage("Failed to remove player {}'s equipment while attempting to handle as Xrayer.", xrayername);
                         }
                     }
 
@@ -87,8 +80,7 @@ public class XrayerHandler {
                 String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
                 String rawMsg = LocaleManager.get().getString("AutoHandledPlayer");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
-                Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-                log.info(legacySerializer.serialize(consoleMessage));
+                Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(prefix + " " + substituted));
 
                 if (mainClass.getConfig().getBoolean("TellPlayersWithPermission")) {
                     XrayerWarn(xrayername);
@@ -97,8 +89,7 @@ public class XrayerHandler {
                 String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
                 String rawMsg = LocaleManager.get().getString("PlayerNotOnlineOnHandle");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
-                Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-                log.info(legacySerializer.serialize(consoleMessage));
+                Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(prefix + " " + substituted));
             }
         }
     }
@@ -137,20 +128,16 @@ public class XrayerHandler {
                     target.getEquipment().setItemInOffHand(belongings[36]);
                 else DropItemAtPlayerLocation(belongings[36], target);
 
-                if (target.getEquipment().getBoots() == null)
-                    target.getEquipment().setBoots(belongings[40]);
+                if (target.getEquipment().getBoots() == null) target.getEquipment().setBoots(belongings[40]);
                 else DropItemAtPlayerLocation(belongings[40], target);
 
-                if (target.getEquipment().getLeggings() == null)
-                    target.getEquipment().setLeggings(belongings[39]);
+                if (target.getEquipment().getLeggings() == null) target.getEquipment().setLeggings(belongings[39]);
                 else DropItemAtPlayerLocation(belongings[39], target);
 
-                if (target.getEquipment().getChestplate() == null)
-                    target.getEquipment().setChestplate(belongings[38]);
+                if (target.getEquipment().getChestplate() == null) target.getEquipment().setChestplate(belongings[38]);
                 else DropItemAtPlayerLocation(belongings[38], target);
 
-                if (target.getEquipment().getHelmet() == null)
-                    target.getEquipment().setHelmet(belongings[37]);
+                if (target.getEquipment().getHelmet() == null) target.getEquipment().setHelmet(belongings[37]);
                 else DropItemAtPlayerLocation(belongings[37], target);
             }
 
@@ -158,8 +145,7 @@ public class XrayerHandler {
             String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
             String rawMsg = LocaleManager.get().getString("AbsolvedPlayer");
             String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, target.getName());
-            Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-            log.info(legacySerializer.serialize(consoleMessage));
+            Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(prefix + " " + substituted));
 
             for (String cmd : mainClassAccess.getConfig().getStringList("CommandsExecutedOnPlayerAbsolved")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(cmd, target.getName()));

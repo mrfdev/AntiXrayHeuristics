@@ -234,7 +234,7 @@ public class XrayerVault {
         CalculatePages();
         player.playSound(player.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 100, 1);
 
-        Inventory gui = Bukkit.createInventory(null, 54, Component.text(GUITitle + (page + 1) + "/" + pages));
+        Inventory gui = Bukkit.createInventory(null, 54, LEGACY_SERIALIZER.deserialize(GUITitle).append (Component.text((page + 1) + "/" + pages)));
         viewers.put(player.getName(), new PlayerViewInfo(page)); //Register player as gui viewer on a certain page (used as player-page reference)
 
         if (mainClassAccess.getConfig().getBoolean("UseHeadsInGUI")) {
@@ -362,7 +362,7 @@ public class XrayerVault {
         viewers.get(player.getName()).xrayerInvUUID = UUIDs.get(xrayerUUIDIndex); //Update uuid of the xrayer we're watching
 
         Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(UUIDs.get(xrayerUUIDIndex), belongings -> {
-            Inventory inv = Bukkit.createInventory(null, 54, PlainTextComponentSerializer.plainText().deserialize(GUITitle)); //Vault contents to display
+            Inventory inv = Bukkit.createInventory(null, 54, LEGACY_SERIALIZER.deserialize(GUITitle)); //Vault contents to display
 
             if (belongings != null) //Belongings could be null when extracted from database, since StoreCopy option exists and can be false
             {
