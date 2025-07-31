@@ -7,6 +7,7 @@ package com.greymagic27;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -65,9 +66,10 @@ class LocaleManager {
         localeConfiguration.addDefault("EntryDescInspector", Arrays.asList("&aCLICK TO TELEPORT to detected location", "&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void setup(String pluginName) //Finds or generates custom config file
     {
-        localeFile = new File(Bukkit.getServer().getPluginManager().getPlugin(pluginName).getDataFolder(), "locale.yml");
+        localeFile = new File(Objects.requireNonNull(Bukkit.getServer().getPluginManager().getPlugin(pluginName)).getDataFolder(), "locale.yml");
 
         if (!localeFile.exists()) {
             try {

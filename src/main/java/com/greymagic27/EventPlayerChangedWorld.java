@@ -7,6 +7,7 @@ package com.greymagic27;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.jetbrains.annotations.NotNull;
 
 class EventPlayerChangedWorld implements Listener {
 
@@ -17,7 +18,7 @@ class EventPlayerChangedWorld implements Listener {
     }
 
     @EventHandler
-    public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) //This event cleans the mining trail, and previous mined ore data, when switching worlds (avoids errors)
+    public void PlayerChangedWorldEvent(@NotNull PlayerChangedWorldEvent e) //This event cleans the mining trail, and previous mined ore data, when switching worlds (avoids errors)
     {
         MiningSession session = mainClassAccess.sessions.get(e.getPlayer().getName());
         if (session != null) { //Checking the player who switched worlds actually has a mining session.

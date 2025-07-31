@@ -6,7 +6,6 @@ package com.greymagic27;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class APIAntiXrayHeuristicsImpl implements APIAntiXrayHeuristics {
 
@@ -35,12 +34,9 @@ public class APIAntiXrayHeuristicsImpl implements APIAntiXrayHeuristics {
         if (target != null) { //Player online
             //Return inventory to player
             final String targetUUID = target.getUniqueId().toString();
-            Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(targetUUID, new CallbackGetXrayerBelongings() {
-                @Override
-                public void onQueryDone(ItemStack[] belongings) {
-                    if (XrayerHandler.PlayerAbsolver(targetUUID, belongings, mainClassAccess)) {
-                        mainClassAccess.vault.XrayerDataRemover(player, false);
-                    }
+            Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(targetUUID, belongings -> {
+                if (XrayerHandler.PlayerAbsolver(targetUUID, belongings, mainClassAccess)) {
+                    mainClassAccess.vault.XrayerDataRemover(player, false);
                 }
             }));
         }

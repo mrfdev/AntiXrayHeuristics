@@ -1,57 +1,58 @@
-//--------------------------------------------------------------------
-// Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
-//--------------------------------------------------------------------
-
 package com.greymagic27;
 
 import java.util.List;
-import org.bukkit.ChatColor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
+@SuppressWarnings("unused")
 class PlaceholderManager {
 
-    public static String SubstitutePlayerNameAndColorCodePlaceholders(String toReplace, String player) {
-        toReplace = toReplace.replaceAll("\\{PlayerName}", player);
-        toReplace = ChatColor.translateAlternateColorCodes('&', toReplace);
+    private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 
+    public static @NotNull String SubstitutePlayerNameAndColorCodePlaceholders(String toReplace, String player) {
+        toReplace = toReplace.replace("{PlayerName}", player);
+        Component component = legacySerializer.deserialize(toReplace);
+        return legacySerializer.serialize(component);
+    }
+
+    public static @NotNull String SubstitutePlayerNameAndHandleTimesPlaceholders(String toReplace, String player, String handleTimes) {
+        toReplace = toReplace.replace("{PlayerName}", player);
+        toReplace = toReplace.replace("{TimesDetected}", handleTimes);
+        Component component = legacySerializer.deserialize(toReplace);
+        return legacySerializer.serialize(component);
+    }
+
+    public static @NotNull String SubstituteColorCodePlaceholders(String toReplace) {
+        Component component = legacySerializer.deserialize(toReplace);
+        return legacySerializer.serialize(component);
+    }
+
+    @Contract("_ -> param1")
+    public static @NotNull List<String> SubstituteColorCodePlaceholders(@NotNull List<String> toReplace) {
+        toReplace.replaceAll(text -> {
+            Component component = legacySerializer.deserialize(text);
+            return legacySerializer.serialize(component);
+        });
         return toReplace;
     }
 
-    public static String SubstitutePlayerNameAndHandleTimesPlaceholders(String toReplace, String player, String handleTimes) {
-        toReplace = toReplace.replaceAll("\\{PlayerName}", player);
-        toReplace = toReplace.replaceAll("\\{TimesDetected}", handleTimes);
-
-        return toReplace;
+    public static @NotNull String SubstituteXrayerSlotAndColorCodePlaceholders(String toReplace, int slot) {
+        toReplace = toReplace.replace("{Slot}", Integer.toString(slot));
+        Component component = legacySerializer.deserialize(toReplace);
+        return legacySerializer.serialize(component);
     }
 
-    public static String SubstituteColorCodePlaceholders(String toReplace) {
-        toReplace = ChatColor.translateAlternateColorCodes('&', toReplace);
-
-        return toReplace;
-    }
-
-    public static List<String> SubstituteColorCodePlaceholders(List<String> toReplace) {
+    public static List<String> SubstituteXrayerDataAndColorCodePlaceholders(@NotNull List<String> toReplace, String handledTimesAmount, String firstHandleTime, String lastSeenTime) {
         for (int i = 0; i < toReplace.size(); i++) {
-            toReplace.set(i, ChatColor.translateAlternateColorCodes('&', toReplace.get(i)));
+            String line = toReplace.get(i);
+            line = line.replace("{HandledTimesAmount}", handledTimesAmount);
+            line = line.replace("{FirstTimeDetected}", firstHandleTime);
+            line = line.replace("{LastSeenTime}", lastSeenTime);
+            Component component = legacySerializer.deserialize(line);
+            toReplace.set(i, legacySerializer.serialize(component));
         }
-
-        return toReplace;
-    }
-
-    public static String SubstituteXrayerSlotAndColorCodePlaceholders(String toReplace, int slot) {
-        toReplace = toReplace.replaceAll("\\{Slot}", Integer.toString(slot));
-        toReplace = ChatColor.translateAlternateColorCodes('&', toReplace);
-
-        return toReplace;
-    }
-
-    public static List<String> SubstituteXrayerDataAndColorCodePlaceholders(List<String> toReplace, String handledTimesAmount, String firstHandleTime, String lastSeenTime) {
-        for (int i = 0; i < toReplace.size(); i++) {
-            toReplace.set(i, toReplace.get(i).replaceAll("\\{HandledTimesAmount}", handledTimesAmount));
-            toReplace.set(i, toReplace.get(i).replaceAll("\\{FirstTimeDetected}", firstHandleTime));
-            toReplace.set(i, toReplace.get(i).replaceAll("\\{LastSeenTime}", lastSeenTime));
-            toReplace.set(i, ChatColor.translateAlternateColorCodes('&', toReplace.get(i)));
-        }
-
         return toReplace;
     }
 }

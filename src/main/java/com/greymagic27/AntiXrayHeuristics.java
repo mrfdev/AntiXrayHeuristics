@@ -1,11 +1,10 @@
 package com.greymagic27;
 
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -15,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     private static AntiXrayHeuristics plugin;
     final float maxSuspicionDecreaseProportion = -10.0F;
@@ -22,12 +22,11 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     final float absoluteMinimumSuspicionDecrease = -3.0F;
     final int maxAccountableMillisecondDeltaForThirtyMinedBlocks = 20000;
     final int minAccountableMillisecondDeltaForThirtyMinedBlocks = 0;
+    final HashMap<String, MiningSession> sessions = new HashMap<>();
+    final MemoryManager mm = new MemoryManager(this);
     private final float suspicionLevelThreshold = 100.0F;
     private final int mainRunnableFrequency = 200;
     private final int suspicionStreakZeroThreshold = 20;
-    SpigotVersion spigotVersion;
-    HashMap<String, MiningSession> sessions = new HashMap<>();
-    MemoryManager mm = new MemoryManager(this);
     XrayerVault vault;
     private APIAntiXrayHeuristics api;
     private int nonOreStreakDecreaseAmount;
@@ -47,10 +46,9 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
         this.api = new APIAntiXrayHeuristicsImpl(this);
-        this.spigotVersion = new SpigotVersion();
-        getConfig().options().copyDefaults();
+        getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&5[&bAntiXrayHeuristics&5] &aHas enabled successfully"));
+        Bukkit.getConsoleSender().sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&5[&bAntiXrayHeuristics&5] &aHas enabled successfully"));
         ConfigurationSerialization.registerClass(BlockWeightInfo.class);
         LocaleManager.setup(getName());
         LocaleManager.get().options().copyDefaults(true);
@@ -59,18 +57,12 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         WeightsCard.get().options().copyDefaults(true);
         WeightsCard.save();
         this.vault = new XrayerVault(this);
-        getCommand("AXH").setExecutor(new CommandAXH(this));
-        getCommand("AXH").setTabCompleter(new CommandAXHAutoCompleter());
-        if (getConfig().getString("StorageType").equals("MYSQL")) {
+        Objects.requireNonNull(getCommand("AXH")).setExecutor(new CommandAXH(this));
+        Objects.requireNonNull(getCommand("AXH")).setTabCompleter(new CommandAXHAutoCompleter());
+        if (Objects.equals(getConfig().getString("StorageType"), "MYSQL")) {
             this.mm.InitializeDataSource();
-            Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                try {
-                    this.mm.SQLCreateTableIfNotExists();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            });
-        } else if (getConfig().getString("StorageType").equals("JSON")) {
+            Bukkit.getScheduler().runTaskAsynchronously(this, this.mm::SQLCreateTableIfNotExists);
+        } else if (Objects.equals(getConfig().getString("StorageType"), "JSON")) {
             this.mm.JSONFileCreateIfNotExists();
         }
         getServer().getPluginManager().registerEvents(new EventBlockBreak(this), this);
@@ -88,23 +80,21 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     }
 
     public void onDisable() {
-        if (getConfig().getString("StorageType").equals("MYSQL")) this.mm.CloseDataSource();
+        if (Objects.equals(getConfig().getString("StorageType"), "MYSQL")) this.mm.CloseDataSource();
     }
 
     private void MainRunnable() {
         (new BukkitRunnable() {
             public void run() {
                 Set<String> sessionsKeySet = AntiXrayHeuristics.this.sessions.keySet();
-                Iterator<String> sessionsIterator = sessionsKeySet.iterator();
-                while (sessionsIterator.hasNext()) {
-                    String key = sessionsIterator.next();
+                for (String key : sessionsKeySet) {
                     AntiXrayHeuristics.this.sessions.get(key).SelfSuspicionReducer();
                     AntiXrayHeuristics.this.sessions.get(key).minedNonOreBlocksStreak += AntiXrayHeuristics.this.nonOreStreakDecreaseAmount;
                     if (AntiXrayHeuristics.this.sessions.get(key).GetSuspicionLevel() < 0.0F) {
                         AntiXrayHeuristics.this.sessions.get(key).SetSuspicionLevel(0.0F);
                         AntiXrayHeuristics.this.sessions.get(key).foundAtZeroSuspicionStreak++;
                         if (AntiXrayHeuristics.this.sessions.get(key).foundAtZeroSuspicionStreak >= 20)
-                            AntiXrayHeuristics.this.sessions.remove(AntiXrayHeuristics.this.sessions.get(key));
+                            AntiXrayHeuristics.this.sessions.remove(key);
                     } else {
                         AntiXrayHeuristics.this.sessions.get(key).foundAtZeroSuspicionStreak = 0;
                     }
@@ -115,7 +105,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         }).runTaskTimer(this, 200L, 200L);
     }
 
-    private void UpdateTrail(BlockBreakEvent ev, MiningSession s) {
+    private void UpdateTrail(BlockBreakEvent ev, @NotNull MiningSession s) {
         if (s.GetLastBlockCoordsStoreCounter() == 3)
             s.SetMinedBlocksTrailArrayPos(s.GetNextCoordsStorePos(), ev.getBlock().getLocation());
         s.CycleBlockCoordsStoreCounter();
@@ -135,7 +125,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
                 iteratedBlockCoordSlots++;
             }
         }
-        float fractionReducerValue = (iteratedBlockCoordSlots - unalignedMinedBlocksTimesDetected / 2);
+        float fractionReducerValue = (iteratedBlockCoordSlots - (float) unalignedMinedBlocksTimesDetected / 2);
         if (unalignedMinedBlocksTimesDetected / 2 > iteratedBlockCoordSlots / 2) fractionReducerValue /= 3.0F;
         if (fractionReducerValue < 1.0F) fractionReducerValue = 1.0F;
         s.ResetBlocksTrailArray();
@@ -154,7 +144,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         MiningSession s = this.sessions.get(ev.getPlayer().getName());
         if (s == null) return false;
         System.out.print(m);
-        if (m == Material.STONE || m == Material.NETHERRACK || (this.spigotVersion.version.GetValue() >= 118 && m == Material.DEEPSLATE) || m == Material.TUFF || (this.spigotVersion.version.GetValue() >= 116 && m == Material.BASALT)) {
+        if (m == Material.STONE || m == Material.NETHERRACK || m == Material.DEEPSLATE || m == Material.TUFF || m == Material.BASALT) {
             s.UpdateTimeAccountingProperties(ev.getPlayer());
             s.minedNonOreBlocksStreak++;
             UpdateTrail(ev, s);
@@ -251,47 +241,17 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
                 s.minedNonOreBlocksStreak = 0;
             }
             s.SetLastMinedOreData(m, ev.getBlock().getLocation());
-        } else if (this.spigotVersion.version.GetValue() >= 118) {
-            if (m == Material.DEEPSLATE_DIAMOND_ORE) {
-                s.UpdateTimeAccountingProperties(ev.getPlayer());
-                if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
-                    if (s.minedNonOreBlocksStreak > this.usualEncounterThreshold) {
-                        s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateDiamond")));
-                    } else {
-                        s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, this.extraDiamondWeight));
-                    }
-                    s.minedNonOreBlocksStreak = 0;
+        } else if (m == Material.DEEPSLATE_DIAMOND_ORE) {
+            s.UpdateTimeAccountingProperties(ev.getPlayer());
+            if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
+                if (s.minedNonOreBlocksStreak > this.usualEncounterThreshold) {
+                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateDiamond")));
+                } else {
+                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, this.extraDiamondWeight));
                 }
-                s.SetLastMinedOreData(m, ev.getBlock().getLocation());
-            } else if (m == Material.DEEPSLATE_GOLD_ORE) {
-                s.UpdateTimeAccountingProperties(ev.getPlayer());
-                if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
-                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateGold")));
-                    s.minedNonOreBlocksStreak = 0;
-                }
-                s.SetLastMinedOreData(m, ev.getBlock().getLocation());
-            } else if (m == Material.DEEPSLATE_IRON_ORE) {
-                s.UpdateTimeAccountingProperties(ev.getPlayer());
-                if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
-                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateIron")));
-                    s.minedNonOreBlocksStreak = 0;
-                }
-                s.SetLastMinedOreData(m, ev.getBlock().getLocation());
-            } else if (m == Material.DEEPSLATE_LAPIS_ORE) {
-                s.UpdateTimeAccountingProperties(ev.getPlayer());
-                if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
-                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateLapis")));
-                    s.minedNonOreBlocksStreak = 0;
-                }
-                s.SetLastMinedOreData(m, ev.getBlock().getLocation());
-            } else if (m == Material.DEEPSLATE_REDSTONE_ORE) {
-                s.UpdateTimeAccountingProperties(ev.getPlayer());
-                if ((s.GetLastMinedOre() != m || s.GetLastMinedOreLocation().distance(ev.getBlock().getLocation()) > getConfig().getInt("ConsiderAdjacentWithinDistance")) && s.minedNonOreBlocksStreak > getConfig().getInt("MinimumBlocksMinedToNextVein")) {
-                    s.AddSuspicionLevel(GetWeightFromAnalyzingTrail(ev, s, (float) getConfig().getLong("DeepslateRedstone")));
-                    s.minedNonOreBlocksStreak = 0;
-                }
-                s.SetLastMinedOreData(m, ev.getBlock().getLocation());
+                s.minedNonOreBlocksStreak = 0;
             }
+            s.SetLastMinedOreData(m, ev.getBlock().getLocation());
         } else {
             s.minedNonOreBlocksStreak++;
             UpdateTrail(ev, s);
@@ -349,15 +309,14 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
     }
 
-    void BBEventAnalyzer(BlockBreakEvent ev) {
+    void BBEventAnalyzer(@NotNull BlockBreakEvent ev) {
         if (!ev.getPlayer().hasPermission("AXH.Ignore")) {
             Material m = RelevantBlockCheck(ev);
             if (m != Material.AIR && !UpdateMiningSession(ev, m)) if (m == Material.STONE || m == Material.NETHERRACK) {
                 this.sessions.put(ev.getPlayer().getName(), new MiningSession(this));
-            } else if (this.spigotVersion.version.GetValue() >= 118) {
-                if (m == Material.DEEPSLATE || m == Material.TUFF)
-                    this.sessions.put(ev.getPlayer().getName(), new MiningSession(this));
-            } else if (this.spigotVersion.version.GetValue() >= 116 && m == Material.BASALT) {
+            } else if (m == Material.DEEPSLATE || m == Material.TUFF) {
+                this.sessions.put(ev.getPlayer().getName(), new MiningSession(this));
+            } else if (m == Material.BASALT) {
                 this.sessions.put(ev.getPlayer().getName(), new MiningSession(this));
             }
         }

@@ -4,12 +4,12 @@
 
 package com.greymagic27;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class EventInventoryClose implements Listener {
 
@@ -20,12 +20,13 @@ public class EventInventoryClose implements Listener {
     }
 
     @EventHandler
-    public void closeEv(InventoryCloseEvent e) //Removes the player as an Xrayer Vault viewer with a delay after closing the Xrayer Vault inventory, only if player isn't still looking at inv.
+    public void closeEv(@NotNull InventoryCloseEvent e) //Removes the player as an Xrayer Vault viewer with a delay after closing the Xrayer Vault inventory, only if player isn't still looking at inv.
     {
-        if (e.getView().getTitle().equals("Xrayer Vault")) {
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(); //Delayer scheduler
-            DelayedInventoryCloseExecution delay = new DelayedInventoryCloseExecution(e.getPlayer(), mainClassAccess); //Class with the runnable run() method to be delayed
-            executorService.schedule(delay, 500, TimeUnit.MILLISECONDS); //Set up the schedule to half a second delay
+        if (PlainTextComponentSerializer.plainText().serialize(e.getView().title()).equals("Xrayer Vault")) {
+            Bukkit.getScheduler().runTaskLater(mainClassAccess, () -> {
+                DelayedInventoryCloseExecution delay = new DelayedInventoryCloseExecution(e.getPlayer(), mainClassAccess);
+                delay.run();
+            }, 10L);
         }
     }
 }

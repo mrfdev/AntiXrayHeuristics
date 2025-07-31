@@ -5,7 +5,9 @@
 package com.greymagic27;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 class IntVector3 {
     private int X;
     private int Y;
@@ -18,7 +20,7 @@ class IntVector3 {
         Z = z;
     }
 
-    public IntVector3(Location loc) //Initialize with location
+    public IntVector3(@NotNull Location loc) //Initialize with location
     {
         X = loc.getBlockX();
         Y = loc.getBlockY();

@@ -45,7 +45,7 @@ class EventBlockPlace implements Listener {
                         }
                     }
                     //Spigot for MC 1.16+
-                    if (mainClassAccess.spigotVersion.version.GetValue() >= 116 && e.getBlock().getType() == Material.RESPAWN_ANCHOR) {
+                    if (e.getBlock().getType() == Material.RESPAWN_ANCHOR) {
                         NotifySession(e.getPlayer().getName());
                         break;
                     }

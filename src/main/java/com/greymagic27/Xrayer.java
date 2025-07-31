@@ -6,11 +6,11 @@ package com.greymagic27;
 
 class Xrayer {
 
-    public String UUID;
+    public final String UUID;
     public int Handled;
-    public String FirstHandleTime;
-    public String HandleLocation;
-    public String Belongings;
+    public final String FirstHandleTime;
+    public final String HandleLocation;
+    public final String Belongings;
 
     public Xrayer(String uuid, int handled, String firsthandletime, String handlelocation, String belongings) {
         UUID = uuid;

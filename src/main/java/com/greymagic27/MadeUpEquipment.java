@@ -8,25 +8,27 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("DataFlowIssue")
 class MadeUpEquipment implements EntityEquipment {
     @Override
-    public void setItem(EquipmentSlot slot, ItemStack item) {
+    public void setItem(@NotNull EquipmentSlot slot, ItemStack item) {
 
     }
 
     @Override
-    public void setItem(EquipmentSlot equipmentSlot, ItemStack itemStack, boolean b) {
+    public void setItem(@NotNull EquipmentSlot equipmentSlot, ItemStack itemStack, boolean b) {
 
     }
 
     @Override
-    public ItemStack getItem(EquipmentSlot slot) {
+    public @NotNull ItemStack getItem(@NotNull EquipmentSlot slot) {
         return RandomItemStackGenerator.GetRandomItemStack();
     }
 
     @Override
-    public ItemStack getItemInMainHand() {
+    public @NotNull ItemStack getItemInMainHand() {
         return RandomItemStackGenerator.GetRandomItemStack();
     }
 
@@ -41,7 +43,7 @@ class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
-    public ItemStack getItemInOffHand() {
+    public @NotNull ItemStack getItemInOffHand() {
         return RandomItemStackGenerator.GetRandomItemStack();
     }
 
@@ -56,7 +58,7 @@ class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
-    public ItemStack getItemInHand() {
+    public @NotNull ItemStack getItemInHand() {
         return RandomItemStackGenerator.GetRandomItemStack();
     }
 
@@ -126,12 +128,12 @@ class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
-    public ItemStack[] getArmorContents() {
+    public ItemStack @NotNull [] getArmorContents() {
         return new ItemStack[0];
     }
 
     @Override
-    public void setArmorContents(ItemStack[] items) {
+    public void setArmorContents(ItemStack @NotNull [] items) {
 
     }
 
@@ -211,7 +213,17 @@ class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
-    public Entity getHolder() {
+    public @NotNull Entity getHolder() {
         return null;
+    }
+
+    @Override
+    public float getDropChance(@NotNull EquipmentSlot slot) {
+        return 0;
+    }
+
+    @Override
+    public void setDropChance(@NotNull EquipmentSlot slot, float chance) {
+
     }
 }

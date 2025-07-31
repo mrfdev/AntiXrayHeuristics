@@ -14,7 +14,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("DataFlowIssue")
 class MadeUpInventory implements Inventory {
     @Override
     public int getSize() {
@@ -42,37 +45,42 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public HashMap<Integer, ItemStack> addItem(ItemStack... items) throws IllegalArgumentException {
+    public @NotNull HashMap<Integer, ItemStack> addItem(ItemStack... items) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public HashMap<Integer, ItemStack> removeItem(ItemStack... items) throws IllegalArgumentException {
+    public @NotNull HashMap<Integer, ItemStack> removeItem(ItemStack... items) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public ItemStack[] getContents() {
+    public @NotNull HashMap<Integer, ItemStack> removeItemAnySlot(@NotNull ItemStack... items) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public ItemStack @NotNull [] getContents() {
         return new ItemStack[0];
     }
 
     @Override
-    public void setContents(ItemStack[] items) throws IllegalArgumentException {
+    public void setContents(ItemStack @NotNull [] items) throws IllegalArgumentException {
 
     }
 
     @Override
-    public ItemStack[] getStorageContents() {
+    public ItemStack @NotNull [] getStorageContents() {
         return new ItemStack[0];
     }
 
     @Override
-    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
+    public void setStorageContents(ItemStack @NotNull [] items) throws IllegalArgumentException {
 
     }
 
     @Override
-    public boolean contains(Material material) throws IllegalArgumentException {
+    public boolean contains(@NotNull Material material) throws IllegalArgumentException {
         return false;
     }
 
@@ -82,7 +90,7 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public boolean contains(Material material, int amount) throws IllegalArgumentException {
+    public boolean contains(@NotNull Material material, int amount) throws IllegalArgumentException {
         return false;
     }
 
@@ -97,22 +105,22 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(Material material) throws IllegalArgumentException {
+    public @NotNull HashMap<Integer, ? extends ItemStack> all(@NotNull Material material) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(ItemStack item) {
+    public @NotNull HashMap<Integer, ? extends ItemStack> all(ItemStack item) {
         return null;
     }
 
     @Override
-    public int first(Material material) throws IllegalArgumentException {
+    public int first(@NotNull Material material) throws IllegalArgumentException {
         return 0;
     }
 
     @Override
-    public int first(ItemStack item) {
+    public int first(@NotNull ItemStack item) {
         return 0;
     }
 
@@ -127,12 +135,12 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public void remove(Material material) throws IllegalArgumentException {
+    public void remove(@NotNull Material material) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void remove(ItemStack item) {
+    public void remove(@NotNull ItemStack item) {
 
     }
 
@@ -147,12 +155,17 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public List<HumanEntity> getViewers() {
+    public int close() {
+        return 0;
+    }
+
+    @Override
+    public @NotNull List<HumanEntity> getViewers() {
         return null;
     }
 
     @Override
-    public InventoryType getType() {
+    public @NotNull InventoryType getType() {
         return null;
     }
 
@@ -162,12 +175,17 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public ListIterator<ItemStack> iterator() {
+    public @Nullable InventoryHolder getHolder(boolean useSnapshot) {
         return null;
     }
 
     @Override
-    public ListIterator<ItemStack> iterator(int index) {
+    public @NotNull ListIterator<ItemStack> iterator() {
+        return null;
+    }
+
+    @Override
+    public @NotNull ListIterator<ItemStack> iterator(int index) {
         return null;
     }
 

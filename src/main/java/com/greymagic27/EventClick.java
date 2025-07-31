@@ -4,16 +4,21 @@
 
 package com.greymagic27;
 
+import java.util.Objects;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 class EventClick implements Listener {
+
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     private final AntiXrayHeuristics mainClassAccess;
 
@@ -22,12 +27,10 @@ class EventClick implements Listener {
     }
 
     @EventHandler
-    public void clickEvent(InventoryClickEvent e) {
-        //GUI CLICK EVENT:
-
+    public void clickEvent(@NotNull InventoryClickEvent e) {
         //Check if click occured with xrayer vault gui view open:
-        if (e.getView().getTitle().contains(mainClassAccess.vault.GetGUITitle())) {
-            //A non-null, non AIR, uper window slot was clicked
+        if (PlainTextComponentSerializer.plainText().serialize(e.getView().title()).contains(mainClassAccess.vault.GetGUITitle())) {
+            //A non-null, non AIR, upper window slot was clicked
             if (e.getCurrentItem() != null && e.getRawSlot() < e.getView().getTopInventory().getSize() && e.getCurrentItem().getType() != Material.AIR) {
                 //An item was clicked
                 final String playerWhoClicked = e.getWhoClicked().getName();
@@ -38,8 +41,10 @@ class EventClick implements Listener {
                             //Purge all xrayers:
                             if (e.getWhoClicked().hasPermission("AXH.Vault.Purge")) {
                                 mainClassAccess.vault.PurgeAllXrayersAndRefreshVault();
-                            } else
-                                e.getView().getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', LocaleManager.get().getString("NoPermissionForCommand")));
+                            } else {
+                                Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));
+                                e.getView().getPlayer().sendMessage(noPerm);
+                            }
 
                             break;
                         }
@@ -51,14 +56,14 @@ class EventClick implements Listener {
                         }
                         case 53: {
                             //Show next vault row:
-                            if (e.getCurrentItem().getItemMeta().getDisplayName().equals(mainClassAccess.vault.nextButton.getItemMeta().getDisplayName()))
+                            if (Objects.requireNonNull(e.getCurrentItem().getItemMeta().displayName()).equals(mainClassAccess.vault.nextButton.getItemMeta().displayName()))
                                 mainClassAccess.vault.OpenVault((Player) e.getView().getPlayer(), mainClassAccess.vault.GetPage(playerWhoClicked) + 1);
 
                             break;
                         }
                         case 45: {
                             //Show previous vault row:
-                            if (e.getCurrentItem().getItemMeta().getDisplayName().equals(mainClassAccess.vault.prevButton.getItemMeta().getDisplayName()))
+                            if (Objects.requireNonNull(e.getCurrentItem().getItemMeta().displayName()).equals(mainClassAccess.vault.prevButton.getItemMeta().displayName()))
                                 mainClassAccess.vault.OpenVault((Player) e.getView().getPlayer(), mainClassAccess.vault.GetPage(playerWhoClicked) - 1);
 
                             break;
@@ -86,17 +91,18 @@ class EventClick implements Listener {
                             if (e.getWhoClicked().hasPermission("AXH.Commands.AbsolvePlayer")) {
                                 final String xrayerUUID = mainClassAccess.vault.GetInspectedXrayer(playerWhoClicked);
                                 //Return inventory to player, and do the rest if player was online:
-                                Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(xrayerUUID, new CallbackGetXrayerBelongings() {
-                                    @Override
-                                    public void onQueryDone(ItemStack[] belongings) {
-                                        if (XrayerHandler.PlayerAbsolver(xrayerUUID, belongings, mainClassAccess)) {
-                                            mainClassAccess.vault.XrayerDataRemover(playerWhoClicked, true);
-                                        } else
-                                            e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', LocaleManager.get().getString("MessagesPrefix")) + " " + ChatColor.translateAlternateColorCodes('&', LocaleManager.get().getString("PlayerNotOnlineOnAbsolution")));
+                                Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(xrayerUUID, belongings -> {
+                                    if (XrayerHandler.PlayerAbsolver(xrayerUUID, belongings, mainClassAccess)) {
+                                        mainClassAccess.vault.XrayerDataRemover(playerWhoClicked, true);
+                                    } else {
+                                        Component notOnline = LEGACY_SERIALIZER.deserialize(LocaleManager.get().getString("MessagesPrefix") + " " + LocaleManager.get().getString("PlayerNotOnlineOnAbsolution"));
+                                        e.getWhoClicked().sendMessage(notOnline);
                                     }
                                 }));
-                            } else
-                                e.getView().getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', LocaleManager.get().getString("NoPermissionForCommand")));
+                            } else {
+                                Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));
+                                e.getView().getPlayer().sendMessage(noPerm);
+                            }
 
                             break;
                         }
@@ -104,8 +110,10 @@ class EventClick implements Listener {
                             //Purge player:
                             if (e.getWhoClicked().hasPermission("AXH.Commands.PurgePlayer")) {
                                 mainClassAccess.vault.XrayerDataRemover(playerWhoClicked, true);
-                            } else
-                                e.getView().getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', LocaleManager.get().getString("NoPermissionForCommand")));
+                            } else {
+                                Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));
+                                e.getView().getPlayer().sendMessage(noPerm);
+                            }
 
                             break;
                         }

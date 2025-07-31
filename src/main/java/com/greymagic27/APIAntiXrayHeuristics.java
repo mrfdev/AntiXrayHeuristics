@@ -4,6 +4,7 @@
 
 package com.greymagic27;
 
+@SuppressWarnings("unused")
 public interface APIAntiXrayHeuristics {
 
     //Declares specified player as an Xrayer and does configured handling

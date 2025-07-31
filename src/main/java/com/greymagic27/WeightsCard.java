@@ -10,16 +10,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 class BlockWeightInfo implements ConfigurationSerializable {
-    public Material blockMaterial;
-    public int blockHeight;
-    public float blockWeight;
+    public final Material blockMaterial;
+    public final int blockHeight;
+    public final float blockWeight;
 
     /*Standard constructor*/
     public BlockWeightInfo(Material material, int height, float weight) {
@@ -29,7 +32,7 @@ class BlockWeightInfo implements ConfigurationSerializable {
     }
 
     /*Constructor used when deserializing*/
-    public BlockWeightInfo(Map<String, Object> deserializedProperties) {
+    public BlockWeightInfo(@NotNull Map<String, Object> deserializedProperties) {
         blockMaterial = (Material) deserializedProperties.get("Material");
         blockHeight = (int) deserializedProperties.get("Height");
         blockWeight = (float) deserializedProperties.get("Weight");
@@ -37,7 +40,7 @@ class BlockWeightInfo implements ConfigurationSerializable {
 
     @Override
     /*Method used when serializing*/
-    public final Map<String, Object> serialize() {
+    public final @NotNull Map<String, Object> serialize() {
         Map<String, Object> serializedProperties = new HashMap<>();
         serializedProperties.put("Material", blockMaterial.ordinal());
         serializedProperties.put("Height", blockHeight);
@@ -47,6 +50,7 @@ class BlockWeightInfo implements ConfigurationSerializable {
     }
 }
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class WeightsCard {
 
     private static File weightsFile;
@@ -89,7 +93,7 @@ class WeightsCard {
 
     public static void setup(String pluginName) //Finds or generates custom config file
     {
-        weightsFile = new File(Bukkit.getServer().getPluginManager().getPlugin(pluginName).getDataFolder(), "weights.yml");
+        weightsFile = new File(Objects.requireNonNull(Bukkit.getServer().getPluginManager().getPlugin(pluginName)).getDataFolder(), "weights.yml");
 
         if (!weightsFile.exists()) {
             try {
