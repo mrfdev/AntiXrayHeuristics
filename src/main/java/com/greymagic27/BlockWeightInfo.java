@@ -23,7 +23,7 @@ public class BlockWeightInfo implements ConfigurationSerializable {
     public BlockWeightInfo(@NotNull Map<String, Object> deserializedProperties) {
         blockMaterial = Material.valueOf((String) deserializedProperties.get("Material"));
         blockHeight = (int) deserializedProperties.get("Height");
-        blockWeight = (float) deserializedProperties.get("Weight");
+        blockWeight = ((Number) deserializedProperties.get("Weight")).floatValue();
     }
 
     @Override

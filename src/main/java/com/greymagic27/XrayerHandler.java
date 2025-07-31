@@ -15,10 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XrayerHandler {
 
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
+    private static final Logger log = LoggerFactory.getLogger(XrayerHandler.class);
 
     private static void XrayerWarn(String xrayername) {
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -59,7 +62,7 @@ public class XrayerHandler {
                             player.getInventory().clear();
                             player.getEquipment().clear();
                         } catch (Exception e) {
-                            System.out.println("Failed to remove player " + xrayername + "'s equipment while attempting to handle as Xrayer.");
+                            log.error("Failed to remove player {}'s equipment while attempting to handle as Xrayer.", xrayername);
                         }
                     }
 
@@ -85,7 +88,7 @@ public class XrayerHandler {
                 String rawMsg = LocaleManager.get().getString("AutoHandledPlayer");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
                 Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-                System.out.println(legacySerializer.serialize(consoleMessage));
+                log.info(legacySerializer.serialize(consoleMessage));
 
                 if (mainClass.getConfig().getBoolean("TellPlayersWithPermission")) {
                     XrayerWarn(xrayername);
@@ -95,7 +98,7 @@ public class XrayerHandler {
                 String rawMsg = LocaleManager.get().getString("PlayerNotOnlineOnHandle");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
                 Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-                System.out.println(legacySerializer.serialize(consoleMessage));
+                log.info(legacySerializer.serialize(consoleMessage));
             }
         }
     }
@@ -156,7 +159,7 @@ public class XrayerHandler {
             String rawMsg = LocaleManager.get().getString("AbsolvedPlayer");
             String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, target.getName());
             Component consoleMessage = legacySerializer.deserialize(prefix + " " + substituted);
-            System.out.print(legacySerializer.serialize(consoleMessage));
+            log.info(legacySerializer.serialize(consoleMessage));
 
             for (String cmd : mainClassAccess.getConfig().getStringList("CommandsExecutedOnPlayerAbsolved")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(cmd, target.getName()));
