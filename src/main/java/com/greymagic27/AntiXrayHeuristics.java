@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     private static AntiXrayHeuristics plugin;
@@ -141,15 +142,15 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         return mineralWeight + mineralWeight / fractionReducerValue;
     }
 
-    private boolean CheckGoldBiome(BlockBreakEvent ev) {
-        return ev.getPlayer().getLocation().getBlock().getBiome() == Biome.BADLANDS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WOODED_BADLANDS;
+    private boolean CheckGoldBiome(@NotNull BlockBreakEvent ev) {
+        return ev.getPlayer().getLocation().getBlock().getBiome() == Biome.BADLANDS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WOODED_BADLANDS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.ERODED_BADLANDS;
     }
 
-    private boolean CheckEmeraldBiome(BlockBreakEvent ev) {
-        return ev.getPlayer().getLocation().getBlock().getBiome() == Biome.GRAVELLY_MOUNTAINS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.MOUNTAINS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.MOUNTAIN_EDGE || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WOODED_MOUNTAINS;
+    private boolean CheckEmeraldBiome(@NotNull BlockBreakEvent ev) {
+        return ev.getPlayer().getLocation().getBlock().getBiome() == Biome.MEADOW || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.CHERRY_GROVE || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.GROVE || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.SNOWY_SLOPES || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.JAGGED_PEAKS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.FROZEN_PEAKS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.STONY_PEAKS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WINDSWEPT_HILLS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WINDSWEPT_GRAVELLY_HILLS || ev.getPlayer().getLocation().getBlock().getBiome() == Biome.WINDSWEPT_FOREST;
     }
 
-    private boolean UpdateMiningSession(BlockBreakEvent ev, Material m) {
+    private boolean UpdateMiningSession(@NotNull BlockBreakEvent ev, Material m) {
         MiningSession s = this.sessions.get(ev.getPlayer().getName());
         if (s == null) return false;
         System.out.print(m);
@@ -300,46 +301,52 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         return true;
     }
 
-    private Material RelevantBlockCheck(BlockBreakEvent e) {
+    private Material RelevantBlockCheck(@NotNull BlockBreakEvent e) {
         if (e.getBlock().getType() == Material.STONE) return Material.STONE;
         if (e.getBlock().getType() == Material.NETHERRACK) return Material.NETHERRACK;
         if (e.getBlock().getType() == Material.DEEPSLATE) return Material.DEEPSLATE;
         if (e.getBlock().getType() == Material.TUFF) return Material.TUFF;
         if (e.getBlock().getType() == Material.COAL_ORE && (float) getConfig().getLong("CoalWeight") != 0.0F)
             return Material.COAL_ORE;
-        if (e.getBlock().getType() == Material.REDSTONE_ORE && (float) getConfig().getLong("RedstoneWeight") != 0.0F)
-            return Material.REDSTONE_ORE;
+        if (e.getBlock().getType() == Material.DEEPSLATE_COAL_ORE && (float) getConfig().getLong("DeepslateCoal") != 0.0F)
+            return Material.DEEPSLATE_COAL_ORE;
         if (e.getBlock().getType() == Material.IRON_ORE && (float) getConfig().getLong("IronWeight") != 0.0F)
             return Material.IRON_ORE;
-        if (e.getBlock().getType() == Material.GOLD_ORE && (float) getConfig().getLong("GoldWeight") != 0.0F)
-            return Material.GOLD_ORE;
-        if (e.getBlock().getType() == Material.LAPIS_ORE && (float) getConfig().getLong("LapisWeight") != 0.0F)
-            return Material.LAPIS_ORE;
-        if (e.getBlock().getType() == Material.DIAMOND_ORE && (float) getConfig().getLong("DiamondWeight") != 0.0F)
-            return Material.DIAMOND_ORE;
-        if (e.getBlock().getType() == Material.EMERALD_ORE && (float) getConfig().getLong("EmeraldWeight") != 0.0F)
-            return Material.EMERALD_ORE;
-        if (e.getBlock().getType() == Material.NETHER_QUARTZ_ORE && (float) getConfig().getLong("QuartzWeight") != 0.0F)
-            return Material.NETHER_QUARTZ_ORE;
-        if (e.getBlock().getType() == Material.DEEPSLATE_DIAMOND_ORE && (float) getConfig().getLong("DeepslateDiamond") != 0.0F)
-            return Material.DEEPSLATE_DIAMOND_ORE;
         if (e.getBlock().getType() == Material.DEEPSLATE_IRON_ORE && (float) getConfig().getLong("DeepslateIron") != 0.0F)
             return Material.DEEPSLATE_IRON_ORE;
+        if (e.getBlock().getType() == Material.COPPER_ORE && (float) getConfig().getLong("CopperWeight") != 0.0F)
+            return Material.COPPER_ORE;
+        if (e.getBlock().getType() == Material.DEEPSLATE_COPPER_ORE && (float) getConfig().getLong("DeepslateCopper") != 0.0F)
+            return Material.DEEPSLATE_COPPER_ORE;
+        if (e.getBlock().getType() == Material.GOLD_ORE && (float) getConfig().getLong("GoldWeight") != 0.0F)
+            return Material.GOLD_ORE;
         if (e.getBlock().getType() == Material.DEEPSLATE_GOLD_ORE && (float) getConfig().getLong("DeepslateGold") != 0.0F)
             return Material.DEEPSLATE_GOLD_ORE;
+        if (e.getBlock().getType() == Material.REDSTONE_ORE && (float) getConfig().getLong("RedstoneWeight") != 0.0F)
+            return Material.REDSTONE_ORE;
         if (e.getBlock().getType() == Material.DEEPSLATE_REDSTONE_ORE && (float) getConfig().getLong("DeepslateRedstone") != 0.0F)
             return Material.DEEPSLATE_REDSTONE_ORE;
+        if (e.getBlock().getType() == Material.EMERALD_ORE && (float) getConfig().getLong("EmeraldWeight") != 0.0F)
+            return Material.EMERALD_ORE;
+        if (e.getBlock().getType() == Material.DEEPSLATE_EMERALD_ORE && (float) getConfig().getLong("DeepslateEmerald") != 0.0F)
+            return Material.DEEPSLATE_EMERALD_ORE;
+        if (e.getBlock().getType() == Material.LAPIS_ORE && (float) getConfig().getLong("LapisWeight") != 0.0F)
+            return Material.LAPIS_ORE;
         if (e.getBlock().getType() == Material.DEEPSLATE_LAPIS_ORE && (float) getConfig().getLong("DeepslateLapis") != 0.0F)
             return Material.DEEPSLATE_LAPIS_ORE;
+        if (e.getBlock().getType() == Material.DIAMOND_ORE && (float) getConfig().getLong("DiamondWeight") != 0.0F)
+            return Material.DIAMOND_ORE;
+        if (e.getBlock().getType() == Material.DEEPSLATE_DIAMOND_ORE && (float) getConfig().getLong("DeepslateDiamond") != 0.0F)
+            return Material.DEEPSLATE_DIAMOND_ORE;
+        if (e.getBlock().getType() == Material.NETHER_QUARTZ_ORE && (float) getConfig().getLong("QuartzWeight") != 0.0F)
+            return Material.NETHER_QUARTZ_ORE;
         if (e.getBlock().getType() == Material.NETHER_GOLD_ORE && (float) getConfig().getLong("NetherGoldWeight") != 0.0F)
             return Material.NETHER_GOLD_ORE;
         if (e.getBlock().getType() == Material.ANCIENT_DEBRIS && (float) getConfig().getLong("AncientDebrisWeight") != 0.0F)
             return Material.ANCIENT_DEBRIS;
-        if (this.spigotVersion.version.GetValue() >= 116) {
-            if (e.getBlock().getType() == Material.BASALT) return Material.BASALT;
-            return Material.AIR;
-        }
+        if (e.getBlock().getType() == Material.BASALT) return Material.BASALT;
         return Material.AIR;
+
     }
 
     void BBEventAnalyzer(BlockBreakEvent ev) {
