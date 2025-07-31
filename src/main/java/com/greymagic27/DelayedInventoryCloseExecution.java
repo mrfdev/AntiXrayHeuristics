@@ -8,7 +8,7 @@ import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.HumanEntity;
 
-class DelayedInventoryCloseExecution implements Runnable {
+public class DelayedInventoryCloseExecution implements Runnable {
     private final HumanEntity p;
     private final AntiXrayHeuristics mainClassAccess;
 

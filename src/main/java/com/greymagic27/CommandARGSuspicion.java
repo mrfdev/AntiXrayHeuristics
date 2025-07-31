@@ -7,7 +7,7 @@ package com.greymagic27;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-class CommandARGSuspicion {
+public class CommandARGSuspicion {
     public static void S(CommandSender sender, AntiXrayHeuristics mainClass) {//Non-parametrized
         if (sender instanceof Player player) { //Is player
             MiningSession tempMS = mainClass.sessions.get(player.getName());

@@ -4,7 +4,7 @@
 
 package com.greymagic27;
 
-class MathFunctions {
+public class MathFunctions {
     public static int Cut(int a, int b) //Returns how many times a fits into b, +1 if there's remainder by division algorithm. Will return at least 1 fit.
     {
         int fits = 0;

@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-class CommandARGXrayer {
+public class CommandARGXrayer {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     public static void X(CommandSender sender, @NotNull AntiXrayHeuristics mainClass) { // Non-parametrized

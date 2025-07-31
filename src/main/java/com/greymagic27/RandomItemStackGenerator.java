@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-class RandomItemStackGenerator {
+public class RandomItemStackGenerator {
     public static @NotNull ItemStack GetRandomItemStack() {
         Random random = new Random();
         int material = random.nextInt(Material.values().length); //Random material

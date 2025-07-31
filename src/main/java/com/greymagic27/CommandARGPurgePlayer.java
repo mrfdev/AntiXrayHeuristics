@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-class CommandARGPurgePlayer {
+public class CommandARGPurgePlayer {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     public static void P(CommandSender sender, String arg, AntiXrayHeuristics mainClass) {

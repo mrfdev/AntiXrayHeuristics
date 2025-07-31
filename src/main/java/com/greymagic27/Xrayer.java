@@ -4,7 +4,7 @@
 
 package com.greymagic27;
 
-class Xrayer {
+public class Xrayer {
 
     public final String UUID;
     public int Handled;

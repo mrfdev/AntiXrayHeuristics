@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 
-class CommandARGVault {
+public class CommandARGVault {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     static void V(CommandSender sender, AntiXrayHeuristics mainClass) {

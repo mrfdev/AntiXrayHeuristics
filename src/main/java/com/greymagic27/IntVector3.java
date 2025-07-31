@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
-class IntVector3 {
+public class IntVector3 {
     private int X;
     private int Y;
     private int Z;

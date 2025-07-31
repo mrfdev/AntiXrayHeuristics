@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 @SuppressWarnings("unused")
-class PlaceholderManager {
+public class PlaceholderManager {
 
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 

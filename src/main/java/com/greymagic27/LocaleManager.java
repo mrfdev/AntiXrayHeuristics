@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-class LocaleManager {
+public class LocaleManager {
 
     private static File localeFile;
     private static FileConfiguration localeConfiguration;

@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-class CommandAXH implements CommandExecutor {
+public class CommandAXH implements CommandExecutor {
 
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
     private final AntiXrayHeuristics mainClassAccess;

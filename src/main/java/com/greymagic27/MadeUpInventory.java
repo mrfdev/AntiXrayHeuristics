@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("DataFlowIssue")
-class MadeUpInventory implements Inventory {
+public class MadeUpInventory implements Inventory {
     @Override
     public int getSize() {
         return 0;

@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-class XrayerHandler {
+public class XrayerHandler {
 
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 

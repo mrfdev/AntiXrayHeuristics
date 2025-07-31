@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("DataFlowIssue")
-class MadeUpEquipment implements EntityEquipment {
+public class MadeUpEquipment implements EntityEquipment {
     @Override
     public void setItem(@NotNull EquipmentSlot slot, ItemStack item) {
 

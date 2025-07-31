@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-class EventBlockPlace implements Listener {
+public class EventBlockPlace implements Listener {
 
     private final AntiXrayHeuristics mainClassAccess;
 

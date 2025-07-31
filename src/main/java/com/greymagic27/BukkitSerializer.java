@@ -8,7 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-class BukkitSerializer {
+public class BukkitSerializer {
 
     public static ItemStack @NotNull [] InventoryAndEquipmentToSingleItemStackArray(Inventory inv, EntityEquipment equip) //Returns inventory and equipment item stacks put into an array
     {

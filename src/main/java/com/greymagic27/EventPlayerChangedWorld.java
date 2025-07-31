@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
 
-class EventPlayerChangedWorld implements Listener {
+public class EventPlayerChangedWorld implements Listener {
 
     private final AntiXrayHeuristics mainClassAccess;
 

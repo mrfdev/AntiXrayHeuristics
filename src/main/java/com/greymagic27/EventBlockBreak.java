@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-class EventBlockBreak implements Listener {
+public class EventBlockBreak implements Listener {
 
     private final AntiXrayHeuristics mainClassAccess;
 

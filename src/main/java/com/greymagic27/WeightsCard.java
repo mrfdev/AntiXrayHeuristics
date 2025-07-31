@@ -7,51 +7,15 @@ package com.greymagic27;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.jetbrains.annotations.NotNull;
-
-@SuppressWarnings("unused")
-class BlockWeightInfo implements ConfigurationSerializable {
-    public final Material blockMaterial;
-    public final int blockHeight;
-    public final float blockWeight;
-
-    /*Standard constructor*/
-    public BlockWeightInfo(Material material, int height, float weight) {
-        blockMaterial = material;
-        blockHeight = height;
-        blockWeight = weight;
-    }
-
-    /*Constructor used when deserializing*/
-    public BlockWeightInfo(@NotNull Map<String, Object> deserializedProperties) {
-        blockMaterial = (Material) deserializedProperties.get("Material");
-        blockHeight = (int) deserializedProperties.get("Height");
-        blockWeight = (float) deserializedProperties.get("Weight");
-    }
-
-    @Override
-    /*Method used when serializing*/
-    public final @NotNull Map<String, Object> serialize() {
-        Map<String, Object> serializedProperties = new HashMap<>();
-        serializedProperties.put("Material", blockMaterial.ordinal());
-        serializedProperties.put("Height", blockHeight);
-        serializedProperties.put("Weight", blockWeight);
-
-        return serializedProperties;
-    }
-}
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
-class WeightsCard {
+public class WeightsCard {
 
     private static File weightsFile;
     private static FileConfiguration weightsConfiguration;

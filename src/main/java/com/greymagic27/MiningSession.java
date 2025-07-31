@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-class MiningSession { //Contains heuristics tracked per player
+public class MiningSession { //Contains heuristics tracked per player
 
     private final AntiXrayHeuristics mainClassAccess;
     public int minedNonOreBlocksStreak = 0; //Tracks how many non-ore blocks have been mined in streak.

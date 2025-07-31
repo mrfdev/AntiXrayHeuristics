@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class MemoryManager {
+@SuppressWarnings("ClassEscapesDefinedScope")
+public class MemoryManager {
 
     private static final Logger log = LoggerFactory.getLogger(MemoryManager.class);
     private final AntiXrayHeuristics mainClassAccess;
@@ -52,7 +54,7 @@ class MemoryManager {
     void StorePlayerData(Player player, final StorePlayerDataCallback callback) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLPlayerDataStore(cn, player, callback);
@@ -76,7 +78,7 @@ class MemoryManager {
     void StoreDummyPlayerData(final StorePlayerDataCallback callback) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLPlayerDataStore(cn, null, callback);
@@ -100,7 +102,7 @@ class MemoryManager {
     public void GetAllBaseXrayerData(final CallbackGetAllBaseXrayerData callback) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLGetAllBaseXrayerData(cn, callback);
@@ -124,7 +126,7 @@ class MemoryManager {
     public void GetXrayerBelongings(String xrayerUUID, final CallbackGetXrayerBelongings callback) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLGetXrayerBelongings(cn, xrayerUUID, callback);
@@ -147,7 +149,7 @@ class MemoryManager {
     public void GetXrayerHandleLocation(String xrayerUUID, final CallbackGetXrayerHandleLocation callback) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLGetXrayerHandleLocation(cn, xrayerUUID, callback);
@@ -170,7 +172,7 @@ class MemoryManager {
     public void DeleteXrayer(String xrayerUUID) {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLDeleteXrayer(cn, xrayerUUID);
@@ -194,7 +196,7 @@ class MemoryManager {
     public void DeleteRegisteredXrayers() {
         switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
             case "MYSQL":
-                try (java.sql.Connection cn = dataSource.getConnection()) {
+                try (Connection cn = dataSource.getConnection()) {
                     try {
                         if (cn != null) {
                             SQLDeleteRegistry(cn);
@@ -241,7 +243,7 @@ class MemoryManager {
 
     //Creates the Xrayers table
     void SQLCreateTableIfNotExists() {
-        try (java.sql.Connection cn = dataSource.getConnection()) {
+        try (Connection cn = dataSource.getConnection()) {
             try {
                 if (cn != null) {
                     PreparedStatement create = cn.prepareStatement("CREATE TABLE IF NOT EXISTS Xrayers(UUID VARCHAR(36) NOT NULL, Handled INT NOT NULL, FirstHandleTime VARCHAR(32) NOT NULL, HandleLocation VARCHAR(128) NOT NULL, Belongings TEXT NULL, PRIMARY KEY(UUID))");
@@ -268,7 +270,7 @@ class MemoryManager {
     }
 
     //Stores player name as xrayer and some other info + player belongings if configured (or dummy data if player is null), ONLY IF there isn't UUID related information already stored.
-    private void SQLPlayerDataStore(java.sql.Connection connection, Player player, final StorePlayerDataCallback callback) throws SQLException {
+    private void SQLPlayerDataStore(Connection connection, Player player, final StorePlayerDataCallback callback) throws SQLException {
         String playerUUID;
         //Assign true UUID?
         if (player != null) playerUUID = player.getUniqueId().toString();
@@ -460,7 +462,7 @@ class MemoryManager {
 
     //GSON Serialization functions
 
-    private String JSONSerializeXrayersData(List<Xrayer> xrayers) //Serializes class ArrayList to json String
+    private String JSONSerializeXrayersData(List<Xrayer> xrayers) //Serializes public class ArrayList to json String
     {
         return new Gson().toJson(xrayers);
     }
