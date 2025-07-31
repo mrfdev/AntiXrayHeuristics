@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.greymagic27</groupId>
-    <artifactId>AntiXrayHeuristics</artifactId>
-    <version>1.4.0</version>
+    <artifactId>1MB-AntiXrayHeuristics</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.4.0</revision>
     </properties>
 
     <build>
@@ -44,7 +45,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
                             <outputFile>${project.build.directory}/${project.build.finalName}.jar</outputFile>
-                            <finalName>1MB-AntiXrayHeuristics-${project.version}</finalName>
+                            <finalName>AntiXrayHeuristics-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>
