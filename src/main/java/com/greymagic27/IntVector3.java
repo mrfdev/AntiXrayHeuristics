@@ -17,6 +17,7 @@ class IntVector3 {
         Y = y;
         Z = z;
     }
+
     public IntVector3(Location loc) //Initialize with location
     {
         X = loc.getBlockX();
@@ -25,21 +26,28 @@ class IntVector3 {
     }
 
     //XYZ Getters
-    public int GetX()
-    {
+    public int GetX() {
         return X;
     }
-    public int GetY()
-    {
+
+    public int GetY() {
         return Y;
     }
-    public int GetZ()
-    {
+
+    public int GetZ() {
         return Z;
     }
 
     //XYZ Setters
-    public void SetX(int x) { X = x; }
-    public void SetY(int y) { Y = y; }
-    public void SetZ(int z) { Z = z; }
+    public void SetX(int x) {
+        X = x;
+    }
+
+    public void SetY(int y) {
+        Y = y;
+    }
+
+    public void SetZ(int z) {
+        Z = z;
+    }
 }

@@ -4,13 +4,12 @@
 
 package com.greymagic27;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 class LocaleManager {
 
@@ -20,12 +19,12 @@ class LocaleManager {
     private static void SetDefaultFileEntries() //Sets the default language entries in english
     {
         //Messages prefix:
-        localeConfiguration.addDefault("MessagesPrefix","&5[&bAntiXrayHeuristics&5]");
+        localeConfiguration.addDefault("MessagesPrefix", "&5[&bAntiXrayHeuristics&5]");
 
         //Commands:
-        localeConfiguration.addDefault("NoPermissionForCommand","&bYou do not have permission to execute this command.");
-        localeConfiguration.addDefault("PlayerOnlyCommand","&bYou need to be a player in order to execute this command without arguments.");
-        localeConfiguration.addDefault("InvalidCMDArg","&bInvalid command argument.");
+        localeConfiguration.addDefault("NoPermissionForCommand", "&bYou do not have permission to execute this command.");
+        localeConfiguration.addDefault("PlayerOnlyCommand", "&bYou need to be a player in order to execute this command without arguments.");
+        localeConfiguration.addDefault("InvalidCMDArg", "&bInvalid command argument.");
         localeConfiguration.addDefault("PlayerNotOnlineOnHandle", "&bPlayer named &e{PlayerName} &bwas not found while attempting to handle as Xrayer. Player must be online.");
         localeConfiguration.addDefault("Reloaded", "&bAntiXrayHeuristics has reloaded.");
         localeConfiguration.addDefault("PlayerAbsolved", "&bAbsolving player, sending confiscated items back to owner and removing from vault.");
@@ -63,19 +62,17 @@ class LocaleManager {
         localeConfiguration.addDefault("AbsolvePlayerButtonDesc", Arrays.asList("&bAbsolve this player,", "&breturning all confiscated", "&bitems. If they don't fit in", "&bplayer's inventory, they", "&bwill be dropped nearby.", "&bThis also purges the player's", "&bentry in this vault."));
         localeConfiguration.addDefault("HandledXrayerSlotName", "&aHandled xrayer slot #{Slot}");
         localeConfiguration.addDefault("EntryDesc", Arrays.asList("&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
-        localeConfiguration.addDefault("EntryDescInspector", Arrays.asList("&aCLICK TO TELEPORT to detected location","&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
+        localeConfiguration.addDefault("EntryDescInspector", Arrays.asList("&aCLICK TO TELEPORT to detected location", "&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
     }
 
     public static void setup(String pluginName) //Finds or generates custom config file
     {
         localeFile = new File(Bukkit.getServer().getPluginManager().getPlugin(pluginName).getDataFolder(), "locale.yml");
 
-        if(!localeFile.exists())
-        {
+        if (!localeFile.exists()) {
             try {
                 localeFile.createNewFile(); //Creates the file
-            } catch(IOException e)
-            {
+            } catch (IOException e) {
                 System.out.print("[AntiXrayHeuristics] Could not create locale file.");
             }
         }
@@ -83,17 +80,14 @@ class LocaleManager {
         SetDefaultFileEntries(); //Sets default entries
     }
 
-    public static FileConfiguration get()
-    {
+    public static FileConfiguration get() {
         return localeConfiguration;
     }
 
-    public static void save()
-    {
+    public static void save() {
         try {
             localeConfiguration.save(localeFile);
-        } catch(IOException e)
-        {
+        } catch (IOException e) {
             System.out.print("[AntiXrayHeuristics] Could not save locale file.");
         }
     }

@@ -12,7 +12,9 @@ class EventPlayerChangedWorld implements Listener {
 
     private final AntiXrayHeuristics mainClassAccess;
 
-    public EventPlayerChangedWorld(AntiXrayHeuristics main) { this.mainClassAccess = main; }
+    public EventPlayerChangedWorld(AntiXrayHeuristics main) {
+        this.mainClassAccess = main;
+    }
 
     @EventHandler
     public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) //This event cleans the mining trail, and previous mined ore data, when switching worlds (avoids errors)

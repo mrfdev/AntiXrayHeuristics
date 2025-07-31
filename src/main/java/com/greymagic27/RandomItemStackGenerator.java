@@ -4,14 +4,12 @@
 
 package com.greymagic27;
 
+import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Random;
-
 class RandomItemStackGenerator {
-    public static ItemStack GetRandomItemStack()
-    {
+    public static ItemStack GetRandomItemStack() {
         Random random = new Random();
         int material = random.nextInt(Material.values().length); //Random material
         int amount = Material.values()[material].getMaxStackSize(); //Max stack size

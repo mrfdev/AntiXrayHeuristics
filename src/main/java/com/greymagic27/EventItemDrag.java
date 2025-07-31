@@ -12,8 +12,7 @@ class EventItemDrag implements Listener {
     @EventHandler
     public void dragEv(InventoryDragEvent e) //Stops items from being placed in top Xrayer Vault inventory by dragging them
     {
-        if(e.getView().getTitle().equals("Xrayer Vault"))
-        {
+        if (e.getView().getTitle().equals("Xrayer Vault")) {
             e.setCancelled(true);
         }
     }

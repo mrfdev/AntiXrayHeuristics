@@ -4,6 +4,9 @@
 
 package com.greymagic27;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -11,10 +14,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
 
 class MadeUpInventory implements Inventory {
     @Override
@@ -123,7 +122,9 @@ class MadeUpInventory implements Inventory {
     }
 
     @Override
-    public boolean isEmpty() { return false; }
+    public boolean isEmpty() {
+        return false;
+    }
 
     @Override
     public void remove(Material material) throws IllegalArgumentException {

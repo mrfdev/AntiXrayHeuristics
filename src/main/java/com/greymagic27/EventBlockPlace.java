@@ -19,8 +19,7 @@ class EventBlockPlace implements Listener {
     }
 
     //Tells session for player name (if exists) that an explosive block was placed
-    private void NotifySession(String playername)
-    {
+    private void NotifySession(String playername) {
         MiningSession s = mainClassAccess.sessions.get(playername);
         if (s != null) s.IncreaseExplosivesPlaced();
     }
@@ -33,10 +32,9 @@ class EventBlockPlace implements Listener {
             if (mainClassAccess.getConfig().getStringList("TrackWorlds").get(i).equals(e.getBlock().getWorld().getName())) //It's one of the whitelisted "TrackWorlds"
             {
                 //Is it overworld?:
-                if (e.getBlock().getWorld().getEnvironment() == World.Environment.NORMAL)
-                {
+                if (e.getBlock().getWorld().getEnvironment() == World.Environment.NORMAL) {
                     //Relevant explosive materials check:
-                    switch(e.getBlock().getType()) {
+                    switch (e.getBlock().getType()) {
                         case TNT:
                         case END_CRYSTAL: {
                             NotifySession(e.getPlayer().getName());
@@ -47,7 +45,7 @@ class EventBlockPlace implements Listener {
                         }
                     }
                     //Spigot for MC 1.16+
-                    if(mainClassAccess.spigotVersion.version.GetValue() >= 116 && e.getBlock().getType() == Material.RESPAWN_ANCHOR){
+                    if (mainClassAccess.spigotVersion.version.GetValue() >= 116 && e.getBlock().getType() == Material.RESPAWN_ANCHOR) {
                         NotifySession(e.getPlayer().getName());
                         break;
                     }
@@ -55,8 +53,7 @@ class EventBlockPlace implements Listener {
                 //Is it nether?:
                 if (e.getBlock().getWorld().getEnvironment() == World.Environment.NETHER) {
                     //Relevant explosive materials check:
-                    switch(e.getBlock().getType())
-                    {
+                    switch (e.getBlock().getType()) {
                         case TNT:
                         case END_CRYSTAL:
                         case WHITE_BED:
@@ -79,8 +76,7 @@ class EventBlockPlace implements Listener {
                             NotifySession(e.getPlayer().getName());
                             break;
                         }
-                        default:
-                        {
+                        default: {
                             break;
                         }
                     }

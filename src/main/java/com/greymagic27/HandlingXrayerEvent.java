@@ -11,13 +11,15 @@ import org.bukkit.event.HandlerList;
 
 public final class HandlingXrayerEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    private boolean cancelled;
-
     private final Player handledPlayer;
+    private boolean cancelled;
 
     public HandlingXrayerEvent(Player handled) {
         handledPlayer = handled;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public Player getHandledPlayer() {
@@ -32,12 +34,7 @@ public final class HandlingXrayerEvent extends Event implements Cancellable {
         cancelled = cancel;
     }
 
-
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

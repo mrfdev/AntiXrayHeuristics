@@ -13,7 +13,9 @@ class EventBlockBreak implements Listener {
 
     private final AntiXrayHeuristics mainClassAccess;
 
-    public EventBlockBreak(AntiXrayHeuristics main) { this.mainClassAccess = main; }
+    public EventBlockBreak(AntiXrayHeuristics main) {
+        this.mainClassAccess = main;
+    }
 
     @EventHandler
     public void blockBreakEvent(BlockBreakEvent e) {
@@ -23,18 +25,13 @@ class EventBlockBreak implements Listener {
             if (mainClassAccess.getConfig().getStringList("TrackWorlds").get(i).equals(e.getBlock().getWorld().getName())) //It's one of the whitelisted "TrackWorlds"
             {
                 //Only consider if it's a normal overworld or nether environment:
-                if(e.getBlock().getWorld().getEnvironment() == World.Environment.NORMAL)
-                {
-                    if(e.getBlock().getLocation().getY() < mainClassAccess.getConfig().getInt("IgnoreHigherThanOverworldAltitude"))
-                    {
+                if (e.getBlock().getWorld().getEnvironment() == World.Environment.NORMAL) {
+                    if (e.getBlock().getLocation().getY() < mainClassAccess.getConfig().getInt("IgnoreHigherThanOverworldAltitude")) {
                         mainClassAccess.BBEventAnalyzer(e);
                         break;
                     }
-                }
-                else if(e.getBlock().getWorld().getEnvironment() == World.Environment.NETHER)
-                {
-                    if(e.getBlock().getLocation().getY() < mainClassAccess.getConfig().getInt("IgnoreHigherThanNetherAltitude"))
-                    {
+                } else if (e.getBlock().getWorld().getEnvironment() == World.Environment.NETHER) {
+                    if (e.getBlock().getLocation().getY() < mainClassAccess.getConfig().getInt("IgnoreHigherThanNetherAltitude")) {
                         mainClassAccess.BBEventAnalyzer(e);
                         break;
                     }

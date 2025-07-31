@@ -1,5 +1,8 @@
 package com.greymagic27;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -7,16 +10,12 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 class BukkitSerializer {
 
     public static ItemStack[] InventoryAndEquipmentToSingleItemStackArray(Inventory inv, EntityEquipment equip) //Returns inventory and equipment item stacks put into an array
     {
         ItemStack[] confiscatedItems = new ItemStack[41]; //41 = max number of items a player can have in inventory and equipment combined.
-        for(int i = 0; i < 36; i++) confiscatedItems[i] = inv.getItem(i);
+        for (int i = 0; i < 36; i++) confiscatedItems[i] = inv.getItem(i);
         confiscatedItems[36] = equip.getItemInOffHand();
         confiscatedItems[37] = equip.getHelmet();
         confiscatedItems[38] = equip.getChestplate();
@@ -46,8 +45,9 @@ class BukkitSerializer {
             throw new IllegalStateException("Unable to save item stacks.", e);
         }
     }
+
     public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
-        if(data == null) //Null string case returns null
+        if (data == null) //Null string case returns null
         {
             return null;
         }

@@ -4,10 +4,9 @@
 
 package com.greymagic27;
 
-import org.bukkit.Bukkit;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Bukkit;
 
 
 class SpigotVersion {
@@ -18,41 +17,10 @@ class SpigotVersion {
     //Versions version = Versions.VERSION_1_12;
     //int versionInt = version.getValue(); // versionInt = 112
 
-    public enum Versions { VERSION_UNKNOWN(0), VERSION_1_8(108), VERSION_1_9(109), VERSION_1_10(110), VERSION_1_11(111),
-        VERSION_1_12(112), VERSION_1_13(113), VERSION_1_14(114), VERSION_1_15(115), VERSION_1_16(116), VERSION_1_17(117),
-        VERSION_1_18(118), VERSION_1_19(119), VERSION_1_20(120), VERSION_1_21(121), VERSION_1_22(122), VERSION_1_23(123),
-        VERSION_1_24(124), VERSION_1_25(125), VERSION_1_26(126), VERSION_1_27(127), VERSION_1_28(128), VERSION_1_29(129),
-        VERSION_1_30(130), VERSION_1_31(131), VERSION_1_32(132), VERSION_1_33(133), VERSION_1_34(134), VERSION_1_35(135),
-        VERSION_1_36(136), VERSION_1_37(137), VERSION_1_38(138), VERSION_1_39(139), VERSION_1_40(140), VERSION_1_41(141),
-        VERSION_1_42(142);
-
-        private int value;
-        private static Map map = new HashMap<>();
-
-        private Versions(int value) {
-            this.value = value;
-        }
-
-        static {
-            for (Versions version : Versions.values()) {
-                map.put(version.value, version);
-            }
-        }
-
-        public Versions ValueOf(int version) {
-            return (Versions) map.get(version);
-        }
-
-        public int GetValue() {
-            return value;
-        }
-    };
-
-
     public Versions version; //Captures Spigot's version on plugin start
 
-    SpigotVersion()
-    {
+
+    SpigotVersion() {
         version = GetBaseSpigotVersion();
     }
 
@@ -235,5 +203,37 @@ class SpigotVersion {
             return Versions.VERSION_1_42;
 
         else return Versions.VERSION_UNKNOWN;
+    }
+
+    public enum Versions {
+        VERSION_UNKNOWN(0), VERSION_1_8(108), VERSION_1_9(109), VERSION_1_10(110), VERSION_1_11(111),
+        VERSION_1_12(112), VERSION_1_13(113), VERSION_1_14(114), VERSION_1_15(115), VERSION_1_16(116), VERSION_1_17(117),
+        VERSION_1_18(118), VERSION_1_19(119), VERSION_1_20(120), VERSION_1_21(121), VERSION_1_22(122), VERSION_1_23(123),
+        VERSION_1_24(124), VERSION_1_25(125), VERSION_1_26(126), VERSION_1_27(127), VERSION_1_28(128), VERSION_1_29(129),
+        VERSION_1_30(130), VERSION_1_31(131), VERSION_1_32(132), VERSION_1_33(133), VERSION_1_34(134), VERSION_1_35(135),
+        VERSION_1_36(136), VERSION_1_37(137), VERSION_1_38(138), VERSION_1_39(139), VERSION_1_40(140), VERSION_1_41(141),
+        VERSION_1_42(142);
+
+        private static final Map map = new HashMap<>();
+
+        static {
+            for (Versions version : Versions.values()) {
+                map.put(version.value, version);
+            }
+        }
+
+        private final int value;
+
+        Versions(int value) {
+            this.value = value;
+        }
+
+        public Versions ValueOf(int version) {
+            return (Versions) map.get(version);
+        }
+
+        public int GetValue() {
+            return value;
+        }
     }
 }

@@ -4,8 +4,6 @@
 
 package com.greymagic27;
 
-import org.bukkit.entity.Player;
-
 public interface APIAntiXrayHeuristics {
 
     //Declares specified player as an Xrayer and does configured handling
