@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 class MiningSession { //Contains heuristics tracked per player
 
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
     //General distance/time algorithm variables:
     private float suspicionLevel = 0.0f; //Level of suspicion for the player
@@ -40,7 +40,7 @@ class MiningSession { //Contains heuristics tracked per player
     private int nextCoordsStorePos = 0; //Position where next mined block coordinates will be stored
     private int counterSinceLastBlockCoordsStore = 0; //Counts how many blocks we've mined since last mined block coordinates storing
 
-    MiningSession(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main)
+    MiningSession(AntiXrayHeuristics main)
     {
         this.mainClassAccess = main;
         lastThirtyBlocksTime = (int)System.currentTimeMillis();

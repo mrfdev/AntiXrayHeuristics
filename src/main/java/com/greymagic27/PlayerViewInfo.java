@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 class PlayerViewInfo {
     public int page; //Page Player is on

@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -11,9 +11,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 class EventBlockBreak implements Listener {
 
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
-    public EventBlockBreak(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main) { this.mainClassAccess = main; }
+    public EventBlockBreak(AntiXrayHeuristics main) { this.mainClassAccess = main; }
 
     @EventHandler
     public void blockBreakEvent(BlockBreakEvent e) {

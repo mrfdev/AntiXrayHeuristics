@@ -1,4 +1,4 @@
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import java.sql.SQLException;
 import java.util.HashMap;

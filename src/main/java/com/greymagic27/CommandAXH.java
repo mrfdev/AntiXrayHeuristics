@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 
 class CommandAXH implements CommandExecutor {
 
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
-    public CommandAXH(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main)
+    public CommandAXH(AntiXrayHeuristics main)
     {
         this.mainClassAccess = main;
     }

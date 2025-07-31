@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -24,9 +24,9 @@ import java.util.UUID;
 
 class MemoryManager {
 
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
-    MemoryManager(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main) { this.mainClassAccess = main; }
+    MemoryManager(AntiXrayHeuristics main) { this.mainClassAccess = main; }
 
     //SQL Data:
     private BasicDataSource dataSource; //Stores a pool of sql connections

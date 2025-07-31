@@ -1,4 +1,4 @@
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 interface CallbackGetAllBaseXrayerData {
     void onQueryDone();

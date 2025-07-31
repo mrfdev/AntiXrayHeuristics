@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,9 +15,9 @@ import org.bukkit.inventory.ItemStack;
 
 class EventClick implements Listener {
 
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
-    public EventClick(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main) { this.mainClassAccess = main; }
+    public EventClick(AntiXrayHeuristics main) { this.mainClassAccess = main; }
 
     @EventHandler
     public void clickEvent(InventoryClickEvent e)

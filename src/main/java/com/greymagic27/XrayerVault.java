@@ -2,7 +2,7 @@
 // Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
 //--------------------------------------------------------------------
 
-package es.mithrandircraft.antixrayheuristics;
+package com.greymagic27;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import java.util.*;
 
 class XrayerVault
 {
-    private final es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics mainClassAccess;
+    private final AntiXrayHeuristics mainClassAccess;
 
     //The following 4 list's values are parallel, and represent xrayer information. The first 3 are usually filled from
     //persistent memory, while the last one is filled by querying heads
@@ -51,7 +51,7 @@ class XrayerVault
         return UUIDs;
     }
 
-    public XrayerVault(es.mithrandircraft.antixrayheuristics.AntiXrayHeuristics main)
+    public XrayerVault(AntiXrayHeuristics main)
     {
         this.mainClassAccess = main;
 
