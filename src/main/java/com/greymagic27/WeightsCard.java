@@ -23,24 +23,57 @@ public class WeightsCard {
     private static void SetDefaultFileEntries() //Sets the default language entries in english
     {
         List<BlockWeightInfo> worldWeights = new ArrayList<>();
+        // COAL_ORE
         worldWeights.add(new BlockWeightInfo(Material.COAL_ORE, 5, 5.0f));
         worldWeights.add(new BlockWeightInfo(Material.COAL_ORE, 65, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COAL_ORE, 0, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COAL_ORE, 40, 5.0f));
+
+        // REDSTONE_ORE
         worldWeights.add(new BlockWeightInfo(Material.REDSTONE_ORE, 5, 9.0f));
         worldWeights.add(new BlockWeightInfo(Material.REDSTONE_ORE, 15, 9.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_REDSTONE_ORE, 0, 9.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_REDSTONE_ORE, 30, 9.0f));
+
+        // IRON_ORE
         worldWeights.add(new BlockWeightInfo(Material.IRON_ORE, 5, 5.0f));
         worldWeights.add(new BlockWeightInfo(Material.IRON_ORE, 60, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_IRON_ORE, 0, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_IRON_ORE, 30, 5.0f));
+
+        // GOLD_ORE
         worldWeights.add(new BlockWeightInfo(Material.GOLD_ORE, 5, 5.0f));
         worldWeights.add(new BlockWeightInfo(Material.GOLD_ORE, 30, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_GOLD_ORE, 0, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_GOLD_ORE, 15, 5.0f));
+
+        // COPPER_ORE
         worldWeights.add(new BlockWeightInfo(Material.COPPER_ORE, 0, 15.0f));
         worldWeights.add(new BlockWeightInfo(Material.COPPER_ORE, 45, 2.5f));
         worldWeights.add(new BlockWeightInfo(Material.COPPER_ORE, 70, 15.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COPPER_ORE, 20, 2.5f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COPPER_ORE, 50, 2.5f));
+
+        // DIAMOND_ORE
         worldWeights.add(new BlockWeightInfo(Material.DIAMOND_ORE, 5, 15.0f));
         worldWeights.add(new BlockWeightInfo(Material.DIAMOND_ORE, 5, 15.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_DIAMOND_ORE, 0, 15.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_DIAMOND_ORE, 20, 15.0f));
+
+        // EMERALD_ORE
         worldWeights.add(new BlockWeightInfo(Material.EMERALD_ORE, 5, 22.0f));
         worldWeights.add(new BlockWeightInfo(Material.EMERALD_ORE, 30, 22.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_EMERALD_ORE, 0, 22.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_EMERALD_ORE, 20, 22.0f));
+
+        // LAPIS_ORE
         worldWeights.add(new BlockWeightInfo(Material.LAPIS_ORE, 0, 8.0f));
         worldWeights.add(new BlockWeightInfo(Material.LAPIS_ORE, 15, 2.5f));
         worldWeights.add(new BlockWeightInfo(Material.LAPIS_ORE, 30, 8.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_LAPIS_ORE, 0, 8.0f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_LAPIS_ORE, 20, 2.5f));
+        worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_LAPIS_ORE, 40, 8.0f));
+
 
         weightsConfiguration.addDefault("world", worldWeights);
 
