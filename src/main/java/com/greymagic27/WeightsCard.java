@@ -75,7 +75,8 @@ public class WeightsCard {
         worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_LAPIS_ORE, 40, 8.0f));
 
 
-        weightsConfiguration.addDefault("world", worldWeights);
+        weightsConfiguration.addDefault("wild", worldWeights);
+        weightsConfiguration.addDefault("general", worldWeights);
 
         List<BlockWeightInfo> netherWeights = new ArrayList<>();
         netherWeights.add(new BlockWeightInfo(Material.NETHER_QUARTZ_ORE, 5, 5.0f));
@@ -85,7 +86,7 @@ public class WeightsCard {
         netherWeights.add(new BlockWeightInfo(Material.ANCIENT_DEBRIS, 0, 22.0f));
         netherWeights.add(new BlockWeightInfo(Material.ANCIENT_DEBRIS, 255, 22.0f));
 
-        weightsConfiguration.addDefault("world_nether", netherWeights);
+        weightsConfiguration.addDefault("nether", netherWeights);
     }
 
     public static void setup(String pluginName) //Finds or generates custom config file
