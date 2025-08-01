@@ -12,8 +12,9 @@
 #AXH will only monitor player behaviour in order to detect xrays in certain worlds. Only nether and overworld world
 #types will be considered from following lists:
 TrackWorlds:
-  - 'world'
-  - 'world_nether'
+  - 'general'
+  - 'wild'
+  - 'nether'
 
 #The following values are to be balanced depending on the world's mineral density. Default values should be ok for
 #regular mineral generation. Set to 0 to ignore. Negative values will reduce player suspicion and/or cause unintended
@@ -60,7 +61,7 @@ MinimumBlocksMinedToNextVein: 10
 #Ignore mined blocks above following altitude in the overworld (default value should be ok):
 IgnoreHigherThanOverworldAltitude: 65
 #Ignore mined blocks above following altitude in the nether (default value should be ok):
-IgnoreHigherThanNetherAltitude: 120
+IgnoreHigherThanNetherAltitude: 240
 
 #------------------------------------------------------
 #AUTOMATIC XRAYER HANDLING & PUNISHMENT CONFIGURATIONS:
@@ -69,11 +70,11 @@ IgnoreHigherThanNetherAltitude: 120
 #If set to true, the player's items will be stored (even before a configurable clense) which will later be revisable.
 #This includes HotBar, OffHand, Inventory and Equipment.
 #(View "STORAGE CONFIGURATION" for details on how the persistent memory storage can be configured)
-StoreCopy: true
+StoreCopy: false
 
 #If set to true, all of the player's items will be erased. This includes HotBar, OffHand, Inventory and Equipment.
 #Warning: This should be set to true if StoreCopy is true, else player absolving will result in duplications:
-ClensePlayerItems: true
+ClensePlayerItems: false
 
 #If set to true, players punished for xraying will receive a message ("PlayerMessageOnXray" in locale.yml) when detected
 #for xraying.
@@ -97,7 +98,17 @@ NullifySuspicionAferPunish: true
 #Set the array of commands to empty like this: CommandsExecutedOnXrayerDetected: [] , if you wish to disable command
 #executions for the case.
 #Available placeholders for following arrays and strings (Caps sensitive): {PlayerName}, {TimesDetected}
-CommandsExecutedOnXrayerDetected: []
+CommandsExecutedOnXrayerDetected:
+  1:
+    1: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
+  2:
+    2: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
+  3:
+    3: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
+  4:
+    4: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
+  5:
+    5: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
 
 #Commands that will be executed when an xrayer is absolved, If you wish to add commands, remove the [] and add them
 #on each following line:

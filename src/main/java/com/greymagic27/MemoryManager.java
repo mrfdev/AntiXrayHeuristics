@@ -435,7 +435,7 @@ public class MemoryManager {
                 JSONStoreInFile("[]");
             } //Store empty JSON array in file
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error: ", e);
         }
     }
 
@@ -446,7 +446,7 @@ public class MemoryManager {
             writer.write(toStore);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error: ", e);
         }
     }
 
@@ -455,7 +455,7 @@ public class MemoryManager {
         try {
             return new BufferedReader(new FileReader(mainClassAccess.getDataFolder().getAbsolutePath() + "/data.json")); //Return buffered file contents
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error: ", e);
             return null;
         }
     }
