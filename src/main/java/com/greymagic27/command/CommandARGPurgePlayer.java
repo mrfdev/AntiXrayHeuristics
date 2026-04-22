@@ -11,11 +11,12 @@ import org.bukkit.entity.Player;
 
 public class CommandARGPurgePlayer {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    private static final String ADMIN_PERMISSION = "xrayheuristics.admin";
 
     public static void P(CommandSender sender, String arg, AntiXrayHeuristics mainClass) {
         if (sender instanceof Player player) // Is player
         {
-            if (player.hasPermission("AXH.Commands.PurgePlayer")) {
+            if (player.hasPermission(ADMIN_PERMISSION) || player.hasPermission("AXH.Commands.PurgePlayer")) {
                 Player target = Bukkit.getServer().getPlayer(arg);
                 if (target != null) { // Player online
                     mainClass.vault.XrayerDataRemover(arg, false);

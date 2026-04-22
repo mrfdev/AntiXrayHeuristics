@@ -22,7 +22,7 @@ public class XrayerHandler {
 
     private static void XrayerWarn(String xrayername) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("AXH.XrayerWarning")) {
+            if (player.hasPermission("xrayheuristics.notify") || player.hasPermission("AXH.XrayerWarning")) {
                 String prefix = Objects.requireNonNull(LocaleManager.get().getString("MessagesPrefix"));
                 String rawMsg = LocaleManager.get().getString("AutoHandledPlayer");
                 String substituted = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(rawMsg, xrayername);
@@ -54,7 +54,7 @@ public class XrayerHandler {
                         mainClass.vault.AddXrayerHeadToCache(player.getUniqueId());
                     }
 
-                    if (mainClass.getConfig().getBoolean("ClensePlayerItems")) {
+                    if (mainClass.shouldCleansePlayerItems()) {
                         try {
                             player.getInventory().clear();
                             player.getEquipment().clear();
@@ -76,7 +76,7 @@ public class XrayerHandler {
                     }
                 }));
 
-                if (mainClass.getConfig().getBoolean("NullifySuspicionAferPunish")) {
+                if (mainClass.shouldNullifySuspicionAfterPunish()) {
                     mainClass.sessions.remove(player.getName());
                 }
 

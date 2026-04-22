@@ -11,10 +11,11 @@ import org.bukkit.entity.Player;
 
 public class CommandARGVault {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    private static final String ADMIN_PERMISSION = "xrayheuristics.admin";
 
     static void V(CommandSender sender, AntiXrayHeuristics mainClass) {
         if (sender instanceof Player player) {
-            if (player.hasPermission("AXH.Commands.Vault")) {
+            if (player.hasPermission(ADMIN_PERMISSION) || player.hasPermission("AXH.Commands.Vault")) {
                 mainClass.vault.UpdateXrayerInfoLists(player, 0); // Update vault and open UI for player
             } else {
                 Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));

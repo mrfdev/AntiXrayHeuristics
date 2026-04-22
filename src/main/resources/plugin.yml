@@ -1,24 +1,79 @@
-name: AntiXrayHeuristics
+name: @pluginName@
 main: com.greymagic27.AntiXrayHeuristics
-api-version: 1.21.11
-version: ${revision}
-authors: [ __Mithrandir__, Greymagic27 ]
-description: An heuristically based monitor designed to stop and/or punish xray usage.
+version: @version@
+api-version: @targetPaperVersion@
+authors: [__Mithrandir__, Greymagic27, mrfloris]
+depend: [CoreProtect]
+description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVersion@ (API @targetCoreProtectApiVersion@), updated for Paper @targetPaperVersion@.
 commands:
-  AntiXrayHeuristics:
-    description: Does nothing on it's own. Requires further arguments.
-    aliases: axh
-  AXH Reload:
-    description: Will reload the plugin's configuration when specified as axh argument.
-  AXH ResetSuspicion:
-    description: Resets your own, or specified player's suspicion level back to 0.
-  AXH Xrayer:
-    description: Handles a player as xrayer. Should be used on someone you are sure is xraying, or for testing.
-  AXH Vault:
-    description: Opens the Xray Vault GUI showing players registered as xrayers, and, if configured, confiscated inventories when specified as axh argument.
-  AXH Absolve:
-    description: Removes xrayer from xrayer vault and restores belongings.
-  AXH Purge:
-    description: Removes xrayer from xrayer vault.
-  AXH Suspicion:
-    description: TEST
+  xrayer:
+    usage: |
+      /xrayer help
+      /xrayer debug [help|permissions|commands|config|set]
+      /xrayer debug set <key> <value>
+      /xrayer reload
+      /xrayer suspicion [player]
+      /xrayer resetsuspicion [player]
+      /xrayer <player>
+      /xrayer vault
+      /xrayer absolve <player>
+      /xrayer purge <player>
+    description: Review heuristic plugin status, manage suspicious sessions, and administer the xray vault.
+permissions:
+  xrayheuristics.use:
+    description: Allows help output and suspicion lookups.
+    default: op
+    children:
+      AXH.Commands.Suspicion: true
+  xrayheuristics.admin:
+    description: Allows reload, debug pages, vault actions, player handling, and suspicion resets.
+    default: op
+    children:
+      xrayheuristics.use: true
+      AXH.Commands.Reload: true
+      AXH.Commands.ResetSuspicion: true
+      AXH.Commands.Xrayer: true
+      AXH.Commands.Vault: true
+      AXH.Commands.AbsolvePlayer: true
+      AXH.Commands.PurgePlayer: true
+      AXH.Vault.Purge: true
+  xrayheuristics.notify:
+    description: Receives automatic xray-handled warning messages.
+    default: op
+    children:
+      AXH.XrayerWarning: true
+  xrayheuristics.ignore:
+    description: Exempts a player from heuristic tracking.
+    default: false
+    children:
+      AXH.Ignore: true
+  AXH.Commands.Suspicion:
+    description: Legacy permission node for suspicion lookups.
+    default: op
+  AXH.Commands.Reload:
+    description: Legacy permission node for reload access.
+    default: op
+  AXH.Commands.ResetSuspicion:
+    description: Legacy permission node for suspicion resets.
+    default: op
+  AXH.Commands.Xrayer:
+    description: Legacy permission node for manual xray handling.
+    default: op
+  AXH.Commands.Vault:
+    description: Legacy permission node for vault access.
+    default: op
+  AXH.Commands.AbsolvePlayer:
+    description: Legacy permission node for absolving a handled player.
+    default: op
+  AXH.Commands.PurgePlayer:
+    description: Legacy permission node for purging a handled player.
+    default: op
+  AXH.Vault.Purge:
+    description: Legacy permission node for purging the full xrayer vault from the GUI.
+    default: op
+  AXH.XrayerWarning:
+    description: Legacy permission node for automatic warning messages.
+    default: op
+  AXH.Ignore:
+    description: Legacy permission node that bypasses heuristic tracking.
+    default: false

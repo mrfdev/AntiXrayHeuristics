@@ -97,11 +97,16 @@ public class MiningSession { //Contains heuristics tracked per player
             if (suspicionDecreaseAmount > mainClassAccess.absoluteMinimumSuspicionDecrease)
                 suspicionDecreaseAmount = mainClassAccess.absoluteMinimumSuspicionDecrease;
 
-            System.out.println("[AXH Debug]");
-            System.out.println("Player: " + p.getName());
-            System.out.println("Decrease amount: " + suspicionDecreaseAmount);
-            System.out.println("Suspicion level: " + suspicionLevel);
-            System.out.println("--");
+            if (mainClassAccess.isVerboseMiningSessionDebug()) {
+                mainClassAccess.getLogger().info(
+                        "[xrayheuristics debug] player="
+                                + p.getName()
+                                + ", decreaseAmount="
+                                + suspicionDecreaseAmount
+                                + ", suspicionLevel="
+                                + suspicionLevel
+                );
+            }
         }
     }
 

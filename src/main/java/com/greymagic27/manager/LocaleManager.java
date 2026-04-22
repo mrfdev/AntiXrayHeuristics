@@ -7,8 +7,6 @@ package com.greymagic27.manager;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,18 +18,18 @@ public class LocaleManager {
     private static void SetDefaultFileEntries() //Sets the default language entries in English
     {
         //Messages prefix:
-        localeConfiguration.addDefault("MessagesPrefix", "&5[&b1MB Xray&5]");
+        localeConfiguration.addDefault("MessagesPrefix", "&5[&b1MB Heuristics&5]");
 
         //Commands:
         localeConfiguration.addDefault("NoPermissionForCommand", "&bYou do not have permission to execute this command.");
         localeConfiguration.addDefault("PlayerOnlyCommand", "&bYou need to be a player to execute this command without arguments.");
-        localeConfiguration.addDefault("InvalidCMDArg", "&bInvalid command argument.");
+        localeConfiguration.addDefault("InvalidCMDArg", "&bInvalid command argument. Try &f/xrayer help&b.");
         localeConfiguration.addDefault("PlayerNotOnlineOnHandle", "&bPlayer named &e{PlayerName} &bwas not found while attempting to handle as Xrayer. Player must be online.");
-        localeConfiguration.addDefault("Reloaded", "&bAntiXrayHeuristics has reloaded.");
+        localeConfiguration.addDefault("Reloaded", "&bxrayheuristics has reloaded.");
         localeConfiguration.addDefault("PlayerAbsolved", "&bAbsolving player, sending confiscated items back to owner and removing from vault.");
         localeConfiguration.addDefault("PlayerNotOnlineOnAbsolution", "&bPlayer wasn't online. You can only absolve online players to return their items.");
         localeConfiguration.addDefault("PlayerDataPurged", "&bThe Xrayer's data was purged from the xrayer vault.");
-        localeConfiguration.addDefault("PurgeCommandLimit", "&bPurging players through command is currently impossible for players that are not currently connected to the server. You CAN however, purge individual players that are offline through the ingame XrayerVault GUI: /axh v");
+        localeConfiguration.addDefault("PurgeCommandLimit", "&bPurging players through command is currently impossible for players that are not currently connected to the server. You CAN however, purge individual players that are offline through the ingame XrayerVault GUI: /xrayer vault");
         localeConfiguration.addDefault("OwnSuspicionNullified", "&bYour suspicion has been nullified.");
         localeConfiguration.addDefault("PlayerSuspicionNullified", "&a{PlayerName} &b's suspicion has been nullified.");
         localeConfiguration.addDefault("NoOwnSuspicionReset", "&bYou are not suspicious of Xray usage. No suspicion reset applied.");
@@ -67,15 +65,15 @@ public class LocaleManager {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void setup(String pluginName) //Finds or generates custom config file
+    public static void setup(File pluginDataDirectory) //Finds or generates custom config file
     {
-        localeFile = new File(Objects.requireNonNull(Bukkit.getServer().getPluginManager().getPlugin(pluginName)).getDataFolder(), "locale.yml");
+        localeFile = new File(pluginDataDirectory, "locale.yml");
 
         if (!localeFile.exists()) {
             try {
                 localeFile.createNewFile(); //Creates the file
             } catch (IOException e) {
-                System.out.print("[AntiXrayHeuristics] Could not create locale file.");
+                System.out.print("[xrayheuristics] Could not create locale file.");
             }
         }
         localeConfiguration = YamlConfiguration.loadConfiguration(localeFile);
@@ -90,7 +88,7 @@ public class LocaleManager {
         try {
             localeConfiguration.save(localeFile);
         } catch (IOException e) {
-            System.out.print("[AntiXrayHeuristics] Could not save locale file.");
+            System.out.print("[xrayheuristics] Could not save locale file.");
         }
     }
 
@@ -99,9 +97,6 @@ public class LocaleManager {
         localeConfiguration = YamlConfiguration.loadConfiguration(localeFile);
     }
 }
-
-
-
 
 
 

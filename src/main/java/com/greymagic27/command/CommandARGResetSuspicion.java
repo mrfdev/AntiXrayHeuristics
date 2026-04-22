@@ -13,10 +13,11 @@ import org.bukkit.entity.Player;
 
 public class CommandARGResetSuspicion {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    private static final String ADMIN_PERMISSION = "xrayheuristics.admin";
 
     public static void RS(CommandSender sender, AntiXrayHeuristics mainClass) { // Non-parametrized
         if (sender instanceof Player player) {
-            if (player.hasPermission("AXH.Commands.ResetSuspicion")) {
+            if (player.hasPermission(ADMIN_PERMISSION) || player.hasPermission("AXH.Commands.ResetSuspicion")) {
                 MiningSession tempMS = mainClass.sessions.get(player.getName());
                 if (tempMS != null) {
                     mainClass.sessions.remove(player.getName());
@@ -42,7 +43,7 @@ public class CommandARGResetSuspicion {
 
     public static void RS(CommandSender sender, String arg, AntiXrayHeuristics mainClass) { // Parametrized
         if (sender instanceof Player player) {
-            if (player.hasPermission("AXH.Commands.ResetSuspicion")) {
+            if (player.hasPermission(ADMIN_PERMISSION) || player.hasPermission("AXH.Commands.ResetSuspicion")) {
                 MiningSession tempMS = mainClass.sessions.get(arg);
                 if (tempMS != null) {
                     mainClass.sessions.remove(arg);

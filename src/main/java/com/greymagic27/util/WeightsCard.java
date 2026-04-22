@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,6 +38,8 @@ public class WeightsCard {
         worldWeights.add(new BlockWeightInfo(Material.IRON_ORE, 60, 5.0f));
         worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_IRON_ORE, 0, 5.0f));
         worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_IRON_ORE, 30, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.RAW_IRON_BLOCK, 0, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.RAW_IRON_BLOCK, 40, 5.0f));
 
         // GOLD_ORE
         worldWeights.add(new BlockWeightInfo(Material.GOLD_ORE, 5, 5.0f));
@@ -53,6 +53,8 @@ public class WeightsCard {
         worldWeights.add(new BlockWeightInfo(Material.COPPER_ORE, 70, 15.0f));
         worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COPPER_ORE, 20, 2.5f));
         worldWeights.add(new BlockWeightInfo(Material.DEEPSLATE_COPPER_ORE, 50, 2.5f));
+        worldWeights.add(new BlockWeightInfo(Material.RAW_COPPER_BLOCK, 0, 5.0f));
+        worldWeights.add(new BlockWeightInfo(Material.RAW_COPPER_BLOCK, 40, 5.0f));
 
         // DIAMOND_ORE
         worldWeights.add(new BlockWeightInfo(Material.DIAMOND_ORE, 5, 15.0f));
@@ -83,21 +85,23 @@ public class WeightsCard {
         netherWeights.add(new BlockWeightInfo(Material.NETHER_QUARTZ_ORE, 60, 5.0f));
         netherWeights.add(new BlockWeightInfo(Material.NETHER_GOLD_ORE, 0, 5.0f));
         netherWeights.add(new BlockWeightInfo(Material.NETHER_GOLD_ORE, 255, 5.0f));
+        netherWeights.add(new BlockWeightInfo(Material.GILDED_BLACKSTONE, 0, 5.0f));
+        netherWeights.add(new BlockWeightInfo(Material.GILDED_BLACKSTONE, 255, 5.0f));
         netherWeights.add(new BlockWeightInfo(Material.ANCIENT_DEBRIS, 0, 22.0f));
         netherWeights.add(new BlockWeightInfo(Material.ANCIENT_DEBRIS, 255, 22.0f));
 
         weightsConfiguration.addDefault("nether", netherWeights);
     }
 
-    public static void setup(String pluginName) //Finds or generates custom config file
+    public static void setup(File pluginDataDirectory) //Finds or generates custom config file
     {
-        weightsFile = new File(Objects.requireNonNull(Bukkit.getServer().getPluginManager().getPlugin(pluginName)).getDataFolder(), "weights.yml");
+        weightsFile = new File(pluginDataDirectory, "weights.yml");
 
         if (!weightsFile.exists()) {
             try {
                 weightsFile.createNewFile(); //Creates the file
             } catch (IOException e) {
-                System.out.print("[AntiXrayHeuristics] Could not create weights file.");
+                System.out.print("[xrayheuristics] Could not create weights file.");
             }
         }
         weightsConfiguration = YamlConfiguration.loadConfiguration(weightsFile);
@@ -112,7 +116,7 @@ public class WeightsCard {
         try {
             weightsConfiguration.save(weightsFile);
         } catch (IOException e) {
-            System.out.print("[AntiXrayHeuristics] Could not save weights file.");
+            System.out.print("[xrayheuristics] Could not save weights file.");
         }
     }
 
@@ -121,9 +125,6 @@ public class WeightsCard {
         weightsConfiguration = YamlConfiguration.loadConfiguration(weightsFile);
     }
 }
-
-
-
 
 
 

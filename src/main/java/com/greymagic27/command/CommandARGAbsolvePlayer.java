@@ -12,11 +12,12 @@ import org.bukkit.entity.Player;
 
 public class CommandARGAbsolvePlayer {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    private static final String ADMIN_PERMISSION = "xrayheuristics.admin";
 
     public static void A(CommandSender sender, String arg, AntiXrayHeuristics mainClass) {
         if (sender instanceof Player player) //Is player
         {
-            if (player.hasPermission("AXH.Commands.AbsolvePlayer")) {
+            if (player.hasPermission(ADMIN_PERMISSION) || player.hasPermission("AXH.Commands.AbsolvePlayer")) {
                 Player target = Bukkit.getServer().getPlayer(arg);
                 if (target != null) { //Player online
                     final String targetUUID = target.getUniqueId().toString();

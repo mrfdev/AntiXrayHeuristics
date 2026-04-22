@@ -1,0 +1,12 @@
+2026-04-23
+
+Future features / wishes / changes
+
+- Refactor internal naming so the codebase, package names, and class names are no longer a mix of `AntiXrayHeuristics` and `xrayheuristics`.
+- Add automated tests for suspicion accumulation, vein grouping, deepslate/raw-block handling, and the CoreProtect hook.
+- Expand `/xrayer debug set` to cover more config, locale, and GUI-related values once those need live editing.
+- Review and retune the current suspicion weights on live server data, especially for `RAW_IRON_BLOCK`, `RAW_COPPER_BLOCK`, and `GILDED_BLACKSTONE`.
+- Add a richer `/xrayer debug health` or `/xrayer debug sessions` page if session-level inspection becomes useful.
+- Keep Gradle as the single supported build path unless there is a real need to reintroduce Maven later.
+- Review old typo config keys after the server has fully migrated to `CleansePlayerItems` and `NullifySuspicionAfterPunish`.
+- Keep `README.md` and `/xrayer help` aligned whenever commands, permissions, placeholders, or build targets change.

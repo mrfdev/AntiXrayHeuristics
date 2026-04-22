@@ -431,11 +431,15 @@ public class MemoryManager {
 
     //Java File I.O. functions
 
+    private @NonNull File getJsonDataFile() {
+        return mainClassAccess.getPluginDataFile("data.json");
+    }
+
     public void JSONFileCreateIfNotExists() //Returns true if file was created
     {
         try {
             //Create file (will do nothing if it already exists):
-            if (new File(mainClassAccess.getDataFolder().getAbsolutePath() + "/data.json").createNewFile()) {
+            if (getJsonDataFile().createNewFile()) {
                 JSONStoreInFile("[]");
             } //Store empty JSON array in file
         } catch (IOException e) {
@@ -446,7 +450,7 @@ public class MemoryManager {
     private void JSONStoreInFile(String toStore) //Writes JSON content as string to file
     {
         try {
-            FileWriter writer = new FileWriter(mainClassAccess.getDataFolder().getAbsolutePath() + "/data.json");
+            FileWriter writer = new FileWriter(getJsonDataFile());
             writer.write(toStore);
             writer.close();
         } catch (IOException e) {
@@ -457,7 +461,7 @@ public class MemoryManager {
     private @Nullable BufferedReader JSONGetFromFile() //Gets JSON content from file in BufferedReader format
     {
         try {
-            return new BufferedReader(new FileReader(mainClassAccess.getDataFolder().getAbsolutePath() + "/data.json")); //Return buffered file contents
+            return new BufferedReader(new FileReader(getJsonDataFile())); //Return buffered file contents
         } catch (IOException e) {
             log.error("Error: ", e);
             return null;

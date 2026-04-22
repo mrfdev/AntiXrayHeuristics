@@ -44,7 +44,7 @@ public class EventClick implements Listener {
                     switch (e.getSlot()) {
                         case 48: {
                             //Purge all xrayers:
-                            if (e.getWhoClicked().hasPermission("AXH.Vault.Purge")) {
+                            if (e.getWhoClicked().hasPermission("xrayheuristics.admin") || e.getWhoClicked().hasPermission("AXH.Vault.Purge")) {
                                 mainClassAccess.vault.PurgeAllXrayersAndRefreshVault();
                             } else {
                                 Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));
@@ -93,7 +93,7 @@ public class EventClick implements Listener {
                         }
                         case 53: {
                             //Absolve player:
-                            if (e.getWhoClicked().hasPermission("AXH.Commands.AbsolvePlayer")) {
+                            if (e.getWhoClicked().hasPermission("xrayheuristics.admin") || e.getWhoClicked().hasPermission("AXH.Commands.AbsolvePlayer")) {
                                 final String xrayerUUID = mainClassAccess.vault.GetInspectedXrayer(playerWhoClicked);
                                 //Return inventory to player, and do the rest if player was online:
                                 Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(xrayerUUID, belongings -> {
@@ -113,7 +113,7 @@ public class EventClick implements Listener {
                         }
                         case 51: {
                             //Purge player:
-                            if (e.getWhoClicked().hasPermission("AXH.Commands.PurgePlayer")) {
+                            if (e.getWhoClicked().hasPermission("xrayheuristics.admin") || e.getWhoClicked().hasPermission("AXH.Commands.PurgePlayer")) {
                                 mainClassAccess.vault.XrayerDataRemover(playerWhoClicked, true);
                             } else {
                                 Component noPerm = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("NoPermissionForCommand")));
