@@ -53,7 +53,7 @@ public final class CoreProtectHook {
 
         this.coreProtect = coreProtectPlugin;
         this.api = candidateApi;
-        this.statusMessage = "Hooked into CoreProtect " + coreProtectPlugin.getDescription().getVersion() + " (API " + apiVersion + ").";
+        this.statusMessage = "Hooked into CoreProtect " + coreProtectPlugin.getPluginMeta().getVersion() + " (API " + apiVersion + ").";
         return true;
     }
 
@@ -70,7 +70,7 @@ public final class CoreProtectHook {
     }
 
     public String getCoreProtectVersion() {
-        return coreProtect != null ? coreProtect.getDescription().getVersion() : "unavailable";
+        return coreProtect != null ? coreProtect.getPluginMeta().getVersion() : "unavailable";
     }
 
     public String getCoreProtectApiVersion() {

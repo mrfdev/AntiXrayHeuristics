@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -104,7 +105,12 @@ public class WeightsCard {
                 System.out.print("[xrayheuristics] Could not create weights file.");
             }
         }
-        weightsConfiguration = YamlConfiguration.loadConfiguration(weightsFile);
+        try {
+            weightsConfiguration = YamlFiles.load(weightsFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            weightsConfiguration = new YamlConfiguration();
+            System.out.print("[xrayheuristics] Could not load weights file.");
+        }
         SetDefaultFileEntries(); //Sets default entries
     }
 
@@ -122,10 +128,14 @@ public class WeightsCard {
 
     public static void reload() //Used from ARGReload AXH command argument in order to reload the weights file
     {
-        weightsConfiguration = YamlConfiguration.loadConfiguration(weightsFile);
+        try {
+            weightsConfiguration = YamlFiles.load(weightsFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            weightsConfiguration = new YamlConfiguration();
+            System.out.print("[xrayheuristics] Could not reload weights file.");
+        }
     }
 }
-
 
 
 

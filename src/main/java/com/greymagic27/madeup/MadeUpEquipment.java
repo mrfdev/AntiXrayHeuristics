@@ -59,13 +59,15 @@ public class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public @NonNull ItemStack getItemInHand() {
-        return RandomItemStackGenerator.GetRandomItemStack();
+        return getItemInMainHand();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setItemInHand(ItemStack stack) {
-
+        setItemInMainHand(stack);
     }
 
     @Override
@@ -144,13 +146,15 @@ public class MadeUpEquipment implements EntityEquipment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public float getItemInHandDropChance() {
-        return 0;
+        return getItemInMainHandDropChance();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setItemInHandDropChance(float chance) {
-
+        setItemInMainHandDropChance(chance);
     }
 
     @Override

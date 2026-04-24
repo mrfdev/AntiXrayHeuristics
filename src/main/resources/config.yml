@@ -1,7 +1,8 @@
 #------------------------------------------------------------------------------------------------------
 #                         1MB XRAYHEURISTICS / XRAYER
 #
-#    Heuristic CoreProtect add-on for Paper 26.1.2 / Java 25.
+#    Heuristic CoreProtect add-on compiled against Paper 26.1.2 / Java 25.
+#    plugin.yml declares api-version 1.21.11 for shared-jar compatibility.
 #    Default values are tuned for vanilla-like ore generation.
 #------------------------------------------------------------------------------------------------------
 

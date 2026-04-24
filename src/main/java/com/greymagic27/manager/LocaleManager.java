@@ -4,9 +4,11 @@
 
 package com.greymagic27.manager;
 
+import com.greymagic27.util.YamlFiles;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -76,7 +78,12 @@ public class LocaleManager {
                 System.out.print("[xrayheuristics] Could not create locale file.");
             }
         }
-        localeConfiguration = YamlConfiguration.loadConfiguration(localeFile);
+        try {
+            localeConfiguration = YamlFiles.load(localeFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            localeConfiguration = new YamlConfiguration();
+            System.out.print("[xrayheuristics] Could not load locale file.");
+        }
         SetDefaultFileEntries(); //Sets default entries
     }
 
@@ -94,10 +101,14 @@ public class LocaleManager {
 
     public static void reload() //Used from ARGReload AXH command argument in order to reload the language file
     {
-        localeConfiguration = YamlConfiguration.loadConfiguration(localeFile);
+        try {
+            localeConfiguration = YamlFiles.load(localeFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            localeConfiguration = new YamlConfiguration();
+            System.out.print("[xrayheuristics] Could not reload locale file.");
+        }
     }
 }
-
 
 
 

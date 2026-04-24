@@ -9,9 +9,10 @@ def internalPluginName = 'xrayheuristics'
 def javaTarget = 25
 def targetPaperVersion = '26.1.2'
 def targetPaperApiBuild = '19'
+def declaredApiVersion = '1.21.11'
 def targetCoreProtectVersion = '23.4'
 def targetCoreProtectApiVersion = '11'
-def localCoreProtectJar = file('servers/Server-Two-Paper-26.1.2/plugins/CoreProtect-23.4b.jar')
+def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/shared-plugins/CoreProtect-23.4b.jar')
 def versionPropertiesFile = file('version.properties')
 def versionProperties = new Properties()
 
@@ -53,9 +54,9 @@ configurations {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-alpha")
-    if (localCoreProtectJar.exists()) {
-        compileOnly(files(localCoreProtectJar))
-        testRuntimeOnly(files(localCoreProtectJar))
+    if (sharedCoreProtectJar.exists()) {
+        compileOnly(files(sharedCoreProtectJar))
+        testRuntimeOnly(files(sharedCoreProtectJar))
     } else {
         compileOnly("net.coreprotect:coreprotect:${targetCoreProtectVersion}")
         testRuntimeOnly("net.coreprotect:coreprotect:${targetCoreProtectVersion}")
@@ -78,6 +79,8 @@ processResources {
     inputs.properties([
             pluginName               : internalPluginName.toString(),
             targetPaperVersion       : targetPaperVersion.toString(),
+            declaredApiVersion       : declaredApiVersion.toString(),
+            javaTarget               : javaTarget.toString(),
             version                  : version.toString(),
             targetCoreProtectVersion : targetCoreProtectVersion.toString(),
             targetCoreProtectApiVersion: targetCoreProtectApiVersion.toString()
@@ -87,6 +90,8 @@ processResources {
         filter ReplaceTokens, tokens: [
                 pluginName                : internalPluginName.toString(),
                 targetPaperVersion        : targetPaperVersion.toString(),
+                declaredApiVersion        : declaredApiVersion.toString(),
+                javaTarget                : javaTarget.toString(),
                 version                   : version.toString(),
                 targetCoreProtectVersion  : targetCoreProtectVersion.toString(),
                 targetCoreProtectApiVersion: targetCoreProtectApiVersion.toString()
@@ -101,6 +106,19 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register('printBuildConfig') {
+    doLast {
+        println "Artifact name: ${artifactName}"
+        println "Plugin name: ${internalPluginName}"
+        println "Version: ${pluginBuildVersion}"
+        println "Java target: ${javaTarget}"
+        println "Compiled against Paper API: ${targetPaperVersion}.build.${targetPaperApiBuild}-alpha"
+        println "Declared plugin api-version: ${declaredApiVersion}"
+        println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
+        println "Shared CoreProtect jar: ${sharedCoreProtectJar}"
+    }
 }
 
 tasks.jar {

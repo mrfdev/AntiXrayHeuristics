@@ -103,6 +103,7 @@ public final class CommandARGDebug {
         sendLine(sender, "&7Build number: &f" + extractBuildPart(pluginVersion, 1, "unknown"));
         sendLine(sender, "&7Compiled Java: &f" + extractBuildPart(pluginVersion, 2, "j??"));
         sendLine(sender, "&7Compiled Paper: &f" + extractBuildPart(pluginVersion, 3, "26.1.2"));
+        sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
         sendLine(sender, "&7Runtime Java: &f" + System.getProperty("java.version"));
         sendLine(sender, "&7Server: &f" + Bukkit.getName() + " " + Bukkit.getVersion());
         sendLine(sender, "&7CoreProtect hooked: &f" + yesNo(hook.isHooked()));
@@ -111,6 +112,7 @@ public final class CommandARGDebug {
         sendLine(sender, "&7CoreProtect jar: &f" + hook.getJarPath());
         sendLine(sender, "&7CoreProtect data: &f" + hook.getDataFolderPath());
         sendLine(sender, "&7Hook status: &f" + hook.getStatusMessage());
+        sendLine(sender, "&7Description: &f" + plugin.getPluginMeta().getDescription());
         sendLine(sender, "&7Storage type: &f" + plugin.getConfig().getString("StorageType", "JSON"));
         sendLine(sender, "&7Tracked worlds: &f" + join(plugin.getConfig().getStringList("TrackWorlds")));
         sendLine(sender, "&7Suspicion threshold: &f" + DECIMAL_FORMAT.format(plugin.getSuspicionThreshold()));

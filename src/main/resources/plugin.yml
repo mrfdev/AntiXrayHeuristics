@@ -1,10 +1,10 @@
 name: @pluginName@
 main: com.greymagic27.AntiXrayHeuristics
 version: @version@
-api-version: @targetPaperVersion@
+api-version: @declaredApiVersion@
 authors: [__Mithrandir__, Greymagic27, mrfloris]
 depend: [CoreProtect]
-description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVersion@ (API @targetCoreProtectApiVersion@), updated for Paper @targetPaperVersion@.
+description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVersion@ (API @targetCoreProtectApiVersion@), compiled against Paper @targetPaperVersion@ and declaring api-version @declaredApiVersion@.
 commands:
   xrayer:
     usage: |

@@ -4,7 +4,8 @@
 
 This branch is aligned to:
 
-- Paper `26.1.2`
+- Paper API compile target `26.1.2`
+- Declared `plugin.yml` api-version floor `1.21.11`
 - Java `25`
 - CoreProtect `23.4`
 - CoreProtect API `11`
@@ -14,7 +15,9 @@ The canonical command is `/xrayer`. Legacy `AXH.*` permission nodes are still ac
 
 ## Compatibility
 
-- Server engine: Paper `26.1.2`
+- Server engine targets: Paper `1.21.11` and Paper `26.1.2`
+- Compiled against: Paper API `26.1.2`
+- Declared in `plugin.yml`: `api-version: 1.21.11`
 - Java runtime for building and running: Java `25`
 - Required dependency: CoreProtect `23.4` with API `11`
 - Internal plugin name for `/ver`: `xrayheuristics`
@@ -101,7 +104,7 @@ These placeholders are currently used by configurable command strings:
 Use Gradle with Java `25`:
 
 ```bash
-gradle build
+gradle build printBuildConfig
 ```
 
 That writes the next jar to the same pattern:
@@ -112,12 +115,22 @@ build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar
 
 After a successful jar build, `version.properties` is updated automatically, so the next local build will produce the next build number and keep the older jar in `build/libs/`.
 
-## Install / Test Notes
+## Test Runner
 
-1. Run a Paper `26.1.2` server on Java `25`.
-2. Put `CoreProtect-23.4b.jar` in the server `plugins/` folder.
-3. Put the latest `1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar` in the same `plugins/` folder.
-4. Start the server and confirm `/ver xrayheuristics` reports the expected version and CoreProtect target text.
+Use the centralized Paper runner from:
+
+```text
+/Users/floris/Projects/Codex/servers/run-test-server
+```
+
+Example foreground test runs:
+
+```bash
+/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar --foreground
+/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar --foreground
+```
+
+The same jar is compiled against Paper `26.1.2`, but it declares `api-version: 1.21.11` so it can be exercised on both Paper versions.
 
 The plugin stores its own files in:
 
@@ -125,7 +138,9 @@ The plugin stores its own files in:
 plugins/1MB-XRayHeuristics/
 ```
 
-The local `servers/` directory is ignored by Git. In this repo it is only used as a local development/test server location. If `servers/Server-Two-Paper-26.1.2/plugins/CoreProtect-23.4b.jar` exists, Gradle uses that local jar as the compile-only CoreProtect reference; otherwise it falls back to the published CoreProtect dependency.
+This repo should not rely on a local `./servers/` folder for building or testing. The path is ignored by Git, but the intended test flow is the centralized runner above.
+
+If `/Users/floris/Projects/Codex/servers/shared-plugins/CoreProtect-23.4b.jar` exists, Gradle uses that centralized jar for compile/test classpaths. Otherwise it falls back to the published CoreProtect dependency coordinates.
 
 ## Notes
 
@@ -133,6 +148,7 @@ The local `servers/` directory is ignored by Git. In this repo it is only used a
 - The live suspicion threshold is now configurable through `SuspicionThreshold` and through `/xrayer debug set suspicion-threshold <value>`.
 - The heuristic tracker now covers raw iron blocks, raw copper blocks, gilded blackstone, ancient debris, and the deepslate ore families.
 - The plugin now requires CoreProtect at startup and reports whether it successfully hooked into CoreProtect `23.4` API `11`.
+- `/xrayer help`, `/xrayer debug`, `plugin.yml`, and `printBuildConfig` now distinguish between the Paper `26.1.2` compile target and the declared `1.21.11` api-version floor.
 - `CleansePlayerItems` and `NullifySuspicionAfterPunish` are the corrected config names, while the old typo keys are still read for backwards compatibility.
 - `/ver xrayheuristics` now reports the `2.0.0-0xx-j25-26.1.2` version line and a description that references CoreProtect `23.4` instead of the older `1.2.6` text.
 

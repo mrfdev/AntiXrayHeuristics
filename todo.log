@@ -8,5 +8,6 @@ Future features / wishes / changes
 - Review and retune the current suspicion weights on live server data, especially for `RAW_IRON_BLOCK`, `RAW_COPPER_BLOCK`, and `GILDED_BLACKSTONE`.
 - Add a richer `/xrayer debug health` or `/xrayer debug sessions` page if session-level inspection becomes useful.
 - Keep Gradle as the single supported build path unless there is a real need to reintroduce Maven later.
+- Keep the centralized `/Users/floris/Projects/Codex/servers/run-test-server` workflow current if the shared Paper cache layout changes.
 - Review old typo config keys after the server has fully migrated to `CleansePlayerItems` and `NullifySuspicionAfterPunish`.
 - Keep `README.md` and `/xrayer help` aligned whenever commands, permissions, placeholders, or build targets change.

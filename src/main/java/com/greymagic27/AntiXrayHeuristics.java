@@ -16,6 +16,7 @@ import com.greymagic27.manager.MemoryManager;
 import com.greymagic27.util.BlockWeightInfo;
 import com.greymagic27.util.MiningSession;
 import com.greymagic27.util.WeightsCard;
+import com.greymagic27.util.YamlFiles;
 import com.greymagic27.xrayer.XrayerHandler;
 import com.greymagic27.xrayer.XrayerVault;
 import java.io.File;
@@ -34,6 +35,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -136,7 +138,12 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         if (configFile == null) {
             configFile = getPluginDataFile("config.yml");
         }
-        configuration = YamlConfiguration.loadConfiguration(configFile);
+        try {
+            configuration = YamlFiles.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            configuration = new YamlConfiguration();
+            getLogger().log(Level.SEVERE, "Could not load config.yml.", e);
+        }
 
         try (var defaultConfigReader = getTextResource("config.yml")) {
             if (defaultConfigReader != null) {

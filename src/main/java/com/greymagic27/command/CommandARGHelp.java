@@ -15,10 +15,13 @@ public final class CommandARGHelp {
     }
 
     public static void sendHelp(@NonNull CommandSender sender, @NonNull AntiXrayHeuristics plugin) {
+        String pluginVersion = plugin.getPluginMeta().getVersion();
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&d&l1MB XRayHeuristics / " + ROOT);
-        sendLine(sender, "&7Version: &f" + plugin.getPluginMeta().getVersion());
+        sendLine(sender, "&7Version: &f" + pluginVersion);
         sendLine(sender, "&7Plugin: &f" + plugin.getPluginMeta().getName());
+        sendLine(sender, "&7Compiled Paper target: &f" + extractBuildPart(pluginVersion, 3, "26.1.2"));
+        sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
         sendLine(sender, "&7CoreProtect target: &f23.4 (API 11)");
         sendLine(sender, "&7Use &f/" + ROOT + " debug &7for live status and hook information.");
         sendLine(sender, "&8&m------------------------------------------------");
@@ -52,5 +55,10 @@ public final class CommandARGHelp {
     static void sendLine(@NonNull CommandSender sender, @NonNull String line) {
         Component component = LEGACY_SERIALIZER.deserialize(line);
         sender.sendMessage(component);
+    }
+
+    private static @NonNull String extractBuildPart(@NonNull String version, int index, @NonNull String fallback) {
+        String[] parts = version.split("-");
+        return parts.length > index ? parts[index] : fallback;
     }
 }
