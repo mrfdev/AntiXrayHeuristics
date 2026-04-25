@@ -223,7 +223,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
         this.coreProtectHook = new CoreProtectHook(this);
         if (!refreshCoreProtectHook()) {
-            getLogger().severe("CoreProtect 23.4 with API 11 is required. Disabling plugin.");
+            getLogger().severe("CoreProtect API 11 or newer is required. Tested with CoreProtect 24.0-dev1 (API 12). Disabling plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }

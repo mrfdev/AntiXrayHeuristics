@@ -10,9 +10,10 @@ def javaTarget = 25
 def targetPaperVersion = '26.1.2'
 def targetPaperApiBuild = '19'
 def declaredApiVersion = '1.21.11'
-def targetCoreProtectVersion = '23.4'
-def targetCoreProtectApiVersion = '11'
-def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/shared-plugins/CoreProtect-23.4b.jar')
+def targetCoreProtectVersion = '24.0-dev1'
+def targetCoreProtectApiVersion = '12'
+def fallbackCoreProtectVersion = '23.4'
+def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/cache/Paper-26.1.2/plugins/CoreProtect-24.0-dev1.jar')
 def versionPropertiesFile = file('version.properties')
 def versionProperties = new Properties()
 
@@ -58,8 +59,8 @@ dependencies {
         compileOnly(files(sharedCoreProtectJar))
         testRuntimeOnly(files(sharedCoreProtectJar))
     } else {
-        compileOnly("net.coreprotect:coreprotect:${targetCoreProtectVersion}")
-        testRuntimeOnly("net.coreprotect:coreprotect:${targetCoreProtectVersion}")
+        compileOnly("net.coreprotect:coreprotect:${fallbackCoreProtectVersion}")
+        testRuntimeOnly("net.coreprotect:coreprotect:${fallbackCoreProtectVersion}")
     }
     library("org.apache.commons:commons-dbcp2:2.14.0")
     compileOnly("net.kyori:adventure-api:4.26.1")
@@ -118,6 +119,7 @@ tasks.register('printBuildConfig') {
         println "Declared plugin api-version: ${declaredApiVersion}"
         println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
         println "Shared CoreProtect jar: ${sharedCoreProtectJar}"
+        println "CoreProtect Maven fallback: ${fallbackCoreProtectVersion}"
     }
 }
 

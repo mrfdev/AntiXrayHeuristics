@@ -22,7 +22,7 @@ public final class CommandARGHelp {
         sendLine(sender, "&7Plugin: &f" + plugin.getPluginMeta().getName());
         sendLine(sender, "&7Compiled Paper target: &f" + extractBuildPart(pluginVersion, 3, "26.1.2"));
         sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
-        sendLine(sender, "&7CoreProtect target: &f23.4 (API 11)");
+        sendLine(sender, "&7CoreProtect target: &f24.0-dev1 (API 12)");
         sendLine(sender, "&7Use &f/" + ROOT + " debug &7for live status and hook information.");
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&f/" + ROOT + " help &7- Show this help page.");

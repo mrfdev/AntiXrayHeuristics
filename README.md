@@ -7,8 +7,8 @@ This branch is aligned to:
 - Paper API compile target `26.1.2`
 - Declared `plugin.yml` api-version floor `1.21.11`
 - Java `25`
-- CoreProtect `23.4`
-- CoreProtect API `11`
+- CoreProtect `24.0-dev1`
+- CoreProtect API `12`
 - Artifact pattern `build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar`
 
 The canonical command is `/xrayer`. Legacy `AXH.*` permission nodes are still accepted, but `/axh` and `/AntiXrayHeuristics` are no longer exposed as commands.
@@ -19,7 +19,8 @@ The canonical command is `/xrayer`. Legacy `AXH.*` permission nodes are still ac
 - Compiled against: Paper API `26.1.2`
 - Declared in `plugin.yml`: `api-version: 1.21.11`
 - Java runtime for building and running: Java `25`
-- Required dependency: CoreProtect `23.4` with API `11`
+- Required dependency target: CoreProtect `24.0-dev1` with API `12`
+- Minimum accepted CoreProtect API at runtime: `11`
 - Internal plugin name for `/ver`: `xrayheuristics`
 - Current plugin version: `2.0.0`
 - Build numbering: each successful `gradle build` writes a new jar name and increments `version.properties`
@@ -140,17 +141,17 @@ plugins/1MB-XRayHeuristics/
 
 This repo should not rely on a local `./servers/` folder for building or testing. The path is ignored by Git, but the intended test flow is the centralized runner above.
 
-If `/Users/floris/Projects/Codex/servers/shared-plugins/CoreProtect-23.4b.jar` exists, Gradle uses that centralized jar for compile/test classpaths. Otherwise it falls back to the published CoreProtect dependency coordinates.
+If `/Users/floris/Projects/Codex/servers/cache/Paper-26.1.2/plugins/CoreProtect-24.0-dev1.jar` exists, Gradle uses that centralized jar for compile/test classpaths. Otherwise it falls back to the published CoreProtect `23.4` dependency coordinates for local build resilience.
 
 ## Notes
 
 - The plugin now exposes `/xrayer debug`, `/xrayer debug permissions`, `/xrayer debug commands`, `/xrayer debug config`, and `/xrayer debug set <key> <value>`.
 - The live suspicion threshold is now configurable through `SuspicionThreshold` and through `/xrayer debug set suspicion-threshold <value>`.
 - The heuristic tracker now covers raw iron blocks, raw copper blocks, gilded blackstone, ancient debris, and the deepslate ore families.
-- The plugin now requires CoreProtect at startup and reports whether it successfully hooked into CoreProtect `23.4` API `11`.
+- The plugin now requires CoreProtect API `11` or newer at startup and reports the exact CoreProtect version and API level it successfully hooked at runtime.
 - `/xrayer help`, `/xrayer debug`, `plugin.yml`, and `printBuildConfig` now distinguish between the Paper `26.1.2` compile target and the declared `1.21.11` api-version floor.
 - `CleansePlayerItems` and `NullifySuspicionAfterPunish` are the corrected config names, while the old typo keys are still read for backwards compatibility.
-- `/ver xrayheuristics` now reports the `2.0.0-0xx-j25-26.1.2` version line and a description that references CoreProtect `23.4` instead of the older `1.2.6` text.
+- `/ver xrayheuristics` now reports the `2.0.0-0xx-j25-26.1.2` version line and a description that references the current CoreProtect `24.0-dev1` / API `12` target.
 
 ## Credits
 
