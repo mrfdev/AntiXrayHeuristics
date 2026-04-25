@@ -8,16 +8,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class WeightsCard {
 
     private static File weightsFile;
     private static FileConfiguration weightsConfiguration;
+
+    private static Logger logger() {
+        return JavaPlugin.getProvidingPlugin(WeightsCard.class).getLogger();
+    }
 
     private static void SetDefaultFileEntries() //Sets the default language entries in english
     {
@@ -102,14 +109,14 @@ public class WeightsCard {
             try {
                 weightsFile.createNewFile(); //Creates the file
             } catch (IOException e) {
-                System.out.print("[xrayheuristics] Could not create weights file.");
+                logger().log(Level.WARNING, "Could not create weights file.", e);
             }
         }
         try {
             weightsConfiguration = YamlFiles.load(weightsFile);
         } catch (IOException | InvalidConfigurationException e) {
             weightsConfiguration = new YamlConfiguration();
-            System.out.print("[xrayheuristics] Could not load weights file.");
+            logger().log(Level.WARNING, "Could not load weights file.", e);
         }
         SetDefaultFileEntries(); //Sets default entries
     }
@@ -122,7 +129,7 @@ public class WeightsCard {
         try {
             weightsConfiguration.save(weightsFile);
         } catch (IOException e) {
-            System.out.print("[xrayheuristics] Could not save weights file.");
+            logger().log(Level.WARNING, "Could not save weights file.", e);
         }
     }
 
@@ -132,11 +139,10 @@ public class WeightsCard {
             weightsConfiguration = YamlFiles.load(weightsFile);
         } catch (IOException | InvalidConfigurationException e) {
             weightsConfiguration = new YamlConfiguration();
-            System.out.print("[xrayheuristics] Could not reload weights file.");
+            logger().log(Level.WARNING, "Could not reload weights file.", e);
         }
     }
 }
-
 
 
 

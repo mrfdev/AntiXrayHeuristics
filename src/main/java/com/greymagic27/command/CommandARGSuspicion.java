@@ -27,7 +27,10 @@ public class CommandARGSuspicion {
             MiningSession tempMS = mainClass.sessions.get(player.getName());
             if (tempMS != null) player.sendMessage("Your suspicion level: " + tempMS.GetSuspicionLevel());
             else player.sendMessage("You are not suspicious of Xray usage. No suspicion level available.");
-        } else System.out.println(LocaleManager.get().getString("PlayerOnlyCommand")); //Is console
+        } else {
+            Component playerOnly = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("PlayerOnlyCommand")));
+            sender.sendMessage(playerOnly);
+        }
     }
 
     public static void S(CommandSender sender, String arg, AntiXrayHeuristics mainClass) //Parametrized
@@ -46,9 +49,9 @@ public class CommandARGSuspicion {
         } else { //Is console
             MiningSession tempMS = mainClass.sessions.get(arg);
             if (tempMS != null)
-                System.out.println(arg + "'s suspicion level: " + tempMS.GetSuspicionLevel());
+                sender.sendMessage(arg + "'s suspicion level: " + tempMS.GetSuspicionLevel());
             else
-                System.out.println(arg + " Is not suspicious of Xray usage. No suspicion level available.");
+                sender.sendMessage(arg + " Is not suspicious of Xray usage. No suspicion level available.");
         }
     }
 }

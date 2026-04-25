@@ -7,7 +7,6 @@ import com.greymagic27.util.MiningSession;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,7 +36,8 @@ public class CommandARGResetSuspicion {
             }
         } else {
             // Console sender
-            System.out.println(LocaleManager.get().getString("PlayerOnlyCommand"));
+            Component playerOnly = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(LocaleManager.get().getString("PlayerOnlyCommand")));
+            sender.sendMessage(playerOnly);
         }
     }
 
@@ -69,11 +69,11 @@ public class CommandARGResetSuspicion {
                 mainClass.sessions.remove(arg);
                 String message = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(LocaleManager.get().getString("PlayerSuspicionNullified"), arg);
                 Component comp = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(prefix)).append(Component.space()).append(LEGACY_SERIALIZER.deserialize(message));
-                Bukkit.getConsoleSender().sendMessage(comp);
+                sender.sendMessage(comp);
             } else {
                 String message = PlaceholderManager.SubstitutePlayerNameAndColorCodePlaceholders(LocaleManager.get().getString("NoPlayerSuspicionReset"), arg);
                 Component comp = LEGACY_SERIALIZER.deserialize(Objects.requireNonNull(prefix)).append(Component.space()).append(LEGACY_SERIALIZER.deserialize(message));
-                Bukkit.getConsoleSender().sendMessage(comp);
+                sender.sendMessage(comp);
             }
         }
     }

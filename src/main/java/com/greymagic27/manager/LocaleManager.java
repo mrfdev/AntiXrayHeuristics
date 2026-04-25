@@ -8,14 +8,21 @@ import com.greymagic27.util.YamlFiles;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class LocaleManager {
 
     private static File localeFile;
     private static FileConfiguration localeConfiguration;
+
+    private static Logger logger() {
+        return JavaPlugin.getProvidingPlugin(LocaleManager.class).getLogger();
+    }
 
     private static void SetDefaultFileEntries() //Sets the default language entries in English
     {
@@ -75,14 +82,14 @@ public class LocaleManager {
             try {
                 localeFile.createNewFile(); //Creates the file
             } catch (IOException e) {
-                System.out.print("[xrayheuristics] Could not create locale file.");
+                logger().log(Level.WARNING, "Could not create locale file.", e);
             }
         }
         try {
             localeConfiguration = YamlFiles.load(localeFile);
         } catch (IOException | InvalidConfigurationException e) {
             localeConfiguration = new YamlConfiguration();
-            System.out.print("[xrayheuristics] Could not load locale file.");
+            logger().log(Level.WARNING, "Could not load locale file.", e);
         }
         SetDefaultFileEntries(); //Sets default entries
     }
@@ -95,7 +102,7 @@ public class LocaleManager {
         try {
             localeConfiguration.save(localeFile);
         } catch (IOException e) {
-            System.out.print("[xrayheuristics] Could not save locale file.");
+            logger().log(Level.WARNING, "Could not save locale file.", e);
         }
     }
 
@@ -105,11 +112,10 @@ public class LocaleManager {
             localeConfiguration = YamlFiles.load(localeFile);
         } catch (IOException | InvalidConfigurationException e) {
             localeConfiguration = new YamlConfiguration();
-            System.out.print("[xrayheuristics] Could not reload locale file.");
+            logger().log(Level.WARNING, "Could not reload locale file.", e);
         }
     }
 }
-
 
 
 
