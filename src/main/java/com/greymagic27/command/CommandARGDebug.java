@@ -113,7 +113,7 @@ public final class CommandARGDebug {
         sendLine(sender, "&7CoreProtect data: &f" + hook.getDataFolderPath());
         sendLine(sender, "&7Hook status: &f" + hook.getStatusMessage());
         sendLine(sender, "&7Description: &f" + plugin.getPluginMeta().getDescription());
-        sendLine(sender, "&7Storage type: &f" + plugin.getConfig().getString("StorageType", "JSON"));
+        sendLine(sender, "&7Storage type: &f" + plugin.getStorageType());
         sendLine(sender, "&7Tracked worlds: &f" + join(plugin.getConfig().getStringList("TrackWorlds")));
         sendLine(sender, "&7Suspicion threshold: &f" + DECIMAL_FORMAT.format(plugin.getSuspicionThreshold()));
         sendLine(sender, "&7Verbose mining debug: &f" + yesNo(plugin.isVerboseMiningSessionDebug()));

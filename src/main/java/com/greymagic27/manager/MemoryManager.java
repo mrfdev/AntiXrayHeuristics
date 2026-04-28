@@ -60,7 +60,7 @@ public class MemoryManager {
 
     //Stores player as xrayer with data
     public void StorePlayerData(Player player, final StorePlayerDataCallback callback) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -84,7 +84,7 @@ public class MemoryManager {
 
     //Stores fake player as xrayer with fake data
     public void StoreDummyPlayerData(final StorePlayerDataCallback callback) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -108,7 +108,7 @@ public class MemoryManager {
 
     //Returns various array lists through callback function containing all registered xrayer UUID's, handled times amount, and firstHandled time.
     public void GetAllBaseXrayerData(final CallbackGetAllBaseXrayerData callback) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -132,7 +132,7 @@ public class MemoryManager {
 
     //Returns ItemStack array through callback function containing all confiscated ItemStacks from the specified player by UUID
     public void GetXrayerBelongings(String xrayerUUID, final CallbackGetXrayerBelongings callback) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -155,7 +155,7 @@ public class MemoryManager {
 
     //Returns HandleLocation Location through callback function by UUID
     public void GetXrayerHandleLocation(String xrayerUUID, final CallbackGetXrayerHandleLocation callback) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -178,7 +178,7 @@ public class MemoryManager {
 
     //Deletes xrayer with specified UUID from memory
     public void DeleteXrayer(String xrayerUUID) {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {
@@ -202,7 +202,7 @@ public class MemoryManager {
 
     //Deletes all registered xrayers (basically leaves memory empty)
     public void DeleteRegisteredXrayers() {
-        switch (Objects.requireNonNull(mainClassAccess.getConfig().getString("StorageType"))) {
+        switch (mainClassAccess.getStorageType()) {
             case "MYSQL":
                 try (Connection cn = dataSource.getConnection()) {
                     try {

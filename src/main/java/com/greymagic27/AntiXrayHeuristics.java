@@ -14,6 +14,7 @@ import com.greymagic27.integration.CoreProtectHook;
 import com.greymagic27.manager.LocaleManager;
 import com.greymagic27.manager.MemoryManager;
 import com.greymagic27.util.BlockWeightInfo;
+import com.greymagic27.util.CommentedConfigFile;
 import com.greymagic27.util.MiningSession;
 import com.greymagic27.util.WeightsCard;
 import com.greymagic27.util.YamlFiles;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -69,7 +71,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     private CoreProtectHook coreProtectHook;
     private File pluginDataDirectory;
     private File configFile;
-    private FileConfiguration configuration;
+    private YamlConfiguration configuration;
     private int nonOreStreakDecreaseAmount;
     private int usualEncounterThreshold;
     private float suspicionThreshold;
@@ -124,6 +126,14 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
         return Math.max(0, getConfig().getInt("MinimumBlocksMinedToNextVein", 10));
     }
 
+    public @NonNull String getStorageType() {
+        String configuredValue = getStringCompat("StorageType", "StorageMethod");
+        if (configuredValue == null || configuredValue.isBlank()) {
+            return "JSON";
+        }
+        return configuredValue.trim().toUpperCase(Locale.ROOT);
+    }
+
     @Override
     public FileConfiguration getConfig() {
         if (configuration == null) {
@@ -139,19 +149,11 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
             configFile = getPluginDataFile("config.yml");
         }
         try {
-            configuration = YamlFiles.load(configFile);
+            configuration = CommentedConfigFile.loadAndSync(this, configFile, "config.yml");
+            saveConfig();
         } catch (IOException | InvalidConfigurationException e) {
             configuration = new YamlConfiguration();
             getLogger().log(Level.SEVERE, "Could not load config.yml.", e);
-        }
-
-        try (var defaultConfigReader = getTextResource("config.yml")) {
-            if (defaultConfigReader != null) {
-                YamlConfiguration defaultConfiguration = YamlConfiguration.loadConfiguration(defaultConfigReader);
-                configuration.setDefaults(defaultConfiguration);
-            }
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Could not read embedded config.yml.", e);
         }
     }
 
@@ -161,8 +163,8 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
             return;
         }
         try {
-            configuration.save(configFile);
-        } catch (IOException e) {
+            CommentedConfigFile.saveAndSync(this, configuration, configFile, "config.yml");
+        } catch (IOException | InvalidConfigurationException e) {
             getLogger().log(Level.SEVERE, "Could not save config.yml.", e);
         }
     }
@@ -174,7 +176,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
             configFile = getPluginDataFile("config.yml");
         }
         if (!configFile.exists()) {
-            saveResource("config.yml", false);
+            reloadConfig();
         }
     }
 
@@ -216,10 +218,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
         ensurePluginDataDirectory();
         this.configFile = getPluginDataFile("config.yml");
-        saveDefaultConfig();
         reloadConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
 
         this.coreProtectHook = new CoreProtectHook(this);
         if (!refreshCoreProtectHook()) {
@@ -255,7 +254,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        if (Objects.equals(getConfig().getString("StorageType"), "MYSQL")) {
+        if (Objects.equals(getStorageType(), "MYSQL")) {
             this.mm.CloseDataSource();
         }
     }
@@ -280,10 +279,10 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     }
 
     private void initializeStorage() {
-        if (Objects.equals(getConfig().getString("StorageType"), "MYSQL")) {
+        if (Objects.equals(getStorageType(), "MYSQL")) {
             this.mm.InitializeDataSource();
             Bukkit.getScheduler().runTaskAsynchronously(this, this.mm::SQLCreateTableIfNotExists);
-        } else if (Objects.equals(getConfig().getString("StorageType"), "JSON")) {
+        } else if (Objects.equals(getStorageType(), "JSON")) {
             this.mm.JSONFileCreateIfNotExists();
         }
     }
@@ -310,6 +309,13 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
             return getConfig().getBoolean(preferred);
         }
         return legacy != null && getConfig().getBoolean(legacy);
+    }
+
+    private @Nullable String getStringCompat(@NonNull String preferred, @Nullable String legacy) {
+        if (getConfig().contains(preferred)) {
+            return getConfig().getString(preferred);
+        }
+        return legacy != null ? getConfig().getString(legacy) : null;
     }
 
     private void mainRunnable() {

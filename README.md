@@ -100,6 +100,13 @@ These placeholders are currently used by configurable command strings:
 - `/xrayer absolve mrfloris`
 - `/xrayer purge mrfloris`
 
+## Config Handling
+
+- `config.yml` is loaded and saved through Paper/Bukkit's comment-aware `YamlConfiguration` API with comment parsing enabled.
+- Admin-edited values are preserved. Missing defaults are merged back in path-by-path instead of overwriting the file from the jar.
+- Managed setting comments are re-applied after the config tree is synchronized so they survive first creation, `/xrayer reload`, normal restart, and `/xrayer debug set ...` edits.
+- Config file I/O stays on the main thread, but only during lightweight startup, explicit reloads, and command-driven config edits. The file is small enough that this is intentional and low risk for this plugin.
+
 ## Build
 
 Use Gradle with Java `25`:

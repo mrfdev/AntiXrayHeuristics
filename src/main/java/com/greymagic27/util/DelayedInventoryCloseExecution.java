@@ -26,7 +26,7 @@ public class DelayedInventoryCloseExecution implements Runnable {
             if (mainClassAccess.vault.CheckIfNoViewers()) {
                 mainClassAccess.vault.ClearXrayerInfoLists(false);
             }
-            if (Objects.equals(mainClassAccess.getConfig().getString("StorageMethod"), "JSON")) {
+            if (Objects.equals(mainClassAccess.getStorageType(), "JSON")) {
                 //Flush stored xrayer data from MemoryManager in RAM if no one is still viewing the GUI:
                 if (mainClassAccess.vault.CheckIfNoViewers()) {
                     mainClassAccess.mm.JSONFlushLoadedXrayerData();

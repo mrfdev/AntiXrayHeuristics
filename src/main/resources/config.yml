@@ -1,91 +1,185 @@
-#------------------------------------------------------------------------------------------------------
-#                         1MB XRAYHEURISTICS / XRAYER
+# ------------------------------------------------------------------------------------------------------
+# 1MB XRAYHEURISTICS / XRAYER
 #
-#    Heuristic CoreProtect add-on compiled against Paper 26.1.2 / Java 25.
-#    plugin.yml declares api-version 1.21.11 for shared-jar compatibility.
-#    Default values are tuned for vanilla-like ore generation.
-#------------------------------------------------------------------------------------------------------
+# This file is managed through Paper/Bukkit's comment-aware YamlConfiguration API.
+# Existing values are preserved on startup, /xrayer reload, server restart, and /xrayer debug set edits.
+# Missing defaults and managed comments are added back automatically without overwriting admin values.
+#
+# General reload rules:
+# - Manual file edits need /xrayer reload or a full restart unless a setting below says otherwise.
+# - Values changed through /xrayer debug set are saved and reloaded immediately for the supported keys.
+# - Storage backend settings require a full restart because live storage connections are opened during enable.
+# ------------------------------------------------------------------------------------------------------
 
-#----------------------------------------------
-# HEURISTICALLY BASED MONITORING CONFIGURATIONS:
-#----------------------------------------------
+# ------------------------------------------------------------------------------------------------------
+# HEURISTIC MONITORING
+# ------------------------------------------------------------------------------------------------------
 
-# AXH will only monitor player behaviour in the worlds listed below.
-# Only overworld and nether environments are considered.
+# World names that should be monitored for heuristic mining behaviour.
+# Default: [general, wild, nether]
+# Format: YAML string list using exact Bukkit world names.
+# Safe values: any loaded world names. Worlds not listed here are ignored by the tracker.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set track-worlds updates immediately.
 TrackWorlds:
   - 'general'
   - 'wild'
   - 'nether'
 
-# Suspicion points required before the player is automatically handled as an xrayer.
+# Suspicion points required before a player is automatically handled as an xrayer.
+# Default: 100.0
+# Safe values: decimal numbers greater than 0.0. Lower values are more aggressive; higher values are more forgiving.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set suspicion-threshold updates immediately.
 SuspicionThreshold: 100.0
 
-# If true, verbose mining-session calculations are written to console for debugging.
+# Enables verbose mining-session math in the console for troubleshooting.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set debug-verbose-mining-session updates immediately.
 DebugVerboseMiningSession: false
 
-# The following values are balanced around vanilla ore density.
-# Set a weight to 0 to ignore that family completely.
-# IronWeight also applies to RAW_IRON_BLOCK.
-# CopperWeight also applies to RAW_COPPER_BLOCK.
-# NetherGoldWeight also applies to GILDED_BLACKSTONE.
+# All weight settings below add suspicion points when the matching ore family is mined.
+# Default: the numeric value shown on each line below.
+# Safe values: decimals greater than or equal to 0.0. Setting a weight to 0.0 disables that family.
+# Limits: negative values are not recommended and can produce misleading suspicion calculations.
+# Reload: manual file edits need /xrayer reload or restart. Supported keys can also be changed through /xrayer debug set.
+
+# Suspicion weight for overworld coal ore.
 CoalWeight: 5.0
+
+# Suspicion weight for overworld iron ore and RAW_IRON_BLOCK.
 IronWeight: 5.0
+
+# Suspicion weight for overworld copper ore and RAW_COPPER_BLOCK.
 CopperWeight: 5.0
+
+# Suspicion weight for overworld gold ore.
 GoldWeight: 5.0
+
+# Suspicion weight for overworld redstone ore.
 RedstoneWeight: 9.0
+
+# Suspicion weight for overworld emerald ore.
 EmeraldWeight: 22.0
+
+# Suspicion weight for overworld lapis ore.
 LapisWeight: 8.0
+
+# Suspicion weight for overworld diamond ore.
 DiamondWeight: 15.0
+
+# Suspicion weight for deepslate coal ore.
 DeepslateCoal: 5.0
+
+# Suspicion weight for deepslate iron ore.
 DeepslateIron: 5.0
+
+# Suspicion weight for deepslate copper ore.
 DeepslateCopper: 5.0
+
+# Suspicion weight for deepslate gold ore.
 DeepslateGold: 5.0
+
+# Suspicion weight for deepslate redstone ore.
 DeepslateRedstone: 9.0
+
+# Suspicion weight for deepslate emerald ore.
 DeepslateEmerald: 22.0
+
+# Suspicion weight for deepslate lapis ore.
 DeepslateLapis: 8.0
+
+# Suspicion weight for deepslate diamond ore.
 DeepslateDiamond: 22.0
+
+# Suspicion weight for NETHER_GOLD_ORE and GILDED_BLACKSTONE.
 NetherGoldWeight: 5.0
+
+# Suspicion weight for NETHER_QUARTZ_ORE.
 QuartzWeight: 5.0
+
+# Suspicion weight for ANCIENT_DEBRIS.
 AncientDebrisWeight: 22.0
 
-# Reducers for biome-specific high-density ore generation.
+# Biome-density reducers divide the final suspicion weight in naturally dense ore biomes.
+# Default: Emerald = 2, Gold = 4
+# Safe values: numbers greater than or equal to 1.0. Higher numbers reduce suspicion more strongly.
+# Reload: manual file edits need /xrayer reload or restart.
+
+# Divider applied to emerald suspicion in mountain-style emerald biomes.
 FinalEmeraldWeightDivisionReducer: 2
+
+# Divider applied to gold suspicion in badlands gold biomes.
 FinalGoldWeightDivisionReducer: 4
 
-# How far nearby blocks may still be treated as part of the same ore vein.
+# Maximum block distance used when deciding whether nearby ore still belongs to the same vein.
+# Default: 10
+# Safe values: positive integers. Lower values split veins more often; higher values merge nearby ore more aggressively.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set consider-adjacent-within-distance updates immediately.
 ConsiderAdjacentWithinDistance: 10
 
-# Minimum amount of non-ore blocks mined before a newly found vein counts again.
+# Minimum amount of non-ore mining required before a new ore find counts as a new vein.
+# Default: 10
+# Safe values: integers 0 or higher. Higher values make repeated adjacent finds count less often.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set minimum-blocks-mined-to-next-vein updates immediately.
 MinimumBlocksMinedToNextVein: 10
 
-# Ignore tracked mining above these heights.
+# Ignore tracked mining above this Y level in overworld-style worlds.
+# Default: 65
+# Safe values: any integer Y level. Lowering this can ignore legitimate surface mining.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set ignore-higher-than-overworld-altitude updates immediately.
 IgnoreHigherThanOverworldAltitude: 65
+
+# Ignore tracked mining above this Y level in nether-style worlds.
+# Default: 240
+# Safe values: any integer Y level. Typical practical values are within the normal build-height range.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set ignore-higher-than-nether-altitude updates immediately.
 IgnoreHigherThanNetherAltitude: 240
 
-#------------------------------------------------------
-# AUTOMATIC XRAYER HANDLING & PUNISHMENT CONFIGURATIONS:
-#------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
+# AUTOMATIC HANDLING AND PUNISHMENT
+# ------------------------------------------------------------------------------------------------------
 
-# If true, the player's inventory and equipment are stored before punish actions.
+# Store a copy of the handled player's inventory and equipment before punish actions run.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set store-copy updates immediately.
 StoreCopy: false
 
-# If true, the player's inventory and equipment are cleared after handling.
+# Clear the handled player's inventory and equipment after they are registered as an xrayer.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set cleanse-player-items updates immediately.
 CleansePlayerItems: false
 
-# Legacy typo kept for backward compatibility with older configs.
+# Legacy typo key kept for backward compatibility with older configs.
+# Default: false
+# Safe values: true or false. Keep this aligned with CleansePlayerItems if you still carry legacy configs.
+# Reload: same behaviour as CleansePlayerItems. The preferred key above wins when both are present.
 ClensePlayerItems: false
 
-# If true, punished players receive PlayerMessageOnXray from locale.yml.
+# Send the handled player the locale.yml PlayerMessageOnXray message.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set send-message-to-player updates immediately.
 SendMessageToPlayer: false
 
-# If true, the active suspicion session is removed after handling.
+# Remove the active suspicion session after a player has been handled.
+# Default: true
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set nullify-suspicion-after-punish updates immediately.
 NullifySuspicionAfterPunish: true
 
-# Legacy typo kept for backward compatibility with older configs.
+# Legacy typo key kept for backward compatibility with older configs.
+# Default: true
+# Safe values: true or false. Keep this aligned with NullifySuspicionAfterPunish if you still carry legacy configs.
+# Reload: same behaviour as NullifySuspicionAfterPunish. The preferred key above wins when both are present.
 NullifySuspicionAferPunish: true
 
-# Commands run from console when a player is automatically handled.
-# Available placeholders: {PlayerName}, {TimesDetected}
+# Console commands to run when a player is automatically handled.
+# Default: five example DiscordSRV broadcasts for handled counts 1 through 5.
+# Format: two-level section. First number = handled-times bucket. Second number = command order inside that bucket.
+# Placeholders: {PlayerName}, {TimesDetected}
+# Reload: manual file edits need /xrayer reload or restart. This section is not editable through /xrayer debug set.
 CommandsExecutedOnXrayerDetected:
   1:
     1: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
@@ -98,37 +192,94 @@ CommandsExecutedOnXrayerDetected:
   5:
     5: 'discordsrv broadcast #1400563773055701002 [co axh] `{PlayerName}` - detected `{TimesDetected}`x'
 
-# Commands run from console when a player is absolved.
-# Available placeholders: {PlayerName}
+# Console commands to run when a player is absolved.
+# Default: [] (no commands)
+# Format: YAML string list.
+# Placeholders: {PlayerName}
+# Reload: manual file edits need /xrayer reload or restart. This section is not editable through /xrayer debug set.
 CommandsExecutedOnPlayerAbsolved: [ ]
 
-# If true, players with xrayheuristics.notify / AXH.XrayerWarning are notified when a player is handled.
+# Notify players with xrayheuristics.notify / AXH.XrayerWarning when someone is automatically handled.
+# Default: true
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set tell-players-with-permission updates immediately.
 TellPlayersWithPermission: true
 
-#----------------------
-# STORAGE CONFIGURATION:
-#----------------------
+# ------------------------------------------------------------------------------------------------------
+# STORAGE
+# ------------------------------------------------------------------------------------------------------
 
-# Available values:
-#   MYSQL - Uses the configured SQL server.
-#   JSON  - Stores data inside the plugin data folder.
+# Persistent storage backend used for handled-player data.
+# Default: JSON
+# Safe values: JSON or MYSQL
+# Format: plain uppercase text.
+# Reload: requires a full restart. /xrayer reload does not reopen or migrate storage backends.
 StorageType: 'JSON'
 
+# Optional JDBC driver class name override.
+# Default: '' (empty)
+# Safe values: leave empty unless your host specifically requires a driver class name.
+# Reload: requires a full restart.
+# Note: the plugin only uses this when SQLDriverClassName is non-empty.
 SQLDriverClassName: ''
+
+# SQL host name or IP address used when StorageType is MYSQL.
+# Default: 127.0.0.1
+# Safe values: a reachable database host name or IP address.
+# Reload: requires a full restart.
 SQLHost: '127.0.0.1'
+
+# SQL port used when StorageType is MYSQL.
+# Default: 3306
+# Safe values: a valid database port number stored as text.
+# Reload: requires a full restart.
 SQLPort: '3306'
+
+# SQL database/schema name used when StorageType is MYSQL.
+# Default: myDatabase
+# Safe values: an existing or intended database/schema name on your SQL server.
+# Reload: requires a full restart.
 SQLDatabaseName: 'myDatabase'
+
+# SQL username used when StorageType is MYSQL.
+# Default: root
+# Safe values: any database user with the required permissions for this plugin.
+# Reload: requires a full restart.
 SQLUsername: 'root'
+
+# SQL password used when StorageType is MYSQL.
+# Default: root
+# Safe values: the matching password for SQLUsername.
+# Reload: requires a full restart.
+# Note: this is stored in plain text like most Bukkit plugin configs, so protect filesystem access accordingly.
 SQLPassword: 'root'
+
+# Maximum number of active pooled SQL connections when StorageType is MYSQL.
+# Default: 10
+# Safe values: positive integers. Larger values are only useful if you know your SQL host can handle them.
+# Reload: requires a full restart.
 SQLMaxActiveConnections: 10
+
+# Legacy compatibility flag for explicit driver usage.
+# Default: false
+# Safe values: true or false.
+# Reload: requires a full restart.
+# Note: current code does not actively read this flag; behaviour is driven by whether SQLDriverClassName is empty.
 UseDriverClassName: false
 
-#------
-# TOOLS:
-#------
+# ------------------------------------------------------------------------------------------------------
+# TOOLS AND GUI
+# ------------------------------------------------------------------------------------------------------
 
-# If true, the legacy manual-handle syntax without a player name can add a dummy entry for testing.
+# Allow the legacy manual-handle syntax with no player argument to create a dummy xrayer entry for testing.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set add-random-dummy-xrayer updates immediately.
 AddRandomDummyXrayerIfNoXrayerCommandParameters: false
 
-# If true, the GUI uses heads instead of stone placeholders for entries.
+# Use player heads in the xrayer vault GUI instead of simple placeholders.
+# Default: false
+# Safe values: true or false.
+# Reload: manual file edits need /xrayer reload or restart. /xrayer debug set use-heads-in-gui updates immediately.
+# Note: after changing this, existing viewers may need to reopen or refresh the vault GUI to see the new presentation.
 UseHeadsInGUI: false
