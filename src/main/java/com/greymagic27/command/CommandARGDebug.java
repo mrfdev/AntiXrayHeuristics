@@ -102,7 +102,7 @@ public final class CommandARGDebug {
         sendLine(sender, "&7Version: &f" + pluginVersion);
         sendLine(sender, "&7Build number: &f" + extractBuildPart(pluginVersion, 1, "unknown"));
         sendLine(sender, "&7Compiled Java: &f" + extractBuildPart(pluginVersion, 2, "j??"));
-        sendLine(sender, "&7Compiled Paper: &f" + extractBuildPart(pluginVersion, 3, "26.1.2"));
+        sendLine(sender, "&7Compiled Paper: &f" + extractBuildPart(pluginVersion, 3, "26.2"));
         sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
         sendLine(sender, "&7Runtime Java: &f" + System.getProperty("java.version"));
         sendLine(sender, "&7Server: &f" + Bukkit.getName() + " " + Bukkit.getVersion());
@@ -139,7 +139,7 @@ public final class CommandARGDebug {
     private static void sendPermissions(@NonNull CommandSender sender) {
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&d&l" + ROOT + " debug permissions");
-        sendLine(sender, "&f" + PERMISSION_PREFIX + ".use &7(default: op) - Help output and suspicion lookups.");
+        sendLine(sender, "&f" + PERMISSION_PREFIX + ".use &7(default: op) - Suspicion lookups.");
         sendLine(sender, "&f" + PERMISSION_PREFIX + ".admin &7(default: op) - Reload, debug pages, vault actions, and admin commands.");
         sendLine(sender, "&f" + PERMISSION_PREFIX + ".notify &7(default: op) - Receives automatic handled-player warnings.");
         sendLine(sender, "&f" + PERMISSION_PREFIX + ".ignore &7(default: false) - Bypasses heuristic tracking.");
@@ -150,6 +150,7 @@ public final class CommandARGDebug {
     private static void sendCommands(@NonNull CommandSender sender) {
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&d&l" + ROOT + " debug commands");
+        sendLine(sender, "&f/" + ROOT + " info &7- Show the public introduction and docs link.");
         sendLine(sender, "&f/" + ROOT + " help &7- Show command help.");
         sendLine(sender, "&f/" + ROOT + " debug &7- Show plugin and CoreProtect status.");
         sendLine(sender, "&f/" + ROOT + " debug permissions &7- Show permission nodes.");

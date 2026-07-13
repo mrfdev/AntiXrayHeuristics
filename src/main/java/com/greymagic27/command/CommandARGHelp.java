@@ -20,11 +20,13 @@ public final class CommandARGHelp {
         sendLine(sender, "&d&l1MB XRayHeuristics / " + ROOT);
         sendLine(sender, "&7Version: &f" + pluginVersion);
         sendLine(sender, "&7Plugin: &f" + plugin.getPluginMeta().getName());
-        sendLine(sender, "&7Compiled Paper target: &f" + extractBuildPart(pluginVersion, 3, "26.1.2"));
+        sendLine(sender, "&7Compiled Paper target: &f" + extractBuildPart(pluginVersion, 3, "26.2"));
         sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
         sendLine(sender, "&7CoreProtect target: &f24.0-dev1 (API 12)");
         sendLine(sender, "&7Use &f/" + ROOT + " debug &7for live status and hook information.");
+        sendLine(sender, "&7Use &f/" + ROOT + " info &7for the public intro, quick start, and docs link.");
         sendLine(sender, "&8&m------------------------------------------------");
+        sendLine(sender, "&f/" + ROOT + " info &7- Show the plugin introduction, quick start, and docs link.");
         sendLine(sender, "&f/" + ROOT + " help &7- Show this help page.");
         sendLine(sender, "&f/" + ROOT + " suspicion [player] &7- Show current suspicion for yourself or a player.");
         if (hasAdminAccess(sender)) {

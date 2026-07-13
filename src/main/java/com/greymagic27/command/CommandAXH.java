@@ -32,6 +32,10 @@ public class CommandAXH implements CommandExecutor {
         }
 
         String subcommand = args[0].toLowerCase(Locale.ROOT);
+        if (subcommand.equals("info")) {
+            CommandARGInfo.sendInfo(sender, mainClassAccess);
+            return true;
+        }
         if (subcommand.equals("debug")) {
             return CommandARGDebug.handle(sender, args, mainClassAccess);
         }
@@ -50,6 +54,10 @@ public class CommandAXH implements CommandExecutor {
 
     private boolean handleSingleArgument(@NonNull CommandSender sender, @NonNull String subcommand) {
         return switch (subcommand) {
+            case "info" -> {
+                CommandARGInfo.sendInfo(sender, mainClassAccess);
+                yield true;
+            }
             case "xrayer", "x" -> {
                 CommandARGXrayer.X(sender, mainClassAccess);
                 yield true;

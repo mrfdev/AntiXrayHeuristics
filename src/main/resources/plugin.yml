@@ -8,6 +8,7 @@ description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVe
 commands:
   xrayer:
     usage: |
+      /xrayer info
       /xrayer help
       /xrayer debug [help|permissions|commands|config|set]
       /xrayer debug set <key> <value>
@@ -21,7 +22,7 @@ commands:
     description: Review heuristic plugin status, manage suspicious sessions, and administer the xray vault.
 permissions:
   xrayheuristics.use:
-    description: Allows help output and suspicion lookups.
+    description: Allows suspicion lookups.
     default: op
     children:
       AXH.Commands.Suspicion: true

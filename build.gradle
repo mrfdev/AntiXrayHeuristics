@@ -7,13 +7,14 @@ plugins {
 def artifactName = '1MB-XRayHeuristics'
 def internalPluginName = 'xrayheuristics'
 def javaTarget = 25
-def targetPaperVersion = '26.1.2'
-def targetPaperApiBuild = '19'
+def targetPaperVersion = '26.2'
+def targetPaperApiBuild = '60'
+def targetPaperApiChannel = 'beta'
 def declaredApiVersion = '1.21.11'
 def targetCoreProtectVersion = '24.0-dev1'
 def targetCoreProtectApiVersion = '12'
 def fallbackCoreProtectVersion = '23.4'
-def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/cache/Paper-26.1.2/plugins/CoreProtect-24.0-dev1.jar')
+def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/cache/Paper-26.2/plugins/CoreProtect-24.0-dev1.jar')
 def versionPropertiesFile = file('version.properties')
 def versionProperties = new Properties()
 
@@ -54,7 +55,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-alpha")
+    compileOnly("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}")
     if (sharedCoreProtectJar.exists()) {
         compileOnly(files(sharedCoreProtectJar))
         testRuntimeOnly(files(sharedCoreProtectJar))
@@ -70,7 +71,7 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.13.2")
     compileOnly("org.jspecify:jspecify:1.0.0")
 
-    testImplementation("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-alpha")
+    testImplementation("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}")
     testImplementation(platform("org.junit:junit-bom:5.13.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -115,7 +116,7 @@ tasks.register('printBuildConfig') {
         println "Plugin name: ${internalPluginName}"
         println "Version: ${pluginBuildVersion}"
         println "Java target: ${javaTarget}"
-        println "Compiled against Paper API: ${targetPaperVersion}.build.${targetPaperApiBuild}-alpha"
+        println "Compiled against Paper API: ${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}"
         println "Declared plugin api-version: ${declaredApiVersion}"
         println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
         println "Shared CoreProtect jar: ${sharedCoreProtectJar}"

@@ -28,6 +28,7 @@ public class CommandAXHAutoCompleter implements TabCompleter {
     ) {
         if (args.length == 1) {
             List<String> suggestions = new ArrayList<>(List.of(
+                    "info",
                     "help",
                     "debug",
                     "reload",

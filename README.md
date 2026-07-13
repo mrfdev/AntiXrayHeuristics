@@ -1,167 +1,147 @@
-# 1MB-XRayHeuristics
+# 1MB XRayHeuristics
 
-`1MB-XRayHeuristics` is a CoreProtect-backed heuristic Anti-XRay add-on for 1MoreBlock. It focuses on suspicious mining patterns instead of lookup reports, runs as the plugin `xrayheuristics`, and exposes a single root command: `/xrayer`.
+`1MB XRayHeuristics` is a standalone 1MoreBlock heuristic Anti-XRay plugin for Paper. It integrates with CoreProtect and focuses on suspicious mining patterns, live suspicion sessions, and staff handling workflows instead of lookup-report style commands. The internal plugin id is `xrayheuristics`, and the canonical root command is `/xrayer`.
 
-This branch is aligned to:
+## Technical Overview
 
-- Paper API compile target `26.1.2`
-- Declared `plugin.yml` api-version floor `1.21.11`
-- Java `25`
-- CoreProtect `24.0-dev1`
-- CoreProtect API `12`
-- Artifact pattern `build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar`
+- Player-facing name: `1MB XRayHeuristics`
+- Internal plugin name: `xrayheuristics`
+- Main command: `/xrayer`
+- Build target: Java `25`
+- Paper compile target: `26.2.build.60-beta`
+- Declared `plugin.yml` api-version floor: `1.21.11`
+- CoreProtect compile target: `24.0-dev1` with API `12`
+- Minimum CoreProtect API accepted at runtime: `11`
+- Artifact pattern: `build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.2.jar`
+- Plugin data directory: `plugins/1MB-XRayHeuristics/`
+- Persistent storage backends: `JSON` or `MYSQL`
 
-The canonical command is `/xrayer`. Legacy `AXH.*` permission nodes are still accepted, but `/axh` and `/AntiXrayHeuristics` are no longer exposed as commands.
+## Documentation
 
-## Compatibility
-
-- Server engine targets: Paper `1.21.11` and Paper `26.1.2`
-- Compiled against: Paper API `26.1.2`
-- Declared in `plugin.yml`: `api-version: 1.21.11`
-- Java runtime for building and running: Java `25`
-- Required dependency target: CoreProtect `24.0-dev1` with API `12`
-- Minimum accepted CoreProtect API at runtime: `11`
-- Internal plugin name for `/ver`: `xrayheuristics`
-- Current plugin version: `2.0.0`
-- Build numbering: each successful `gradle build` writes a new jar name and increments `version.properties`
-
-Tracked material coverage includes:
-
-- `COAL_ORE`, `DEEPSLATE_COAL_ORE`
-- `IRON_ORE`, `DEEPSLATE_IRON_ORE`, `RAW_IRON_BLOCK`
-- `COPPER_ORE`, `DEEPSLATE_COPPER_ORE`, `RAW_COPPER_BLOCK`
-- `GOLD_ORE`, `DEEPSLATE_GOLD_ORE`
-- `REDSTONE_ORE`, `DEEPSLATE_REDSTONE_ORE`
-- `EMERALD_ORE`, `DEEPSLATE_EMERALD_ORE`
-- `LAPIS_ORE`, `DEEPSLATE_LAPIS_ORE`
-- `DIAMOND_ORE`, `DEEPSLATE_DIAMOND_ORE`
-- `NETHER_GOLD_ORE`, `GILDED_BLACKSTONE`
-- `NETHER_QUARTZ_ORE`
-- `ANCIENT_DEBRIS`
-
-`RAW_GOLD_BLOCK` is intentionally not tracked.
+- Canonical public docs: [docs.1moreblock.com/custom-server-plugins/xrayheuristics](https://docs.1moreblock.com/custom-server-plugins/xrayheuristics/)
+- Player guide: [docs/player-guide.md](docs/player-guide.md)
+- Commands: [docs/commands.md](docs/commands.md)
+- Permissions: [docs/permissions.md](docs/permissions.md)
+- Placeholders: [docs/placeholders.md](docs/placeholders.md)
+- Configuration: [docs/configuration.md](docs/configuration.md)
+- Installation: [docs/installation.md](docs/installation.md)
+- Integrations: [docs/integrations.md](docs/integrations.md)
+- Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
+- Import manifest: [docs/plugin-docs.yml](docs/plugin-docs.yml)
 
 ## Commands
 
-| Command | Description | Example |
+| Command | Purpose | Notes |
 | --- | --- | --- |
-| `/xrayer help` | Shows the main help page, command summary, and placeholders. | `/xrayer help` |
-| `/xrayer debug` | Shows plugin, server, build, storage, and CoreProtect hook status. | `/xrayer debug` |
-| `/xrayer debug help` | Lists the available debug pages. | `/xrayer debug help` |
-| `/xrayer debug permissions` | Lists the permission nodes and defaults. | `/xrayer debug permissions` |
-| `/xrayer debug commands` | Lists the command syntax and usage notes. | `/xrayer debug commands` |
-| `/xrayer debug config` | Shows the live config values exposed through debug. | `/xrayer debug config` |
-| `/xrayer debug set <key> <value>` | Updates a supported config value, saves `config.yml`, and reloads the plugin state. | `/xrayer debug set suspicion-threshold 125` |
-| `/xrayer reload` | Reloads `config.yml`, `locale.yml`, `weights.yml`, and the CoreProtect hook state. | `/xrayer reload` |
-| `/xrayer suspicion [player]` | Shows the current live suspicion value for yourself or another tracked player. | `/xrayer suspicion mrfloris` |
-| `/xrayer resetsuspicion [player]` | Clears a live suspicion session. | `/xrayer resetsuspicion mrfloris` |
-| `/xrayer <player>` | Manually handles a player as xrayer. | `/xrayer mrfloris` |
-| `/xrayer vault` | Opens the handled-player vault GUI. | `/xrayer vault` |
-| `/xrayer absolve <player>` | Returns stored items and removes the player from the vault. | `/xrayer absolve mrfloris` |
-| `/xrayer purge <player>` | Removes the player from the vault without returning items. | `/xrayer purge mrfloris` |
+| `/xrayer info` | Public introduction, quick start, and docs link. | No permission check in the current implementation. |
+| `/xrayer help` | Command summary and plugin overview. | Also available from `/xrayer` with no arguments. |
+| `/xrayer suspicion [player]` | Show the current live suspicion value. | Requires `xrayheuristics.use` or the legacy suspicion node. |
+| `/xrayer debug` | Show build, server, config, storage, and CoreProtect hook status. | Admin-level command. |
+| `/xrayer debug help` | Show available debug pages. | Admin-level command. |
+| `/xrayer debug permissions` | Show permission nodes and defaults. | Admin-level command. |
+| `/xrayer debug commands` | Show command syntax and usage notes. | Admin-level command. |
+| `/xrayer debug config` | Show the supported live config values. | Admin-level command. |
+| `/xrayer debug set <key> <value>` | Save a supported config key and reload plugin state. | Admin-level command. |
+| `/xrayer reload` | Reload `config.yml`, `locale.yml`, and `weights.yml`. | Admin-level command. |
+| `/xrayer resetsuspicion [player]` | Clear an in-memory suspicion session. | Admin-level command. |
+| `/xrayer <player>` | Manually handle a player as an xrayer. | Admin-level command. |
+| `/xrayer vault` | Open the handled-player vault GUI. | Player-only, admin-level command. |
+| `/xrayer absolve <player>` | Return stored items and remove a vault entry. | The target must be online. |
+| `/xrayer purge <player>` | Remove a vault entry without returning items. | Command path only works for online targets. |
+
+Single-letter aliases are available for several subcommands: `x`, `v`, `r`, `rs`, `s`, `a`, and `p`. The explicit `/xrayer xrayer <player>` form also works, and `/xrayer xrayer` without a player only creates a dummy entry when `AddRandomDummyXrayerIfNoXrayerCommandParameters` is enabled.
 
 ## Permissions
 
-| Permission | Default | Description |
+| Permission | Default | Effective use |
 | --- | --- | --- |
-| `xrayheuristics.use` | `op` | Allows help output and suspicion lookups. |
-| `xrayheuristics.admin` | `op` | Allows reload, debug pages, vault actions, manual player handling, suspicion resets, and vault GUI admin actions. |
-| `xrayheuristics.notify` | `op` | Receives the automatic “handled xrayer” staff warning messages. |
-| `xrayheuristics.ignore` | `false` | Bypasses heuristic tracking for that player. |
-| `AXH.Commands.*`, `AXH.Vault.Purge`, `AXH.XrayerWarning`, `AXH.Ignore` | legacy | Older permission nodes are still supported for backward compatibility. |
+| `xrayheuristics.use` | `op` | Required for `/xrayer suspicion [player]`. |
+| `xrayheuristics.admin` | `op` | Required for debug, reload, resets, manual handling, vault, absolve, purge, and the dummy-entry helper. |
+| `xrayheuristics.notify` | `op` | Receives automatic handled-player warning messages. |
+| `xrayheuristics.ignore` | `false` | Exempts a player from heuristic tracking. |
+
+Legacy nodes are still accepted for compatibility: `AXH.Commands.*`, `AXH.Vault.Purge`, `AXH.XrayerWarning`, and `AXH.Ignore`.
+
+Implementation note: the current code does not enforce a permission check for `/xrayer`, `/xrayer help`, or `/xrayer info`, even though older documentation historically grouped help together with `xrayheuristics.use`.
 
 ## Placeholders
 
-These placeholders are currently used by configurable command strings:
+The plugin does not register PlaceholderAPI expansions. The verified placeholders are internal placeholders used in config-driven commands and GUI/locale text:
 
 - `{PlayerName}`
 - `{TimesDetected}`
+- `{HandledTimesAmount}`
+- `{FirstTimeDetected}`
+- `{LastSeenTime}`
 
-`CommandsExecutedOnXrayerDetected` supports both placeholders.
+See [docs/placeholders.md](docs/placeholders.md) for exact usage.
 
-`CommandsExecutedOnPlayerAbsolved` supports `{PlayerName}`.
+## Configuration and Data
 
-## Command Examples
+`config.yml` is the active runtime configuration file. It is loaded and saved through Paper/Bukkit's comment-aware `YamlConfiguration` API with comment parsing enabled, and admin-edited values are preserved when defaults are synchronized back in.
 
-- `/xrayer help`
-- `/xrayer debug`
-- `/xrayer debug permissions`
-- `/xrayer debug commands`
-- `/xrayer debug config`
-- `/xrayer debug set debug-verbose-mining-session true`
-- `/xrayer debug set track-worlds general,wild,nether`
-- `/xrayer debug set nether-gold-weight 7.5`
-- `/xrayer debug set suspicion-threshold 125`
-- `/xrayer suspicion`
-- `/xrayer suspicion mrfloris`
-- `/xrayer resetsuspicion mrfloris`
-- `/xrayer mrfloris`
-- `/xrayer vault`
-- `/xrayer absolve mrfloris`
-- `/xrayer purge mrfloris`
+Other generated files:
 
-## Config Handling
+- `locale.yml`: generated language and GUI text values
+- `weights.yml`: generated per-world weight-card data retained for compatibility
+- `data.json`: the default JSON storage file when `StorageType` is `JSON`
 
-- `config.yml` is loaded and saved through Paper/Bukkit's comment-aware `YamlConfiguration` API with comment parsing enabled.
-- Admin-edited values are preserved. Missing defaults are merged back in path-by-path instead of overwriting the file from the jar.
-- Managed setting comments are re-applied after the config tree is synchronized so they survive first creation, `/xrayer reload`, normal restart, and `/xrayer debug set ...` edits.
-- Config file I/O stays on the main thread, but only during lightweight startup, explicit reloads, and command-driven config edits. The file is small enough that this is intentional and low risk for this plugin.
+Important runtime note: the current heuristic calculator reads its live suspicion weights from the top-level keys in `config.yml`. `weights.yml` is generated and reloaded, but it is not the active source for the main suspicion-weight checks in the current code.
+
+## Ore Coverage
+
+The runtime logic currently tracks these ore families:
+
+- Coal: `COAL_ORE`, `DEEPSLATE_COAL_ORE`
+- Iron: `IRON_ORE`, `DEEPSLATE_IRON_ORE`, `RAW_IRON_BLOCK`
+- Copper: `COPPER_ORE`, `DEEPSLATE_COPPER_ORE`, `RAW_COPPER_BLOCK`
+- Gold: `GOLD_ORE`, `DEEPSLATE_GOLD_ORE`
+- Redstone: `REDSTONE_ORE`, `DEEPSLATE_REDSTONE_ORE`
+- Emerald: `EMERALD_ORE`, `DEEPSLATE_EMERALD_ORE`
+- Lapis: `LAPIS_ORE`, `DEEPSLATE_LAPIS_ORE`
+- Diamond: `DIAMOND_ORE`, `DEEPSLATE_DIAMOND_ORE`
+- Nether gold family: `NETHER_GOLD_ORE`, `GILDED_BLACKSTONE`
+- Nether quartz: `NETHER_QUARTZ_ORE`
+- Ancient debris: `ANCIENT_DEBRIS`
+
+`RAW_GOLD_BLOCK` is intentionally not tracked.
 
 ## Build
 
-Use Gradle with Java `25`:
+Build with Gradle on Java `25`:
 
 ```bash
 gradle build printBuildConfig
 ```
 
-That writes the next jar to the same pattern:
+Successful builds:
 
-```text
-build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar
-```
+- run the test suite
+- write the next jar to `build/libs/`
+- keep older jars in place
+- increment `version.properties` for the next build number
 
-After a successful jar build, `version.properties` is updated automatically, so the next local build will produce the next build number and keep the older jar in `build/libs/`.
+## Installation Summary
 
-## Test Runner
+1. Install Paper with Java `25`.
+2. Install CoreProtect before this plugin.
+3. Place the built jar in your server's `plugins/` folder.
+4. Start the server so `plugins/1MB-XRayHeuristics/` and its generated files are created.
+5. Verify the load with `version xrayheuristics`, `/xrayer info`, and `/xrayer debug`.
 
-Use the centralized Paper runner from:
+Detailed steps are in [docs/installation.md](docs/installation.md).
 
-```text
-/Users/floris/Projects/Codex/servers/run-test-server
-```
+## Integrations
 
-Example foreground test runs:
+- Required runtime dependency: CoreProtect
+- Optional storage integration: MySQL
+- No verified PlaceholderAPI expansion registration
+- No required dependency on CMI, LuckPerms, Vault, or PlaceholderAPI for the core plugin behavior
 
-```bash
-/Users/floris/Projects/Codex/servers/run-test-server --paper 1.21.11 --plugin build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar --foreground
-/Users/floris/Projects/Codex/servers/run-test-server --paper 26.1.2 --plugin build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.1.2.jar --foreground
-```
-
-The same jar is compiled against Paper `26.1.2`, but it declares `api-version: 1.21.11` so it can be exercised on both Paper versions.
-
-The plugin stores its own files in:
-
-```text
-plugins/1MB-XRayHeuristics/
-```
-
-This repo should not rely on a local `./servers/` folder for building or testing. The path is ignored by Git, but the intended test flow is the centralized runner above.
-
-If `/Users/floris/Projects/Codex/servers/cache/Paper-26.1.2/plugins/CoreProtect-24.0-dev1.jar` exists, Gradle uses that centralized jar for compile/test classpaths. Otherwise it falls back to the published CoreProtect `23.4` dependency coordinates for local build resilience.
-
-## Notes
-
-- The plugin now exposes `/xrayer debug`, `/xrayer debug permissions`, `/xrayer debug commands`, `/xrayer debug config`, and `/xrayer debug set <key> <value>`.
-- The live suspicion threshold is now configurable through `SuspicionThreshold` and through `/xrayer debug set suspicion-threshold <value>`.
-- The heuristic tracker now covers raw iron blocks, raw copper blocks, gilded blackstone, ancient debris, and the deepslate ore families.
-- The plugin now requires CoreProtect API `11` or newer at startup and reports the exact CoreProtect version and API level it successfully hooked at runtime.
-- `/xrayer help`, `/xrayer debug`, `plugin.yml`, and `printBuildConfig` now distinguish between the Paper `26.1.2` compile target and the declared `1.21.11` api-version floor.
-- `CleansePlayerItems` and `NullifySuspicionAfterPunish` are the corrected config names, while the old typo keys are still read for backwards compatibility.
-- `/ver xrayheuristics` now reports the `2.0.0-0xx-j25-26.1.2` version line and a description that references the current CoreProtect `24.0-dev1` / API `12` target.
+See [docs/integrations.md](docs/integrations.md) for details.
 
 ## Credits
 
-- Original plugin authors: __Mithrandir__ and Greymagic27
+- Original plugin authors: `__Mithrandir__` and `Greymagic27`
 - 1MoreBlock maintenance, packaging, compatibility work, and testing: [mrfloris](https://github.com/mrfloris)
-- Thanks to everyone who contributed context, testing, and follow-up fixes around the 1MB Anti-XRay plugin line
+- Thanks to everyone who contributed testing and follow-up fixes across the 1MoreBlock Anti-XRay plugin line

@@ -1,0 +1,12 @@
+id: xrayheuristics
+name: 1MB XRayHeuristics
+category: custom-server-plugin
+summary: Heuristic Anti-XRay add-on that tracks suspicious mining patterns and staff handling workflows.
+main_command: /xrayer
+docs_url: https://docs.1moreblock.com/custom-server-plugins/xrayheuristics/
+player_guide: player-guide.md
+technical_readme: ../README.md
+java_target: 25
+paper_target: 26.2
+official_project: true
+repository: mrfdev/AntiXrayHeuristics
