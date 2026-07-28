@@ -33,12 +33,18 @@ The target must be online so stored items can be returned or dropped nearby if i
 
 Run `/xrayer debug` and check:
 
+- `Version`, `Semantic version`, and `Build number`
+- `Compiled Java target`
+- `Compiled Paper API` and `Paper channel`
+- `Runtime Java` and `Server`
 - `CoreProtect hooked`
 - `CoreProtect version`
 - `CoreProtect API`
 - `Hook status`
 - `Storage type`
 - `Tracked worlds`
+
+For source-release drift, run `gradle verifyReleaseMetadata`. The task fails when generated plugin metadata or documented version, build, Java, Paper API, or channel values no longer match `version.properties`.
 
 ## Persistence Files
 

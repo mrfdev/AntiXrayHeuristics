@@ -3,6 +3,7 @@ package com.greymagic27.command;
 import com.greymagic27.AntiXrayHeuristics;
 import com.greymagic27.integration.CoreProtectHook;
 import com.greymagic27.manager.LocaleManager;
+import com.greymagic27.util.BuildMetadata;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -95,15 +96,17 @@ public final class CommandARGDebug {
 
     private static void sendOverview(@NonNull CommandSender sender, @NonNull AntiXrayHeuristics plugin) {
         CoreProtectHook hook = plugin.getCoreProtectHook();
-        String pluginVersion = plugin.getPluginMeta().getVersion();
+        BuildMetadata metadata = plugin.getBuildMetadata();
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&d&l1MB Heuristics Debug");
         sendLine(sender, "&7Plugin: &f" + plugin.getPluginMeta().getName());
-        sendLine(sender, "&7Version: &f" + pluginVersion);
-        sendLine(sender, "&7Build number: &f" + extractBuildPart(pluginVersion, 1, "unknown"));
-        sendLine(sender, "&7Compiled Java: &f" + extractBuildPart(pluginVersion, 2, "j??"));
-        sendLine(sender, "&7Compiled Paper: &f" + extractBuildPart(pluginVersion, 3, "26.2"));
-        sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
+        sendLine(sender, "&7Version: &f" + metadata.artifactVersion());
+        sendLine(sender, "&7Semantic version: &f" + metadata.pluginVersion());
+        sendLine(sender, "&7Build number: &f" + metadata.buildNumber());
+        sendLine(sender, "&7Compiled Java target: &f" + metadata.javaTarget());
+        sendLine(sender, "&7Compiled Paper API: &f" + metadata.paperApi());
+        sendLine(sender, "&7Paper channel: &f" + metadata.paperApiChannel());
+        sendLine(sender, "&7Declared API floor: &f" + metadata.declaredApiVersion());
         sendLine(sender, "&7Runtime Java: &f" + System.getProperty("java.version"));
         sendLine(sender, "&7Server: &f" + Bukkit.getName() + " " + Bukkit.getVersion());
         sendLine(sender, "&7CoreProtect hooked: &f" + yesNo(hook.isHooked()));
@@ -257,11 +260,6 @@ public final class CommandARGDebug {
 
     private static @NonNull String join(@NonNull List<String> values) {
         return values.isEmpty() ? "(empty)" : String.join(", ", values);
-    }
-
-    private static @NonNull String extractBuildPart(@NonNull String version, int index, @NonNull String fallback) {
-        String[] parts = version.split("-");
-        return parts.length > index ? parts[index] : fallback;
     }
 
     private static @NonNull String yesNo(boolean value) {

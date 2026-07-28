@@ -14,6 +14,7 @@ import com.greymagic27.integration.CoreProtectHook;
 import com.greymagic27.manager.LocaleManager;
 import com.greymagic27.manager.MemoryManager;
 import com.greymagic27.util.BlockWeightInfo;
+import com.greymagic27.util.BuildMetadata;
 import com.greymagic27.util.CommentedConfigFile;
 import com.greymagic27.util.MiningSession;
 import com.greymagic27.util.WeightsCard;
@@ -68,6 +69,7 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     public final MemoryManager mm = new MemoryManager(this);
     public XrayerVault vault;
     private APIAntiXrayHeuristics api;
+    private BuildMetadata buildMetadata;
     private CoreProtectHook coreProtectHook;
     private File pluginDataDirectory;
     private File configFile;
@@ -89,6 +91,10 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
     public @NonNull CoreProtectHook getCoreProtectHook() {
         return Objects.requireNonNull(coreProtectHook, "CoreProtect hook has not been initialized yet.");
+    }
+
+    public @NonNull BuildMetadata getBuildMetadata() {
+        return Objects.requireNonNull(buildMetadata, "Build metadata has not been initialized yet.");
     }
 
     public float getSuspicionThreshold() {
@@ -214,6 +220,8 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
+        this.buildMetadata = BuildMetadata.load(this);
+        validateBuildMetadata();
         this.api = new APIAntiXrayHeuristicsImpl(this);
 
         ensurePluginDataDirectory();
@@ -247,7 +255,10 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
         Bukkit.getConsoleSender().sendMessage(
                 LegacyComponentSerializer.legacyAmpersand().deserialize(
-                        "&5[&b1MB Heuristics&5] &aEnabled successfully with " + getCoreProtectHook().getSummaryLine()
+                        "&5[&b1MB Heuristics&5] &aEnabled " + getBuildMetadata().artifactVersion()
+                                + " [Paper API " + getBuildMetadata().paperApi()
+                                + ", Java target " + getBuildMetadata().javaTarget()
+                                + "] with " + getCoreProtectHook().getSummaryLine()
                 )
         );
     }
@@ -269,6 +280,22 @@ public final class AntiXrayHeuristics extends JavaPlugin implements Listener {
 
     public boolean refreshCoreProtectHook() {
         return getCoreProtectHook().refresh();
+    }
+
+    private void validateBuildMetadata() {
+        BuildMetadata metadata = getBuildMetadata();
+        if (!getPluginMeta().getVersion().equals(metadata.artifactVersion())) {
+            throw new IllegalStateException(
+                    "plugin.yml version '" + getPluginMeta().getVersion()
+                            + "' does not match build metadata '" + metadata.artifactVersion() + "'."
+            );
+        }
+        if (!getPluginMeta().getAPIVersion().equals(metadata.declaredApiVersion())) {
+            throw new IllegalStateException(
+                    "plugin.yml api-version '" + getPluginMeta().getAPIVersion()
+                            + "' does not match build metadata '" + metadata.declaredApiVersion() + "'."
+            );
+        }
     }
 
     private void ensurePluginDataDirectory() {

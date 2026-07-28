@@ -1,6 +1,7 @@
 package com.greymagic27.command;
 
 import com.greymagic27.AntiXrayHeuristics;
+import com.greymagic27.util.BuildMetadata;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
@@ -15,14 +16,15 @@ public final class CommandARGHelp {
     }
 
     public static void sendHelp(@NonNull CommandSender sender, @NonNull AntiXrayHeuristics plugin) {
-        String pluginVersion = plugin.getPluginMeta().getVersion();
+        BuildMetadata metadata = plugin.getBuildMetadata();
         sendLine(sender, "&8&m------------------------------------------------");
         sendLine(sender, "&d&l1MB XRayHeuristics / " + ROOT);
-        sendLine(sender, "&7Version: &f" + pluginVersion);
+        sendLine(sender, "&7Version: &f" + metadata.artifactVersion());
         sendLine(sender, "&7Plugin: &f" + plugin.getPluginMeta().getName());
-        sendLine(sender, "&7Compiled Paper target: &f" + extractBuildPart(pluginVersion, 3, "26.2"));
-        sendLine(sender, "&7Declared API floor: &f" + plugin.getPluginMeta().getAPIVersion());
-        sendLine(sender, "&7CoreProtect target: &f24.0-dev1 (API 12)");
+        sendLine(sender, "&7Compiled Paper API: &f" + metadata.paperApi());
+        sendLine(sender, "&7Compiled Java target: &f" + metadata.javaTarget());
+        sendLine(sender, "&7Declared API floor: &f" + metadata.declaredApiVersion());
+        sendLine(sender, "&7CoreProtect target: &f" + metadata.coreProtectTarget());
         sendLine(sender, "&7Use &f/" + ROOT + " debug &7for live status and hook information.");
         sendLine(sender, "&7Use &f/" + ROOT + " info &7for the public intro, quick start, and docs link.");
         sendLine(sender, "&8&m------------------------------------------------");
@@ -59,8 +61,4 @@ public final class CommandARGHelp {
         sender.sendMessage(component);
     }
 
-    private static @NonNull String extractBuildPart(@NonNull String version, int index, @NonNull String fallback) {
-        String[] parts = version.split("-");
-        return parts.length > index ? parts[index] : fallback;
-    }
 }

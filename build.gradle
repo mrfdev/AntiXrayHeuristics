@@ -6,29 +6,42 @@ plugins {
 
 def artifactName = '1MB-XRayHeuristics'
 def internalPluginName = 'xrayheuristics'
-def javaTarget = 25
-def targetPaperVersion = '26.2'
-def targetPaperApiBuild = '60'
-def targetPaperApiChannel = 'beta'
-def declaredApiVersion = '1.21.11'
-def targetCoreProtectVersion = '24.0-dev1'
-def targetCoreProtectApiVersion = '12'
 def fallbackCoreProtectVersion = '23.4'
 def sharedCoreProtectJar = file('/Users/floris/Projects/Codex/servers/cache/Paper-26.2/plugins/CoreProtect-24.0-dev1.jar')
 def versionPropertiesFile = file('version.properties')
 def versionProperties = new Properties()
 
-if (versionPropertiesFile.exists()) {
-    versionPropertiesFile.withInputStream { stream ->
-        versionProperties.load(stream)
+if (!versionPropertiesFile.exists()) {
+    throw new GradleException("Missing release metadata: ${versionPropertiesFile}")
+}
+versionPropertiesFile.withInputStream { stream -> versionProperties.load(stream) }
+
+def releaseProperty = { String key ->
+    String value = versionProperties.getProperty(key)
+    if (value == null || value.isBlank()) {
+        throw new GradleException("Missing release property '${key}' in ${versionPropertiesFile}")
     }
+    value.trim()
 }
 
-def pluginVersion = versionProperties.getProperty('pluginVersion', '2.0.0')
-def currentBuildNumber = Integer.parseInt(versionProperties.getProperty('buildNumber', '011'))
-def nextBuildNumber = currentBuildNumber + 1
-def buildNumber = String.format('%03d', nextBuildNumber)
+def pluginVersion = releaseProperty('pluginVersion')
+def buildNumber = releaseProperty('buildNumber')
+def javaTarget = Integer.parseInt(releaseProperty('javaTarget'))
+def targetPaperVersion = releaseProperty('paperVersion')
+def targetPaperApiBuild = releaseProperty('paperApiBuild')
+def targetPaperApiChannel = releaseProperty('paperApiChannel')
+def declaredApiVersion = releaseProperty('declaredApiVersion')
+def targetCoreProtectVersion = releaseProperty('coreProtectVersion')
+def targetCoreProtectApiVersion = releaseProperty('coreProtectApiVersion')
+def targetPaperApi = "${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}"
 def pluginBuildVersion = "${pluginVersion}-${buildNumber}-j${javaTarget}-${targetPaperVersion}"
+
+if (!(pluginVersion ==~ /\d+\.\d+\.\d+/)) {
+    throw new GradleException("pluginVersion must be semantic x.y.z, found '${pluginVersion}'")
+}
+if (!(buildNumber ==~ /\d{3}/)) {
+    throw new GradleException("buildNumber must contain exactly three digits, found '${buildNumber}'")
+}
 
 group = 'com.greymagic27'
 version = pluginBuildVersion
@@ -55,7 +68,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}")
+    compileOnly("io.papermc.paper:paper-api:${targetPaperApi}")
     if (sharedCoreProtectJar.exists()) {
         compileOnly(files(sharedCoreProtectJar))
         testRuntimeOnly(files(sharedCoreProtectJar))
@@ -71,7 +84,7 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.13.2")
     compileOnly("org.jspecify:jspecify:1.0.0")
 
-    testImplementation("io.papermc.paper:paper-api:${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}")
+    testImplementation("io.papermc.paper:paper-api:${targetPaperApi}")
     testImplementation(platform("org.junit:junit-bom:5.13.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -80,7 +93,12 @@ dependencies {
 processResources {
     inputs.properties([
             pluginName               : internalPluginName.toString(),
+            pluginVersion            : pluginVersion.toString(),
+            buildNumber              : buildNumber.toString(),
             targetPaperVersion       : targetPaperVersion.toString(),
+            targetPaperApi           : targetPaperApi.toString(),
+            targetPaperApiBuild      : targetPaperApiBuild.toString(),
+            targetPaperApiChannel    : targetPaperApiChannel.toString(),
             declaredApiVersion       : declaredApiVersion.toString(),
             javaTarget               : javaTarget.toString(),
             version                  : version.toString(),
@@ -88,10 +106,15 @@ processResources {
             targetCoreProtectApiVersion: targetCoreProtectApiVersion.toString()
     ])
     filteringCharset = 'UTF-8'
-    filesMatching('plugin.yml') {
+    filesMatching(['plugin.yml', 'build-info.properties']) {
         filter ReplaceTokens, tokens: [
                 pluginName                : internalPluginName.toString(),
+                pluginVersion             : pluginVersion.toString(),
+                buildNumber               : buildNumber.toString(),
                 targetPaperVersion        : targetPaperVersion.toString(),
+                targetPaperApi            : targetPaperApi.toString(),
+                targetPaperApiBuild       : targetPaperApiBuild.toString(),
+                targetPaperApiChannel     : targetPaperApiChannel.toString(),
                 declaredApiVersion        : declaredApiVersion.toString(),
                 javaTarget                : javaTarget.toString(),
                 version                   : version.toString(),
@@ -111,17 +134,102 @@ tasks.test {
 }
 
 tasks.register('printBuildConfig') {
+    dependsOn 'verifyReleaseMetadata'
     doLast {
         println "Artifact name: ${artifactName}"
         println "Plugin name: ${internalPluginName}"
         println "Version: ${pluginBuildVersion}"
         println "Java target: ${javaTarget}"
-        println "Compiled against Paper API: ${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}"
+        println "Compiled against Paper API: ${targetPaperApi}"
         println "Declared plugin api-version: ${declaredApiVersion}"
         println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
         println "Shared CoreProtect jar: ${sharedCoreProtectJar}"
         println "CoreProtect Maven fallback: ${fallbackCoreProtectVersion}"
     }
+}
+
+tasks.register('verifyReleaseMetadata') {
+    dependsOn tasks.named('processResources')
+    doLast {
+        def requiredSnippets = [
+                'README.md': [
+                        "Current release: `${pluginBuildVersion}`",
+                        "Paper compile target: `${targetPaperApi}`",
+                        "build/libs/${artifactName}-v${pluginBuildVersion}.jar"
+                ],
+                'docs/installation.md': [
+                        "Current release: `${pluginBuildVersion}`",
+                        "Paper compile target: `${targetPaperApi}`",
+                        "build/libs/${artifactName}-v${pluginBuildVersion}.jar"
+                ],
+                'docs/integrations.md': [
+                        "Paper compile target: `${targetPaperApi}`",
+                        "Java target: `${javaTarget}`"
+                ],
+                'docs/plugin-docs.yml': [
+                        "plugin_version: ${pluginVersion}",
+                        "build_number: '${buildNumber}'",
+                        "java_target: ${javaTarget}",
+                        "paper_api: ${targetPaperApi}",
+                        "paper_channel: ${targetPaperApiChannel}"
+                ]
+        ]
+
+        requiredSnippets.each { path, snippets ->
+            String content = file(path).getText('UTF-8')
+            snippets.each { snippet ->
+                if (!content.contains(snippet)) {
+                    throw new GradleException("${path} is missing release metadata: ${snippet}")
+                }
+            }
+        }
+
+        def staleMarkers = ['2.0.0', '26.2.build.60-beta', 'buildNumber=028']
+        def driftFiles = [
+                file('README.md'),
+                file('docs/installation.md'),
+                file('docs/integrations.md'),
+                file('docs/plugin-docs.yml'),
+                file('src/main/resources/plugin.yml'),
+                file('src/main/resources/build-info.properties'),
+                file('src/test/java/com/greymagic27/command/CommandARGInfoTest.java')
+        ]
+        driftFiles.each { driftFile ->
+            String content = driftFile.getText('UTF-8')
+            staleMarkers.each { marker ->
+                if (content.contains(marker)) {
+                    throw new GradleException("${driftFile} still contains stale release marker '${marker}'")
+                }
+            }
+        }
+
+        String generatedPlugin = layout.buildDirectory.file('resources/main/plugin.yml').get().asFile.getText('UTF-8')
+        String generatedBuildInfo = layout.buildDirectory.file('resources/main/build-info.properties').get().asFile.getText('UTF-8')
+        [
+                "version: ${pluginBuildVersion}",
+                "api-version: ${declaredApiVersion}",
+                "compiled against Paper API ${targetPaperApi}",
+                "Java target ${javaTarget}"
+        ].each { snippet ->
+            if (!generatedPlugin.contains(snippet)) {
+                throw new GradleException("Generated plugin.yml is missing '${snippet}'")
+            }
+        }
+        [
+                "artifactVersion=${pluginBuildVersion}",
+                "paperApi=${targetPaperApi}",
+                "javaTarget=${javaTarget}",
+                "declaredApiVersion=${declaredApiVersion}"
+        ].each { snippet ->
+            if (!generatedBuildInfo.contains(snippet)) {
+                throw new GradleException("Generated build-info.properties is missing '${snippet}'")
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyReleaseMetadata')
 }
 
 tasks.jar {
@@ -132,10 +240,4 @@ tasks.jar {
         }
     }
     archiveFileName.set("${artifactName}-v${pluginBuildVersion}.jar")
-    doLast {
-        versionPropertiesFile.text = """# Updated after a successful jar build.
-pluginVersion=${pluginVersion}
-buildNumber=${buildNumber}
-"""
-    }
 }

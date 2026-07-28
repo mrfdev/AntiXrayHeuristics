@@ -7,12 +7,17 @@
 - Player-facing name: `1MB XRayHeuristics`
 - Internal plugin name: `xrayheuristics`
 - Main command: `/xrayer`
+- Current release: `2.0.1-029-j25-26.2`
+- Semantic version: `2.0.1`
+- Build number: `029`
 - Build target: Java `25`
-- Paper compile target: `26.2.build.60-beta`
+- Release build JDK: Oracle JDK `25.0.4`
+- Runtime verification JDKs: Oracle JDK `25.0.4` and `26.0.2`
+- Paper compile target: `26.2.build.84-stable`
 - Declared `plugin.yml` api-version floor: `1.21.11`
 - CoreProtect compile target: `24.0-dev1` with API `12`
 - Minimum CoreProtect API accepted at runtime: `11`
-- Artifact pattern: `build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.2.jar`
+- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.1-029-j25-26.2.jar`
 - Plugin data directory: `plugins/1MB-XRayHeuristics/`
 - Persistent storage backends: `JSON` or `MYSQL`
 
@@ -108,18 +113,18 @@ The runtime logic currently tracks these ore families:
 
 ## Build
 
-Build with Gradle on Java `25`:
+Build with Gradle using the required Java `25.0.4` JDK:
 
 ```bash
-gradle build printBuildConfig
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
+  gradle clean build printBuildConfig --warning-mode all
 ```
 
-Successful builds:
+Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
-- run the test suite
-- write the next jar to `build/libs/`
-- keep older jars in place
-- increment `version.properties` for the next build number
+`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, and channel metadata.
+
+Official references used for the target are the [Paper project setup guide](https://docs.papermc.io/paper/dev/project-setup/) and [Paper 26.2 API Javadocs](https://jd.papermc.io/paper/26.2/).
 
 ## Installation Summary
 

@@ -4,7 +4,7 @@ version: @version@
 api-version: @declaredApiVersion@
 authors: [__Mithrandir__, Greymagic27, mrfloris]
 depend: [CoreProtect]
-description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVersion@ (API @targetCoreProtectApiVersion@), compiled against Paper @targetPaperVersion@ and declaring api-version @declaredApiVersion@.
+description: 1MB heuristic Anti-XRay add-on for CoreProtect @targetCoreProtectVersion@ (API @targetCoreProtectApiVersion@), compiled against Paper API @targetPaperApi@ with Java target @javaTarget@ and declaring api-version @declaredApiVersion@.
 commands:
   xrayer:
     usage: |

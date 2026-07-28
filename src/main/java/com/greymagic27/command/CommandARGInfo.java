@@ -1,6 +1,7 @@
 package com.greymagic27.command;
 
 import com.greymagic27.AntiXrayHeuristics;
+import com.greymagic27.util.BuildMetadata;
 import java.util.ArrayList;
 import java.util.List;
 import net.kyori.adventure.text.Component;
@@ -26,8 +27,7 @@ public final class CommandARGInfo {
 
     public static void sendInfo(@NonNull CommandSender sender, @NonNull AntiXrayHeuristics plugin) {
         for (String line : buildInfoLines(
-                plugin.getPluginMeta().getVersion(),
-                plugin.getPluginMeta().getAPIVersion(),
+                plugin.getBuildMetadata(),
                 plugin.getPluginMeta().getName(),
                 CommandARGHelp.hasAdminAccess(sender)
         )) {
@@ -38,8 +38,7 @@ public final class CommandARGInfo {
     }
 
     static @NonNull List<String> buildInfoLines(
-            @NonNull String version,
-            @NonNull String declaredApiVersion,
+            @NonNull BuildMetadata metadata,
             @NonNull String pluginId,
             boolean adminAccess
     ) {
@@ -48,9 +47,12 @@ public final class CommandARGInfo {
         lines.add("&d&l" + PLAYER_FACING_NAME + " / " + ROOT);
         lines.add("&7" + SHORT_INTRO);
         lines.add("&7This plugin is primarily staff-facing. Regular players usually only need this info page or the help page.");
-        lines.add("&7Installed version: &f" + version);
+        lines.add("&7Installed version: &f" + metadata.artifactVersion());
         lines.add("&7Plugin id: &f" + pluginId);
-        lines.add("&7Declared API floor: &f" + declaredApiVersion);
+        lines.add("&7Compiled Paper API: &f" + metadata.paperApi());
+        lines.add("&7Compiled Java target: &f" + metadata.javaTarget());
+        lines.add("&7Declared API floor: &f" + metadata.declaredApiVersion());
+        lines.add("&7CoreProtect target: &f" + metadata.coreProtectTarget());
         lines.add("&7Quick start:");
         lines.add("&f/" + ROOT + " info &7- Reopen this introduction and docs page.");
         lines.add("&f/" + ROOT + " help &7- Show the full command list.");

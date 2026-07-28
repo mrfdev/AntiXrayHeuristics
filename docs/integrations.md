@@ -40,7 +40,9 @@ There is no verified PlaceholderAPI expansion registration in the current source
 From the current build files and `plugin.yml`:
 
 - Java target: `25`
-- Paper compile target: `26.2.build.60-beta`
+- Paper compile target: `26.2.build.84-stable`
 - Declared plugin `api-version`: `1.21.11`
 
 That means the project is built against Paper `26.2` while declaring an older compatibility floor in plugin metadata so the same jar can be exercised on compatible servers that still accept the `1.21.11` floor.
+
+The exact compile coordinate, semantic version, build number, Java target, API floor, and CoreProtect target are packaged in `build-info.properties`. `/xrayer info`, `/xrayer help`, `/xrayer debug`, startup output, and generated `plugin.yml` consume that release metadata instead of hardcoded release values.

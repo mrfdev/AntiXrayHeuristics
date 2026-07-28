@@ -9,7 +9,12 @@
 
 Verified build metadata from this repository:
 
-- Paper compile target: `26.2.build.60-beta`
+- Current release: `2.0.1-029-j25-26.2`
+- Semantic version: `2.0.1`
+- Build number: `029`
+- Build JDK: Oracle JDK `25.0.4`
+- Java bytecode target: `25`
+- Paper compile target: `26.2.build.84-stable`
 - Declared `plugin.yml` api-version floor: `1.21.11`
 - CoreProtect compile target: `24.0-dev1`
 - Minimum runtime CoreProtect API accepted by code: `11`
@@ -19,16 +24,17 @@ Verified build metadata from this repository:
 Run:
 
 ```bash
-gradle build printBuildConfig
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
+  gradle clean build printBuildConfig --warning-mode all
 ```
 
-The jar name pattern is:
+The release jar is:
 
 ```text
-build/libs/1MB-XRayHeuristics-v2.0.0-0xx-j25-26.2.jar
+build/libs/1MB-XRayHeuristics-v2.0.1-029-j25-26.2.jar
 ```
 
-Each successful build increments `version.properties` and leaves older jars in `build/libs/`.
+Release metadata comes from `version.properties`. Increment its semantic version and build number once when preparing a release. Repeated builds keep the same release identity, and `gradle check` runs the metadata drift validation.
 
 ## Install On A Server
 
@@ -60,6 +66,8 @@ After startup, verify:
 
 - runtime Java version
 - server version
+- exact compiled Paper API and channel
+- compiled Java bytecode target
 - CoreProtect hook status
 - CoreProtect version and API
 - config, locale, and weights file paths
