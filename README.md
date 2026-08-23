@@ -20,6 +20,8 @@
 - Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.1-029-j25-26.2.jar`
 - Plugin data directory: `plugins/1MB-XRayHeuristics/`
 - Persistent storage backends: `JSON` or `MYSQL`
+- Maintained Java namespace: `com.onemoreblock.coreprotectaddons.xrayheuristics`
+- Runtime boundary: reusable `XRayHeuristicsModule` plus a standalone `XRayHeuristicsPlugin` adapter
 
 ## Documentation
 
@@ -31,6 +33,7 @@
 - Configuration: [docs/configuration.md](docs/configuration.md)
 - Installation: [docs/installation.md](docs/installation.md)
 - Integrations: [docs/integrations.md](docs/integrations.md)
+- Architecture and future consolidation: [docs/architecture.md](docs/architecture.md)
 - Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
 - Import manifest: [docs/plugin-docs.yml](docs/plugin-docs.yml)
 
@@ -93,6 +96,12 @@ Other generated files:
 
 Important runtime note: the current heuristic calculator reads its live suspicion weights from the top-level keys in `config.yml`. `weights.yml` is generated and reloaded, but it is not the active source for the main suspicion-weight checks in the current code.
 
+## Architecture and Future Consolidation
+
+The current jar remains a standalone plugin, but its maintained implementation is organized as an extractable X-ray Heuristics feature. `XRayHeuristicsPlugin` owns the standalone Paper lifecycle and compatibility paths; `XRayHeuristicsModule` owns feature state, listeners, CoreProtect access, commands, config, and handled-player persistence.
+
+This boundary is intended for the planned unified CoreProtect Add-ons plugin. The future host can instantiate the module with a shared `JavaPlugin`, an explicit feature data directory, and a shared CoreProtect hook. Existing server-facing identifiers and data formats remain unchanged in this release. See [docs/architecture.md](docs/architecture.md) for the embedding contract and migration constraints.
+
 ## Ore Coverage
 
 The runtime logic currently tracks these ore families:
@@ -122,7 +131,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
 
 Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
-`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, and channel metadata.
+`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, and channel metadata.
 
 Official references used for the target are the [Paper project setup guide](https://docs.papermc.io/paper/dev/project-setup/) and [Paper 26.2 API Javadocs](https://jd.papermc.io/paper/26.2/).
 

@@ -1,5 +1,5 @@
 name: @pluginName@
-main: com.greymagic27.AntiXrayHeuristics
+main: com.onemoreblock.coreprotectaddons.xrayheuristics.XRayHeuristicsPlugin
 version: @version@
 api-version: @declaredApiVersion@
 authors: [__Mithrandir__, Greymagic27, mrfloris]
@@ -19,7 +19,7 @@ commands:
       /xrayer vault
       /xrayer absolve <player>
       /xrayer purge <player>
-    description: Review heuristic plugin status, manage suspicious sessions, and administer the xray vault.
+    description: Review heuristic plugin status, manage suspicion sessions, and administer the handled-player vault.
 permissions:
   xrayheuristics.use:
     description: Allows suspicion lookups.
@@ -39,7 +39,7 @@ permissions:
       AXH.Commands.PurgePlayer: true
       AXH.Vault.Purge: true
   xrayheuristics.notify:
-    description: Receives automatic xray-handled warning messages.
+    description: Receives automatic handled-player warning messages.
     default: op
     children:
       AXH.XrayerWarning: true
@@ -70,7 +70,7 @@ permissions:
     description: Legacy permission node for purging a handled player.
     default: op
   AXH.Vault.Purge:
-    description: Legacy permission node for purging the full xrayer vault from the GUI.
+    description: Legacy permission node for purging the full handled-player vault from the GUI.
     default: op
   AXH.XrayerWarning:
     description: Legacy permission node for automatic warning messages.

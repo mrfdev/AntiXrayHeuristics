@@ -1,0 +1,150 @@
+//--------------------------------------------------------------------
+// Copyright © Dylan Calaf Latham 2019-2021 XRay Heuristics
+//--------------------------------------------------------------------
+
+package com.onemoreblock.coreprotectaddons.xrayheuristics.util;
+
+import com.onemoreblock.coreprotectaddons.xrayheuristics.XRayHeuristicsModule;
+import java.util.Arrays;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.util.BlockVector;
+
+public class MiningSession { //Contains heuristics tracked per player
+
+    private final XRayHeuristicsModule module;
+    //Mined blocks trail tracking algorithm variables:
+    private final BlockVector[] minedBlocksTrailCoords = new BlockVector[10];
+    public int minedNonOreBlocksStreak = 0; //Tracks how many non-ore blocks have been mined in streak.
+    public int foundAtZeroSuspicionStreak = 0; //Tracks how many times this mining session has been found at suspicion level 0 during Runnable tasks.
+    float suspicionDecreaseAmount = -4; //How much "suspicionLevel" to reduce for the MiningSession every "mainRunnableFrequency" in the X-ray Heuristics module. This value results from a calculation based on speed.
+    //General distance/time algorithm variables:
+    private float suspicionLevel = 0.0f; //Level of suspicion for the player
+    private Material lastMinedOre = null; //Last mined Material ore name
+    private Location lastMinedOreLocation = null; //Last mined Material ore location
+    private int shortestDeltaTimeThirtyBlocksMined = Integer.MAX_VALUE; //Shortest delta time from 0 to 30 blocks mined (this value represents the speed at which the mining session owner is removing blocks)
+    private int lastThirtyBlocksTime; //Last time we reached 30 mined blocks
+    private int thirtyBlockCounter = 0; //When this value reaches 30, "thirtyBlockTimer" is compared to "lowestTimeThirtyBlocksMined". If lower, "thirtyBlockTimer" replaces "lowestTimeThirtyBlocksMined"
+    private int explosivesPlacedStreak = 0; //Tracks how many explosive blocks have been placed. Used for suspicion increase inmunity above certain threshold.
+    private int nextCoordsStorePos = 0; //Position where next mined block coordinates will be stored
+    private int counterSinceLastBlockCoordsStore = 0; //Counts how many blocks we've mined since last mined block coordinates storing
+
+    public MiningSession(XRayHeuristicsModule main) {
+        this.module = main;
+        lastThirtyBlocksTime = (int) System.currentTimeMillis();
+    }
+
+    //General distance/time algorithm methods:
+    public float GetSuspicionLevel() {
+        return suspicionLevel;
+    }
+
+    public void SetSuspicionLevel(float l) {
+        suspicionLevel = l;
+    }
+
+    public void AddSuspicionLevel(float l) {
+        //Don't add suspicion if explosivesPlacedStreak above 4
+        if (explosivesPlacedStreak <= 4) suspicionLevel += l;
+    }
+
+    public void SelfSuspicionReducer() {
+        suspicionLevel += suspicionDecreaseAmount;
+    }
+
+    public void SetLastMinedOreData(Material m, Location l) {
+        lastMinedOre = m;
+        lastMinedOreLocation = l;
+    }
+
+    public Material GetLastMinedOre() {
+        return lastMinedOre;
+    }
+
+    public Location GetLastMinedOreLocation() {
+        return lastMinedOreLocation;
+    }
+
+    //Time property update methods:
+    public void UpdateTimeAccountingProperties(Player p) //Updates properties based on time, and may also modify suspicion decrease amount based on them
+    {
+        thirtyBlockCounter++;
+        if (thirtyBlockCounter >= 30) {
+            int thirtyBlockDeltaTime = ((int) System.currentTimeMillis() - lastThirtyBlocksTime); //Thirty block delta time in milliseconds
+
+            //Clamp 30 block delta time to max and min accountable millis:
+            if (thirtyBlockDeltaTime > module.maxAccountableMillisecondDeltaForThirtyMinedBlocks)
+                thirtyBlockDeltaTime = module.maxAccountableMillisecondDeltaForThirtyMinedBlocks;
+            else if (thirtyBlockDeltaTime < module.minAccountableMillisecondDeltaForThirtyMinedBlocks)
+                thirtyBlockDeltaTime = module.minAccountableMillisecondDeltaForThirtyMinedBlocks;
+
+            //Is this new delta shorter (hence 30 blocks where mined faster at this point) than the current shortest registered delta time?
+            if (thirtyBlockDeltaTime < shortestDeltaTimeThirtyBlocksMined) {
+                shortestDeltaTimeThirtyBlocksMined = thirtyBlockDeltaTime; //New highest speed
+
+                //Correlate decrease amount to current shortest delta...
+                //Example formula for range conversion x in range [a,b] to y in range [c,d]: "y = (x - a) * ((d - c) / (b - a)) + c"
+                suspicionDecreaseAmount = (shortestDeltaTimeThirtyBlocksMined - module.minAccountableMillisecondDeltaForThirtyMinedBlocks) *
+                        ((module.minSuspicionDecreaseProportion - (module.maxSuspicionDecreaseProportion)) /
+                                (module.maxAccountableMillisecondDeltaForThirtyMinedBlocks - module.minAccountableMillisecondDeltaForThirtyMinedBlocks)) +
+                        (module.maxSuspicionDecreaseProportion);
+            }
+            thirtyBlockCounter = 0;
+            lastThirtyBlocksTime = (int) System.currentTimeMillis();
+
+            //Minimum suspicion decrease amount should be at (negative) least "absoluteMinimumSuspicionDecrease", else suspicion reduction is too slow. This prevents slow mining players from receiving fp's
+            if (suspicionDecreaseAmount > module.absoluteMinimumSuspicionDecrease)
+                suspicionDecreaseAmount = module.absoluteMinimumSuspicionDecrease;
+
+            if (module.isVerboseMiningSessionDebug()) {
+                module.getLogger().info(
+                        "[xrayheuristics debug] player="
+                                + p.getName()
+                                + ", decreaseAmount="
+                                + suspicionDecreaseAmount
+                                + ", suspicionLevel="
+                                + suspicionLevel
+                );
+            }
+        }
+    }
+
+    //Mined blocks trail tracking algorithm methods:
+    public void IncreaseExplosivesPlaced() {
+        explosivesPlacedStreak++;
+    }
+
+    public int GetLastBlockCoordsStoreCounter() {
+        return counterSinceLastBlockCoordsStore;
+    }
+
+    public void CycleBlockCoordsStoreCounter() {
+        counterSinceLastBlockCoordsStore = (counterSinceLastBlockCoordsStore + 1) % 4;
+    }
+
+    public void ResetBlockCoordsStoreCounter() {
+        counterSinceLastBlockCoordsStore = 0;
+    }
+
+    public void CycleNextCoordsStorePos() {
+        nextCoordsStorePos = (nextCoordsStorePos + 1) % 10;
+    }
+
+    public int GetNextCoordsStorePos() {
+        return nextCoordsStorePos;
+    }
+
+    public BlockVector GetMinedBlocksTrailArrayPos(int pos) {
+        return minedBlocksTrailCoords[pos];
+    }
+
+    //void SetMinedBlocksTrailArrayPos(int pos, int x, int y, int z) { minedBlocksTrailCoords[pos] = new IntVector3(x, y, z); }
+    public void SetMinedBlocksTrailArrayPos(int pos, BlockVector l) {
+        minedBlocksTrailCoords[pos] = new BlockVector(l);
+    }
+
+    public void ResetBlocksTrailArray() {
+        Arrays.fill(minedBlocksTrailCoords, null);
+    }
+}

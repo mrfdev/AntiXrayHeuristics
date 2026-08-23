@@ -43,7 +43,7 @@ if (!(buildNumber ==~ /\d{3}/)) {
     throw new GradleException("buildNumber must contain exactly three digits, found '${buildNumber}'")
 }
 
-group = 'com.greymagic27'
+group = 'com.onemoreblock'
 version = pluginBuildVersion
 
 java {
@@ -106,7 +106,7 @@ processResources {
             targetCoreProtectApiVersion: targetCoreProtectApiVersion.toString()
     ])
     filteringCharset = 'UTF-8'
-    filesMatching(['plugin.yml', 'build-info.properties']) {
+    filesMatching(['plugin.yml', 'xrayheuristics/build-info.properties']) {
         filter ReplaceTokens, tokens: [
                 pluginName                : internalPluginName.toString(),
                 pluginVersion             : pluginVersion.toString(),
@@ -191,8 +191,8 @@ tasks.register('verifyReleaseMetadata') {
                 file('docs/integrations.md'),
                 file('docs/plugin-docs.yml'),
                 file('src/main/resources/plugin.yml'),
-                file('src/main/resources/build-info.properties'),
-                file('src/test/java/com/greymagic27/command/CommandARGInfoTest.java')
+                file('src/main/resources/xrayheuristics/build-info.properties'),
+                file('src/test/java/com/onemoreblock/coreprotectaddons/xrayheuristics/command/InfoSubcommandTest.java')
         ]
         driftFiles.each { driftFile ->
             String content = driftFile.getText('UTF-8')
@@ -204,7 +204,7 @@ tasks.register('verifyReleaseMetadata') {
         }
 
         String generatedPlugin = layout.buildDirectory.file('resources/main/plugin.yml').get().asFile.getText('UTF-8')
-        String generatedBuildInfo = layout.buildDirectory.file('resources/main/build-info.properties').get().asFile.getText('UTF-8')
+        String generatedBuildInfo = layout.buildDirectory.file('resources/main/xrayheuristics/build-info.properties').get().asFile.getText('UTF-8')
         [
                 "version: ${pluginBuildVersion}",
                 "api-version: ${declaredApiVersion}",

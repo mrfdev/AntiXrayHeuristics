@@ -1,0 +1,142 @@
+//--------------------------------------------------------------------
+// Copyright © Dylan Calaf Latham 2019-2021 XRay Heuristics
+//--------------------------------------------------------------------
+
+package com.onemoreblock.coreprotectaddons.xrayheuristics.manager;
+
+import com.onemoreblock.coreprotectaddons.xrayheuristics.util.YamlFiles;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class LocaleManager {
+
+    private static File localeFile;
+    private static FileConfiguration localeConfiguration;
+
+    private static Logger logger() {
+        return JavaPlugin.getProvidingPlugin(LocaleManager.class).getLogger();
+    }
+
+    private static void SetDefaultFileEntries() //Sets the default language entries in English
+    {
+        //Messages prefix:
+        localeConfiguration.addDefault("MessagesPrefix", "&5[&b1MB Heuristics&5]");
+
+        //Commands:
+        localeConfiguration.addDefault("NoPermissionForCommand", "&bYou do not have permission to execute this command.");
+        localeConfiguration.addDefault("PlayerOnlyCommand", "&bYou need to be a player to execute this command without arguments.");
+        localeConfiguration.addDefault("InvalidCMDArg", "&bInvalid command argument. Try &f/xrayer help&b.");
+        localeConfiguration.addDefault("PlayerNotOnlineOnHandle", "&bPlayer named &e{PlayerName} &bwas not found while attempting to handle as Xrayer. Player must be online.");
+        localeConfiguration.addDefault("Reloaded", "&bxrayheuristics has reloaded.");
+        localeConfiguration.addDefault("PlayerAbsolved", "&bAbsolving player, sending confiscated items back to owner and removing from vault.");
+        localeConfiguration.addDefault("PlayerNotOnlineOnAbsolution", "&bPlayer wasn't online. You can only absolve online players to return their items.");
+        localeConfiguration.addDefault("PlayerDataPurged", "&bThe Xrayer's data was purged from the xrayer vault.");
+        localeConfiguration.addDefault("PurgeCommandLimit", "&bPurging players through command is currently impossible for players that are not currently connected to the server. You CAN however, purge individual players that are offline through the in-game handled-player vault GUI: /xrayer vault");
+        localeConfiguration.addDefault("OwnSuspicionNullified", "&bYour suspicion has been nullified.");
+        localeConfiguration.addDefault("PlayerSuspicionNullified", "&a{PlayerName} &b's suspicion has been nullified.");
+        localeConfiguration.addDefault("NoOwnSuspicionReset", "&bYou are not suspicious of Xray usage. No suspicion reset applied.");
+        localeConfiguration.addDefault("NoPlayerSuspicionReset", "&a{PlayerName} &bis not suspicious of Xray usage. No suspicion reset was applied.");
+        localeConfiguration.addDefault("AbsolvedPlayer", "&a{PlayerName} &bhas been absolved from being considered an Xrayer, and his items have been returned.");
+
+        //Plugin Actions:
+        localeConfiguration.addDefault("AutoHandledPlayer", "&a{PlayerName} &bwas automatically registered and handled for xraying.");
+        localeConfiguration.addDefault("PlayerMessageOnXray", "&bYou were punished for Xraying, uninstall Xrays immediately. Resume your gameplay only after you have uninstalled Xrays.");
+        localeConfiguration.addDefault("ForcedPageZero", "&bYou were automatically sent to handled-player vault page 0 since one or more players were either purged or absolved.");
+        localeConfiguration.addDefault("VaultRefreshed", "&bShowing latest xrayer information.");
+        localeConfiguration.addDefault("TeleportToHandleLocation", "&bYou were teleported to the location where the player was handled for xrays.");
+
+        //Persistent memory:
+        localeConfiguration.addDefault("SQLDisconError", "&bThere was an error when attempting to disconnect from SQL database.");
+
+        //GUI:
+        localeConfiguration.addDefault("GUITitle", "&9Xrayer vault ");
+        localeConfiguration.addDefault("BackButtonTitle", "&aBack");
+        localeConfiguration.addDefault("GoBackButtonTitle", "&aGoBack");
+        localeConfiguration.addDefault("NextButtonTitle", "&aNext");
+        localeConfiguration.addDefault("PurgeButtonTitle", "&4Purge vault");
+        localeConfiguration.addDefault("PurgeButtonDesc", Arrays.asList("&bThis will delete all xrayer", "&bentries within the vault.", "&bEntries are irrecoverable", "&bafter they have been purged."));
+        localeConfiguration.addDefault("RefreshButtonTitle", "&9Refresh vault");
+        localeConfiguration.addDefault("RefreshButtonDesc", Arrays.asList("&bRefreshes xrayer entries", "&bshowing new, modified, or", "&bremoved logged xrayers."));
+        localeConfiguration.addDefault("PurgePlayerButtonTitle", "&4Purge player");
+        localeConfiguration.addDefault("PurgePlayerButtonDesc", Arrays.asList("&bThis will delete this specific", "&bxrayer entry and inventory.", "&bEntries are irrecoverable", "&bafter they have been purged."));
+        localeConfiguration.addDefault("AbsolvePlayerButtonTitle", "&eAbsolve player");
+        localeConfiguration.addDefault("AbsolvePlayerButtonDesc", Arrays.asList("&bAbsolve this player,", "&breturning all confiscated", "&bitems. If they don't fit in", "&bplayer's inventory, they", "&bwill be dropped nearby.", "&bThis also purges the player's", "&bentry in this vault."));
+        localeConfiguration.addDefault("HandledXrayerSlotName", "&aHandled xrayer slot #{Slot}");
+        localeConfiguration.addDefault("EntryDesc", Arrays.asList("&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
+        localeConfiguration.addDefault("EntryDescInspector", Arrays.asList("&aCLICK TO TELEPORT to detected location", "&aConsecutive times handled: &b{HandledTimesAmount}", "&aFirst time detected: &b{FirstTimeDetected}", "&aLast seen: &b{LastSeenTime}"));
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void setup(File pluginDataDirectory) //Finds or generates custom config file
+    {
+        localeFile = new File(pluginDataDirectory, "locale.yml");
+
+        if (!localeFile.exists()) {
+            try {
+                localeFile.createNewFile(); //Creates the file
+            } catch (IOException e) {
+                logger().log(Level.WARNING, "Could not create locale file.", e);
+            }
+        }
+        try {
+            localeConfiguration = YamlFiles.load(localeFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            localeConfiguration = new YamlConfiguration();
+            logger().log(Level.WARNING, "Could not load locale file.", e);
+        }
+        SetDefaultFileEntries(); //Sets default entries
+    }
+
+    public static FileConfiguration get() {
+        return localeConfiguration;
+    }
+
+    public static void save() {
+        try {
+            localeConfiguration.save(localeFile);
+        } catch (IOException e) {
+            logger().log(Level.WARNING, "Could not save locale file.", e);
+        }
+    }
+
+    public static void reload() //Used from ARGReload AXH command argument in order to reload the language file
+    {
+        try {
+            localeConfiguration = YamlFiles.load(localeFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            localeConfiguration = new YamlConfiguration();
+            logger().log(Level.WARNING, "Could not reload locale file.", e);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

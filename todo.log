@@ -2,7 +2,6 @@
 
 Future features / wishes / changes
 
-- Refactor internal naming so the codebase, package names, and class names are no longer a mix of `AntiXrayHeuristics` and `xrayheuristics`.
 - Add automated tests for suspicion accumulation, vein grouping, deepslate/raw-block handling, and the CoreProtect hook.
 - Expand `/xrayer debug set` to cover more config, locale, and GUI-related values once those need live editing.
 - Review and retune the current suspicion weights on live server data, especially for `RAW_IRON_BLOCK`, `RAW_COPPER_BLOCK`, and `GILDED_BLACKSTONE`.
@@ -11,3 +10,4 @@ Future features / wishes / changes
 - Keep the centralized `/Users/floris/Projects/Codex/servers/run-test-server` workflow current if the shared Paper cache layout changes.
 - Review old typo config keys after the server has fully migrated to `CleansePlayerItems` and `NullifySuspicionAfterPunish`.
 - Keep `README.md` and `/xrayer help` aligned whenever commands, permissions, placeholders, or build targets change.
+- When the unified CoreProtect Add-ons plugin is created, embed `XRayHeuristicsModule`, share the host and CoreProtect hook, keep `/xrayer` as a migration alias, and choose an explicit data-directory migration policy.

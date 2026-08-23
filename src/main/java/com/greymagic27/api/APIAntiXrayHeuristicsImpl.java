@@ -1,46 +1,43 @@
-//--------------------------------------------------------------------
-// Copyright © Dylan Calaf Latham 2019-2021 AntiXrayHeuristics
-//--------------------------------------------------------------------
-
 package com.greymagic27.api;
 
 import com.greymagic27.AntiXrayHeuristics;
-import com.greymagic27.xrayer.XrayerHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import com.onemoreblock.coreprotectaddons.xrayheuristics.XRayHeuristicsPlugin;
+import com.onemoreblock.coreprotectaddons.xrayheuristics.api.XRayHeuristicsApi;
+import java.util.Objects;
+import org.jspecify.annotations.NonNull;
 
-public class APIAntiXrayHeuristicsImpl implements APIAntiXrayHeuristics {
+/** Legacy method-name adapter for the maintained API. */
+@Deprecated(forRemoval = false)
+public final class APIAntiXrayHeuristicsImpl implements APIAntiXrayHeuristics {
+    private final XRayHeuristicsApi delegate;
 
-    private final AntiXrayHeuristics mainClassAccess;
-
-    public APIAntiXrayHeuristicsImpl(AntiXrayHeuristics mainClassRef) {
-        mainClassAccess = mainClassRef;
+    public APIAntiXrayHeuristicsImpl(@NonNull AntiXrayHeuristics plugin) {
+        this(requireCanonicalPlugin(plugin).getApi());
     }
 
-    //Declares specified player as an Xrayer and does configured handling
+    public APIAntiXrayHeuristicsImpl(@NonNull XRayHeuristicsApi delegate) {
+        this.delegate = Objects.requireNonNull(delegate, "delegate");
+    }
+
+    @Override
     public void Xrayer(String xrayerName) {
-        XrayerHandler.HandleXrayer(xrayerName);
+        delegate.handlePlayer(xrayerName);
     }
 
-    //Purges the specified player from vault
+    @Override
     public void PurgePlayer(String playerName) {
-        Player target = Bukkit.getServer().getPlayer(playerName);
-        if (target != null) {
-            mainClassAccess.vault.XrayerDataRemover(playerName, false);
-        }
+        delegate.purgePlayer(playerName);
     }
 
-    //Absolves a player with absolution handling and removes from the player's vault registry
-    public void AbsolvePlayer(String player) {
-        Player target = Bukkit.getServer().getPlayer(player);
-        if (target != null) { //Player online
-            //Return inventory to player
-            final String targetUUID = target.getUniqueId().toString();
-            Bukkit.getScheduler().runTaskAsynchronously(mainClassAccess, () -> mainClassAccess.mm.GetXrayerBelongings(targetUUID, belongings -> {
-                if (XrayerHandler.PlayerAbsolver(targetUUID, belongings, mainClassAccess)) {
-                    mainClassAccess.vault.XrayerDataRemover(player, false);
-                }
-            }));
+    @Override
+    public void AbsolvePlayer(String playerName) {
+        delegate.absolvePlayer(playerName);
+    }
+
+    private static @NonNull XRayHeuristicsPlugin requireCanonicalPlugin(@NonNull AntiXrayHeuristics plugin) {
+        if (plugin instanceof XRayHeuristicsPlugin canonicalPlugin) {
+            return canonicalPlugin;
         }
+        throw new IllegalArgumentException("Unsupported legacy X-ray Heuristics plugin implementation: " + plugin.getClass().getName());
     }
 }

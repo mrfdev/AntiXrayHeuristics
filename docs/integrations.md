@@ -45,4 +45,8 @@ From the current build files and `plugin.yml`:
 
 That means the project is built against Paper `26.2` while declaring an older compatibility floor in plugin metadata so the same jar can be exercised on compatible servers that still accept the `1.21.11` floor.
 
-The exact compile coordinate, semantic version, build number, Java target, API floor, and CoreProtect target are packaged in `build-info.properties`. `/xrayer info`, `/xrayer help`, `/xrayer debug`, startup output, and generated `plugin.yml` consume that release metadata instead of hardcoded release values.
+The exact compile coordinate, semantic version, build number, Java target, API floor, and CoreProtect target are packaged in `xrayheuristics/build-info.properties`. The namespaced resource path prevents collisions when this feature is later packaged with other CoreProtect add-ons. `/xrayer info`, `/xrayer help`, `/xrayer debug`, startup output, and generated `plugin.yml` consume that release metadata instead of hardcoded release values.
+
+## Future Unified Host
+
+The maintained implementation separates the standalone `XRayHeuristicsPlugin` entry point from the reusable `XRayHeuristicsModule`. The module accepts a host `JavaPlugin`, an explicit feature data directory, and optionally a shared `CoreProtectHook`; see [architecture.md](architecture.md) for the compatibility contract and future embedding example.

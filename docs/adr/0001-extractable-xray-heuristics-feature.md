@@ -1,0 +1,3 @@
+# Keep X-ray Heuristics extractable from its standalone plugin
+
+The maintained implementation lives under `com.onemoreblock.coreprotectaddons.xrayheuristics`, with the X-ray Heuristics runtime separated from its standalone `JavaPlugin` entry point. This adds a small adapter layer now, but lets a future unified CoreProtect Add-ons plugin host the feature with an explicit data directory and shared plugin owner instead of renaming and untangling the entire codebase again. The current `xrayheuristics` plugin id, `/xrayer` command, permission nodes, `plugins/1MB-XRayHeuristics/` data directory, configuration and storage formats, and legacy `com.greymagic27` Java API remain compatibility contracts for the standalone release.
