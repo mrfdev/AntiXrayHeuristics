@@ -12,11 +12,11 @@ class BuildMetadataTest {
     void loadsCompleteGeneratedMetadata() {
         BuildMetadata metadata = BuildMetadata.fromProperties(validProperties());
 
-        assertEquals("2.0.1-029-j25-26.2", metadata.artifactVersion());
-        assertEquals("26.2.build.84-stable", metadata.paperApi());
+        assertEquals("2.0.2-030-j25-26.2", metadata.artifactVersion());
+        assertEquals("26.2.build.121-stable", metadata.paperApi());
         assertEquals("stable", metadata.paperApiChannel());
         assertEquals(25, metadata.javaTarget());
-        assertEquals("24.0-dev1 (API 12)", metadata.coreProtectTarget());
+        assertEquals("25.0-rc1 (API 13)", metadata.coreProtectTarget());
     }
 
     @Test
@@ -29,17 +29,17 @@ class BuildMetadataTest {
 
     private static Properties validProperties() {
         Properties properties = new Properties();
-        properties.setProperty("pluginVersion", "2.0.1");
-        properties.setProperty("buildNumber", "029");
-        properties.setProperty("artifactVersion", "2.0.1-029-j25-26.2");
+        properties.setProperty("pluginVersion", "2.0.2");
+        properties.setProperty("buildNumber", "030");
+        properties.setProperty("artifactVersion", "2.0.2-030-j25-26.2");
         properties.setProperty("javaTarget", "25");
         properties.setProperty("paperVersion", "26.2");
-        properties.setProperty("paperApi", "26.2.build.84-stable");
-        properties.setProperty("paperApiBuild", "84");
+        properties.setProperty("paperApi", "26.2.build.121-stable");
+        properties.setProperty("paperApiBuild", "121");
         properties.setProperty("paperApiChannel", "stable");
         properties.setProperty("declaredApiVersion", "1.21.11");
-        properties.setProperty("coreProtectVersion", "24.0-dev1");
-        properties.setProperty("coreProtectApiVersion", "12");
+        properties.setProperty("coreProtectVersion", "25.0-rc1");
+        properties.setProperty("coreProtectApiVersion", "13");
         return properties;
     }
 }

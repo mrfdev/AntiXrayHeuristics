@@ -289,7 +289,8 @@ public final class XRayHeuristicsModule {
         reloadConfig();
 
         if (!refreshCoreProtectHook()) {
-            getLogger().severe("CoreProtect API 11 or newer is required. Tested with CoreProtect 24.0-dev1 (API 12).");
+            getLogger().severe("CoreProtect API 11 or newer is required. Tested with CoreProtect "
+                    + getBuildMetadata().coreProtectTarget() + ".");
             return false;
         }
 

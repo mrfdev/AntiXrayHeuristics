@@ -9,29 +9,31 @@
 
 Verified build metadata from this repository:
 
-- Current release: `2.0.1-029-j25-26.2`
-- Semantic version: `2.0.1`
-- Build number: `029`
+- Current release: `2.0.2-030-j25-26.2`
+- Semantic version: `2.0.2`
+- Build number: `030`
 - Build JDK: Oracle JDK `25.0.4`
 - Java bytecode target: `25`
-- Paper compile target: `26.2.build.84-stable`
+- Paper compile target: `26.2.build.121-stable`
 - Declared `plugin.yml` api-version floor: `1.21.11`
-- CoreProtect compile target: `24.0-dev1`
+- CoreProtect compile target: `25.0-rc1` with API `13`
 - Minimum runtime CoreProtect API accepted by code: `11`
 
 ## Build From Source
 
-Run:
+Place `CoreProtect-25.0-rc1.jar` in `~/Downloads`, then run:
 
 ```bash
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
   gradle clean build printBuildConfig --warning-mode all
 ```
 
+For another jar location, append `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-rc1.jar`. The build requires the specified CoreProtect release; it does not silently fall back to an older dependency. `gradle check` verifies the jar's version and actual API version against `version.properties`.
+
 The release jar is:
 
 ```text
-build/libs/1MB-XRayHeuristics-v2.0.1-029-j25-26.2.jar
+build/libs/1MB-XRayHeuristics-v2.0.2-030-j25-26.2.jar
 ```
 
 Release metadata comes from `version.properties`. Increment its semantic version and build number once when preparing a release. Repeated builds keep the same release identity, and `gradle check` runs the metadata drift validation.

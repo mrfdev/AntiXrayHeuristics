@@ -7,17 +7,17 @@
 - Player-facing name: `1MB XRayHeuristics`
 - Internal plugin name: `xrayheuristics`
 - Main command: `/xrayer`
-- Current release: `2.0.1-029-j25-26.2`
-- Semantic version: `2.0.1`
-- Build number: `029`
+- Current release: `2.0.2-030-j25-26.2`
+- Semantic version: `2.0.2`
+- Build number: `030`
 - Build target: Java `25`
 - Release build JDK: Oracle JDK `25.0.4`
-- Runtime verification JDKs: Oracle JDK `25.0.4` and `26.0.2`
-- Paper compile target: `26.2.build.84-stable`
+- Runtime verification JDK: Oracle JDK `25.0.4`
+- Paper compile target: `26.2.build.121-stable`
 - Declared `plugin.yml` api-version floor: `1.21.11`
-- CoreProtect compile target: `24.0-dev1` with API `12`
+- CoreProtect compile target: `25.0-rc1` with API `13`
 - Minimum CoreProtect API accepted at runtime: `11`
-- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.1-029-j25-26.2.jar`
+- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.2-030-j25-26.2.jar`
 - Plugin data directory: `plugins/1MB-XRayHeuristics/`
 - Persistent storage backends: `JSON` or `MYSQL`
 - Maintained Java namespace: `com.onemoreblock.coreprotectaddons.xrayheuristics`
@@ -122,7 +122,7 @@ The runtime logic currently tracks these ore families:
 
 ## Build
 
-Build with Gradle using the required Java `25.0.4` JDK:
+Build with Gradle using the required Java `25.0.4` JDK. Place `CoreProtect-25.0-rc1.jar` in `~/Downloads`, or pass `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-rc1.jar` to select its location:
 
 ```bash
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
@@ -131,9 +131,11 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
 
 Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
-`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, and channel metadata.
+`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, channel, and CoreProtect metadata. A compatibility test reads the actual CoreProtect jar's plugin version and invokes `APIVersion()` to verify both against the release target. The build requires that jar and does not fall back to an older Maven dependency. CoreProtect is not bundled in the release artifact.
 
 Official references used for the target are the [Paper project setup guide](https://docs.papermc.io/paper/dev/project-setup/) and [Paper 26.2 API Javadocs](https://jd.papermc.io/paper/26.2/).
+
+The [CoreProtect 25 compatibility verification](docs/compatibility-coreprotect-25.md) records the jar checksums, Java 25 build results, Paper 121 startup/restart checks, commands, and mining-listener probe.
 
 ## Installation Summary
 

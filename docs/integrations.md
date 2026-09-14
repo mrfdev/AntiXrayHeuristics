@@ -11,8 +11,12 @@ Verified source behavior:
 - The plugin looks up the `CoreProtect` plugin from the Bukkit plugin manager.
 - It calls `getAPI()` and reads `APIVersion()`.
 - It refuses to enable if the detected CoreProtect API is below `11`.
-- Current build metadata and status output target CoreProtect `24.0-dev1` with API `12`.
+- Current build metadata and status output target CoreProtect `25.0-rc1` with API `13`.
 - `/xrayer debug` reports the detected CoreProtect version, API, jar path, data path, and hook status.
+
+CoreProtect `25.0-rc1` increments `APIVersion()` from `12` to `13`. The hook's existing `getAPI()`, `APIVersion()`, and `isEnabled()` calls remain available, and its minimum API check already accepts `13`. X-ray Heuristics analyzes live Bukkit mining events; it does not use CoreProtect's lookup, rollback, or database APIs, so the new typed lookup API does not require a migration here.
+
+See the [CoreProtect 25 compatibility verification](compatibility-coreprotect-25.md) for the exact tested versions, build results and runtime checks.
 
 ## Optional Storage Integration
 
@@ -40,7 +44,7 @@ There is no verified PlaceholderAPI expansion registration in the current source
 From the current build files and `plugin.yml`:
 
 - Java target: `25`
-- Paper compile target: `26.2.build.84-stable`
+- Paper compile target: `26.2.build.121-stable`
 - Declared plugin `api-version`: `1.21.11`
 
 That means the project is built against Paper `26.2` while declaring an older compatibility floor in plugin metadata so the same jar can be exercised on compatible servers that still accept the `1.21.11` floor.
