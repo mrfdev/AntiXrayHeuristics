@@ -44,6 +44,8 @@ There is no verified PlaceholderAPI expansion registration in the current source
 From the current build files and `plugin.yml`:
 
 - Java target: `25`
+- Build and default test JDK: Oracle JDK `25.0.4.1`
+- Compatible runtime JDKs: Oracle JDK `25.0.4.1` and `26.0.2.1` (live uses Java `26`)
 - Paper compile target: `26.2.build.121-stable`
 - Declared plugin `api-version`: `1.21.11`
 

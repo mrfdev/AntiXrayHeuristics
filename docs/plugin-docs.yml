@@ -6,8 +6,8 @@ main_command: /xrayer
 docs_url: https://docs.1moreblock.com/custom-server-plugins/xrayheuristics/
 player_guide: player-guide.md
 technical_readme: ../README.md
-plugin_version: 2.0.2
-build_number: '030'
+plugin_version: 2.0.3
+build_number: '031'
 java_target: 25
 paper_target: 26.2
 paper_api: 26.2.build.121-stable

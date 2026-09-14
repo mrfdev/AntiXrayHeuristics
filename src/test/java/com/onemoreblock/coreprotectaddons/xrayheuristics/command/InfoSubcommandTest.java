@@ -20,7 +20,7 @@ class InfoSubcommandTest {
         assertTrue(lines.stream().anyMatch(line -> line.contains("1MB XRayHeuristics / xrayer")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("/xrayer info")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("/xrayer help")), lines.toString());
-        assertTrue(lines.stream().anyMatch(line -> line.contains("2.0.2-030-j25-26.2")), lines.toString());
+        assertTrue(lines.stream().anyMatch(line -> line.contains("2.0.3-031-j25-26.2")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("26.2.build.121-stable")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("Java target: &f25")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("xrayheuristics")), lines.toString());
@@ -46,9 +46,9 @@ class InfoSubcommandTest {
 
     private static BuildMetadata metadata() {
         return new BuildMetadata(
-                "2.0.2",
-                "030",
-                "2.0.2-030-j25-26.2",
+                "2.0.3",
+                "031",
+                "2.0.3-031-j25-26.2",
                 25,
                 "26.2",
                 "26.2.build.121-stable",

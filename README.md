@@ -7,17 +7,18 @@
 - Player-facing name: `1MB XRayHeuristics`
 - Internal plugin name: `xrayheuristics`
 - Main command: `/xrayer`
-- Current release: `2.0.2-030-j25-26.2`
-- Semantic version: `2.0.2`
-- Build number: `030`
+- Current release: `2.0.3-031-j25-26.2`
+- Semantic version: `2.0.3`
+- Build number: `031`
 - Build target: Java `25`
-- Release build JDK: Oracle JDK `25.0.4`
-- Runtime verification JDK: Oracle JDK `25.0.4`
+- Release build JDK: Oracle JDK `25.0.4.1`
+- Runtime verification JDKs: Oracle JDK `25.0.4.1` and `26.0.2.1`
+- Live runtime: Java `26`
 - Paper compile target: `26.2.build.121-stable`
 - Declared `plugin.yml` api-version floor: `1.21.11`
 - CoreProtect compile target: `25.0-rc1` with API `13`
 - Minimum CoreProtect API accepted at runtime: `11`
-- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.2-030-j25-26.2.jar`
+- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.3-031-j25-26.2.jar`
 - Plugin data directory: `plugins/1MB-XRayHeuristics/`
 - Persistent storage backends: `JSON` or `MYSQL`
 - Maintained Java namespace: `com.onemoreblock.coreprotectaddons.xrayheuristics`
@@ -122,12 +123,23 @@ The runtime logic currently tracks these ore families:
 
 ## Build
 
-Build with Gradle using the required Java `25.0.4` JDK. Place `CoreProtect-25.0-rc1.jar` in `~/Downloads`, or pass `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-rc1.jar` to select its location:
+Build with Gradle using the required Java `25.0.4.1` JDK. Place `CoreProtect-25.0-rc1.jar` in `~/Downloads`, or pass `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-rc1.jar` to select its location:
 
 ```bash
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.jdk/Contents/Home \
-  gradle clean build printBuildConfig --warning-mode all
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.1.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+gradle clean build printBuildConfig --warning-mode all
 ```
+
+`./scripts/rebuild.sh` runs this canonical full rebuild with the same `JAVA_HOME` and `PATH`. Gradle compiles and runs the default test suite with Java 25; `options.release = 25` keeps the plugin bytecode compatible with Java 25 and Java 26. Local toolchains come from `JAVA_HOME` and `JAVA26_HOME`, with automatic discovery and downloads disabled.
+
+Run the full test suite on the live runtime's Java version as well:
+
+```bash
+./scripts/test-java26.sh
+```
+
+This selects `/Library/Java/JavaVirtualMachines/jdk-26.0.2.1.jdk/Contents/Home` through `JAVA26_HOME` for `gradle testJava26`. The build JVM and compiler remain JDK `25.0.4.1`. Reports are separate: `build/reports/tests/test/` and `build/reports/tests/testJava26/`.
 
 Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
@@ -137,9 +149,11 @@ Official references used for the target are the [Paper project setup guide](http
 
 The [CoreProtect 25 compatibility verification](docs/compatibility-coreprotect-25.md) records the jar checksums, Java 25 build results, Paper 121 startup/restart checks, commands, and mining-listener probe.
 
+The [JDK 25 and Java 26 compatibility verification](docs/compatibility-jdk-25-26.md) records the current release's full test suite and Paper startup, mining, reload, restart and shutdown checks on both installed runtimes. Historical verification records retain their original version values.
+
 ## Installation Summary
 
-1. Install Paper with Java `25`.
+1. Install Paper `26.2` with Java `25` or `26` (live runs Java `26`).
 2. Install CoreProtect before this plugin.
 3. Place the built jar in your server's `plugins/` folder.
 4. Start the server so `plugins/1MB-XRayHeuristics/` and its generated files are created.

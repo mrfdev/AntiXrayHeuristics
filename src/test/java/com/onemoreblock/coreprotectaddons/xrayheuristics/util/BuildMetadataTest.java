@@ -12,7 +12,7 @@ class BuildMetadataTest {
     void loadsCompleteGeneratedMetadata() {
         BuildMetadata metadata = BuildMetadata.fromProperties(validProperties());
 
-        assertEquals("2.0.2-030-j25-26.2", metadata.artifactVersion());
+        assertEquals("2.0.3-031-j25-26.2", metadata.artifactVersion());
         assertEquals("26.2.build.121-stable", metadata.paperApi());
         assertEquals("stable", metadata.paperApiChannel());
         assertEquals(25, metadata.javaTarget());
@@ -29,9 +29,9 @@ class BuildMetadataTest {
 
     private static Properties validProperties() {
         Properties properties = new Properties();
-        properties.setProperty("pluginVersion", "2.0.2");
-        properties.setProperty("buildNumber", "030");
-        properties.setProperty("artifactVersion", "2.0.2-030-j25-26.2");
+        properties.setProperty("pluginVersion", "2.0.3");
+        properties.setProperty("buildNumber", "031");
+        properties.setProperty("artifactVersion", "2.0.3-031-j25-26.2");
         properties.setProperty("javaTarget", "25");
         properties.setProperty("paperVersion", "26.2");
         properties.setProperty("paperApi", "26.2.build.121-stable");

@@ -129,6 +129,18 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.register('testJava26', Test) {
+    description = 'Runs the full test suite on Java 26 using the Java 25 compiled classes.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(26)
+    }
+    useJUnitPlatform()
+    shouldRunAfter tasks.test
+}
+
 tasks.register('printBuildConfig') {
     dependsOn 'verifyReleaseMetadata'
     doLast {
@@ -136,6 +148,11 @@ tasks.register('printBuildConfig') {
         println "Plugin name: ${internalPluginName}"
         println "Version: ${pluginBuildVersion}"
         println "Java target: ${javaTarget}"
+        println "Build JVM: ${System.getProperty('java.runtime.version')} (${System.getProperty('java.home')})"
+        def compiler = tasks.named('compileJava').get().javaCompiler.get().metadata
+        println "Java compiler: ${compiler.javaRuntimeVersion} (${compiler.installationPath})"
+        def testRuntime = tasks.named('test').get().javaLauncher.get().metadata
+        println "Default test JVM: ${testRuntime.javaRuntimeVersion} (${testRuntime.installationPath})"
         println "Compiled against Paper API: ${targetPaperApi}"
         println "Declared plugin api-version: ${declaredApiVersion}"
         println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
