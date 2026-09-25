@@ -11,12 +11,12 @@ Verified source behavior:
 - The plugin looks up the `CoreProtect` plugin from the Bukkit plugin manager.
 - It calls `getAPI()` and reads `APIVersion()`.
 - It refuses to enable if the detected CoreProtect API is below `11`.
-- Current build metadata and status output target CoreProtect `25.0-rc1` with API `13`.
+- Current build metadata and status output target CoreProtect `25.0` with API `13`.
 - `/xrayer debug` reports the detected CoreProtect version, API, jar path, data path, and hook status.
 
-CoreProtect `25.0-rc1` increments `APIVersion()` from `12` to `13`. The hook's existing `getAPI()`, `APIVersion()`, and `isEnabled()` calls remain available, and its minimum API check already accepts `13`. X-ray Heuristics analyzes live Bukkit mining events; it does not use CoreProtect's lookup, rollback, or database APIs, so the new typed lookup API does not require a migration here.
+The supplied CoreProtect `25.0` JAR reports `APIVersion()` `13`. The hook's existing `getAPI()`, `APIVersion()`, and `isEnabled()` calls remain available, and its minimum API check already accepts `13`. X-ray Heuristics analyzes live Bukkit mining events; it does not use CoreProtect's lookup, rollback, or database APIs, so the typed lookup API does not require a migration here.
 
-See the [CoreProtect 25 compatibility verification](compatibility-coreprotect-25.md) for the exact tested versions, build results and runtime checks.
+See the [Paper 26.3 compatibility verification](compatibility-paper-26.3.md) for the exact tested versions, build results and runtime checks.
 
 ## Optional Storage Integration
 
@@ -45,11 +45,11 @@ From the current build files and `plugin.yml`:
 
 - Java target: `25`
 - Build and default test JDK: Oracle JDK `25.0.4.1`
-- Compatible runtime JDKs: Oracle JDK `25.0.4.1` and `26.0.2.1` (live uses Java `26`)
-- Paper compile target: `26.2.build.121-stable`
-- Declared plugin `api-version`: `1.21.11`
+- Maintained server and additional test runtime: Oracle Java `27+35-2325`
+- Paper compile target: `26.3.build.41-alpha`
+- Declared plugin `api-version`: `26.3`
 
-That means the project is built against Paper `26.2` while declaring an older compatibility floor in plugin metadata so the same jar can be exercised on compatible servers that still accept the `1.21.11` floor.
+The declared API floor matches Paper `26.3`; older servers should use the preserved baseline release. Compilation and default tests remain on Java 25, while the maintained local server runs on Java 27. Build `41` is an explicitly selected alpha build, with the compile/test API pinned to the same build and channel.
 
 The exact compile coordinate, semantic version, build number, Java target, API floor, and CoreProtect target are packaged in `xrayheuristics/build-info.properties`. The namespaced resource path prevents collisions when this feature is later packaged with other CoreProtect add-ons. `/xrayer info`, `/xrayer help`, `/xrayer debug`, startup output, and generated `plugin.yml` consume that release metadata instead of hardcoded release values.
 

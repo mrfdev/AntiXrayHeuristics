@@ -32,7 +32,7 @@ def declaredApiVersion = releaseProperty('declaredApiVersion')
 def targetCoreProtectVersion = releaseProperty('coreProtectVersion')
 def targetCoreProtectApiVersion = releaseProperty('coreProtectApiVersion')
 def coreProtectJar = file(providers.gradleProperty('coreProtectJar')
-        .orElse("${System.getProperty('user.home')}/Downloads/CoreProtect-${targetCoreProtectVersion}.jar").get())
+        .orElse("servers/compile-support/CoreProtect-${targetCoreProtectVersion}.jar").get())
 def targetPaperApi = "${targetPaperVersion}.build.${targetPaperApiBuild}-${targetPaperApiChannel}"
 def pluginBuildVersion = "${pluginVersion}-${buildNumber}-j${javaTarget}-${targetPaperVersion}"
 
@@ -129,13 +129,13 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register('testJava26', Test) {
-    description = 'Runs the full test suite on Java 26 using the Java 25 compiled classes.'
+tasks.register('testJava27', Test) {
+    description = 'Runs the full test suite on Java 27 using the Java 25 compiled classes.'
     group = 'verification'
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(26)
+        languageVersion = JavaLanguageVersion.of(27)
     }
     useJUnitPlatform()
     shouldRunAfter tasks.test
@@ -185,6 +185,7 @@ tasks.register('verifyReleaseMetadata') {
                         "plugin_version: ${pluginVersion}",
                         "build_number: '${buildNumber}'",
                         "java_target: ${javaTarget}",
+                        "paper_target: ${targetPaperVersion}",
                         "paper_api: ${targetPaperApi}",
                         "paper_channel: ${targetPaperApiChannel}"
                 ]
@@ -199,7 +200,7 @@ tasks.register('verifyReleaseMetadata') {
             }
         }
 
-        def staleMarkers = ['2.0.0', '26.2.build.60-beta', 'buildNumber=028']
+        def staleMarkers = ['2.0.0', '26.2.build.', 'buildNumber=028', '2.0.3-031', '25.0-rc1']
         def driftFiles = [
                 file('README.md'),
                 file('docs/installation.md'),
@@ -207,7 +208,8 @@ tasks.register('verifyReleaseMetadata') {
                 file('docs/plugin-docs.yml'),
                 file('src/main/resources/plugin.yml'),
                 file('src/main/resources/xrayheuristics/build-info.properties'),
-                file('src/test/java/com/onemoreblock/coreprotectaddons/xrayheuristics/command/InfoSubcommandTest.java')
+                file('src/test/java/com/onemoreblock/coreprotectaddons/xrayheuristics/command/InfoSubcommandTest.java'),
+                file('src/test/java/com/onemoreblock/coreprotectaddons/xrayheuristics/util/BuildMetadataTest.java')
         ]
         driftFiles.each { driftFile ->
             String content = driftFile.getText('UTF-8')

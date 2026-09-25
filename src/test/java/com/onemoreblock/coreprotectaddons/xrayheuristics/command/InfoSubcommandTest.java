@@ -20,8 +20,8 @@ class InfoSubcommandTest {
         assertTrue(lines.stream().anyMatch(line -> line.contains("1MB XRayHeuristics / xrayer")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("/xrayer info")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("/xrayer help")), lines.toString());
-        assertTrue(lines.stream().anyMatch(line -> line.contains("2.0.3-031-j25-26.2")), lines.toString());
-        assertTrue(lines.stream().anyMatch(line -> line.contains("26.2.build.121-stable")), lines.toString());
+        assertTrue(lines.stream().anyMatch(line -> line.contains("2.0.4-032-j25-26.3")), lines.toString());
+        assertTrue(lines.stream().anyMatch(line -> line.contains("26.3.build.41-alpha")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("Java target: &f25")), lines.toString());
         assertTrue(lines.stream().anyMatch(line -> line.contains("xrayheuristics")), lines.toString());
         assertEquals("https://docs.1moreblock.com/custom-server-plugins/xrayheuristics/", InfoSubcommand.DOCS_URL);
@@ -46,16 +46,16 @@ class InfoSubcommandTest {
 
     private static BuildMetadata metadata() {
         return new BuildMetadata(
-                "2.0.3",
-                "031",
-                "2.0.3-031-j25-26.2",
+                "2.0.4",
+                "032",
+                "2.0.4-032-j25-26.3",
                 25,
-                "26.2",
-                "26.2.build.121-stable",
-                121,
-                "stable",
-                "1.21.11",
-                "25.0-rc1",
+                "26.3",
+                "26.3.build.41-alpha",
+                41,
+                "alpha",
+                "26.3",
+                "25.0",
                 13
         );
     }

@@ -6,11 +6,11 @@ main_command: /xrayer
 docs_url: https://docs.1moreblock.com/custom-server-plugins/xrayheuristics/
 player_guide: player-guide.md
 technical_readme: ../README.md
-plugin_version: 2.0.3
-build_number: '031'
+plugin_version: 2.0.4
+build_number: '032'
 java_target: 25
-paper_target: 26.2
-paper_api: 26.2.build.121-stable
-paper_channel: stable
+paper_target: 26.3
+paper_api: 26.3.build.41-alpha
+paper_channel: alpha
 official_project: true
 repository: mrfdev/AntiXrayHeuristics
