@@ -167,4 +167,19 @@ Every invocation creates a new `servers/paper-26.3-stable-033-*` directory, veri
 
 The probe calls the actual registered mining listener using synthetic players, checks command denial, round-trips PDC/data components and a shulker-box item, and exercises JSON insert/read/delete callbacks and a persistent record. The runner executes status/help/reload commands, restarts with existing disposable data and compares file hashes, then verifies that removing CoreProtect prevents this plugin from loading. Java 27 runs use `--illegal-final-field-mutation=deny`. Logs and `smoke-results.json` remain in the disposable directory; failures also shut down the process owned by the runner. The test probe is built separately under `build/smoke/` and must never be installed on a live server.
 
-These synthetic checks do not replace a player-client inventory/handling test or a MySQL integration test. Follow the concrete checklist in [the compatibility report](compatibility-paper-26.3.md#remaining-checks-and-existing-limits).
+These synthetic checks do not replace a player-client inventory/handling test or a MySQL integration test. The [compatibility report](compatibility-paper-26.3.md#remaining-checks-and-existing-limits) preserves the original checklist and known limitations; use the issues below to track follow-up work.
+
+## Manual Verification Follow-up
+
+The remaining manual checks are tracked in these GitHub issues. Each issue contains acceptance criteria and evidence requirements; consult it for current status.
+
+| Issue | Verification scope |
+| --- | --- |
+| [#9](https://github.com/mrfdev/AntiXrayHeuristics/issues/9) | Java/Bedrock mining, ignore permissions and protection-plugin interactions on Paper 26.3 |
+| [#10](https://github.com/mrfdev/AntiXrayHeuristics/issues/10) | Handled-player vault permissions, stale sessions and inventory interactions |
+| [#11](https://github.com/mrfdev/AntiXrayHeuristics/issues/11) | Item conservation during handling, absolution and concurrent player actions |
+| [#12](https://github.com/mrfdev/AntiXrayHeuristics/issues/12) | MySQL persistence, connection failures and plugin lifecycle behavior |
+| [#13](https://github.com/mrfdev/AntiXrayHeuristics/issues/13) | Crash recovery across confiscation, persistence and item delivery |
+| [#14](https://github.com/mrfdev/AntiXrayHeuristics/issues/14) | Configured commands, third-party integrations and recipient identity |
+
+Run these checks only in an environment identified and authorized for that task. Documentation and issue-tracking work does not authorize starting, creating or recreating a test server. The [removed shared test server](#deployment-destinations) is not an active target. Add new evidence to the relevant issues and preserve dated verification reports and deployment receipts unchanged.

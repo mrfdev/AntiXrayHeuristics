@@ -155,6 +155,8 @@ Official references used for the target are the [Paper project setup guide](http
 
 The [Paper 26.3 compatibility verification](docs/compatibility-paper-26.3.md) records the current release's exact stable build, checksums, tests, server smoke checks and remaining manual checks. The [CoreProtect verification](docs/compatibility-coreprotect-25.md) and [JDK 25/26 verification](docs/compatibility-jdk-25-26.md) remain historical records of the preserved baseline.
 
+The [manual verification follow-up](docs/installation.md#manual-verification-follow-up) links GitHub issues #9–#14 for current status, acceptance criteria and required evidence. These checks require a separately authorized test environment.
+
 The [2026-09-25 alpha verification](docs/compatibility-paper-26.3-alpha.md) is historical. See [CHANGELOG.md](CHANGELOG.md) for the stable migration and compatibility fixes.
 
 ## Installation Summary
