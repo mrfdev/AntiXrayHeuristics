@@ -2,6 +2,8 @@
 
 Verified on 2026-09-25 on macOS ARM64 for `1MB-XRayHeuristics-v2.0.4-032-j25-26.3.jar`.
 
+The build workflow was updated on 2026-10-25: Oracle 25 now compiles every source set and Oracle 27 runs every automated test. See [current build instructions and verification](installation.md#build-from-source). The dated migration results below retain the original JDK versions and test arrangement.
+
 ## Preserved baseline and release identity
 
 The clean baseline is commit `dc1bc6b826d7f9d13260f6f48f57794936740424`, release `2.0.3-031-j25-26.2`. Annotated tag `v2.0.3-paper-26.2` was pushed before changing release metadata. Its recorded evidence is the [2026-09-15 JDK 25/26 verification](compatibility-jdk-25-26.md): Paper 26.2 build 121 stable, CoreProtect 25.0-rc1 API 13, 11 tests on each JDK, and successful startup, mining, reload, restart and shutdown checks. That record makes no Paper 26.3 claim.

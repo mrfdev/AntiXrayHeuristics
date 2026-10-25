@@ -2,7 +2,4 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.1.jdk/Contents/Home
-export PATH="$JAVA_HOME/bin:$PATH"
-
-exec gradle clean build printBuildConfig --warning-mode all "$@"
+exec ./scripts/gradle.sh clean build printBuildConfig --warning-mode all "$@"

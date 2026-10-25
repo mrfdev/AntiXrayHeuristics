@@ -11,9 +11,9 @@
 - Semantic version: `2.0.4`
 - Build number: `032`
 - Build target: Java `25`
-- Release build JDK: Oracle JDK `25.0.4.1`
-- Default unit-test JDK: Oracle JDK `25.0.4.1`
-- Maintained test-server runtime: Oracle Java `27+35-2325`
+- Gradle and compiler JDK: installed Oracle JDK `25`
+- Automated test JDK: installed Oracle JDK `27`
+- Maintained test-server runtime: installed Oracle JDK `27`
 - Paper compile target: `26.3.build.41-alpha`
 - Declared `plugin.yml` api-version floor: `26.3`
 - CoreProtect compile target: `25.0` with API `13`
@@ -123,27 +123,28 @@ The runtime logic currently tracks these ore families:
 
 ## Build
 
-Build with Gradle using the required Java `25.0.4.1` JDK. Copy the supplied `CoreProtect-25.0-26.3.jar` to the gitignored `servers/compile-support/CoreProtect-25.0.jar`, or pass `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-26.3.jar` to select its location. Its manifest must report version `25.0` and its API must report `13`:
+Use installed Oracle JDKs 25 and 27 and Gradle 9.8.0 or newer (this Mac has 9.8.2). Copy the supplied `CoreProtect-25.0-26.3.jar` to the gitignored `servers/compile-support/CoreProtect-25.0.jar`, or pass `-PcoreProtectJar=/absolute/path/to/CoreProtect-25.0-26.3.jar` to select its location. Its manifest must report version `25.0` and its API must report `13`:
 
 ```bash
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-25.0.4.1.jdk/Contents/Home
-export PATH="$JAVA_HOME/bin:$PATH"
-gradle clean build printBuildConfig --warning-mode all
+./scripts/rebuild.sh
 ```
 
-`./scripts/rebuild.sh` runs this canonical full rebuild with the same `JAVA_HOME` and `PATH`. Gradle compiles and runs the default test suite with Java 25; `options.release = 25` keeps the plugin bytecode compatible with Java 25 and later. Local toolchains come from `JAVA_HOME` and `JAVA27_HOME`, with automatic discovery and downloads disabled.
+This canonical command runs a clean build, the full default test suite and verification tasks. Gradle and every Java compiler use Oracle 25; plugin, test and smoke-probe sources all compile with `--release 25`. Every Gradle `Test` task runs on Oracle 27, including its worker JVMs. Tests and disposable Paper servers also pass the selected Oracle 27 home and `bin` directory to child processes through `JAVA_HOME` and `PATH`.
 
-Run the full test suite on the maintained test server's Java version as well:
+`scripts/java-env.sh` resolves installed homes on each invocation with `/usr/libexec/java_home -F -v 25` and `-v 27`, then validates the actual major versions and Oracle vendor. Set `ONE_MB_BUILD_JAVA_HOME` or `ONE_MB_TEST_JAVA_HOME` only to deliberately select another installed Oracle 25 or 27 home. Missing or mismatched installations fail clearly; there are no JDK downloads or vendor/version fallbacks. Patch upgrades require no project edits.
+
+Use the validated launcher for custom tasks, or rerun the full suite with its separate report:
 
 ```bash
+./scripts/gradle.sh test printBuildConfig
 ./scripts/test-java27.sh
 ```
 
-This selects `/Library/Java/JavaVirtualMachines/jdk-27.jdk/Contents/Home` through `JAVA27_HOME` for `gradle testJava27`. The build JVM and compiler remain JDK `25.0.4.1`. Reports are separate: `build/reports/tests/test/` and `build/reports/tests/testJava27/`.
+Both test tasks use Oracle 27. Reports are `build/reports/tests/test/` and `build/reports/tests/testJava27/`. `printBuildConfig` reports actual JVM/compiler paths, versions and vendors. The launcher pins the Gradle JVM, disables automatic JDK detection/downloads and rejects Java property overrides or stale daemon JVM criteria. Direct `gradle` or IDE invocations that bypass these validated settings are guarded; use `./scripts/gradle.sh`. See [build instructions](docs/installation.md#build-from-source) for configuration and verification details.
 
 Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
-`gradle check` includes `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, channel, and CoreProtect metadata. A compatibility test reads the actual CoreProtect jar's plugin version and invokes `APIVersion()` to verify both against the release target. The build requires that jar and does not fall back to an older Maven dependency. CoreProtect is not bundled in the release artifact.
+`./scripts/gradle.sh check` includes `verifyJavaBytecode`, which checks every compiled source set for Java 25 class-file version 69.0, and `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, channel, and CoreProtect metadata. A compatibility test reads the actual CoreProtect jar's plugin version and invokes `APIVersion()` to verify both against the release target. The build requires that jar and does not fall back to an older Maven dependency. CoreProtect is not bundled in the release artifact.
 
 Official references used for the target are the [Paper project setup guide](https://docs.papermc.io/paper/dev/project-setup/) and [Paper 26.3 API Javadocs](https://jd.papermc.io/paper/26.3/).
 

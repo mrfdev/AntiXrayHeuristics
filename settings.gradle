@@ -1,1 +1,25 @@
+// Fail before configuring tasks or resolving toolchains if a direct/IDE launch
+// bypassed the validated launcher or inherited conflicting local settings.
+def buildHome = System.getenv('ONE_MB_BUILD_JAVA_HOME')
+def testHome = System.getenv('ONE_MB_TEST_JAVA_HOME')
+if (!buildHome || !testHome || Runtime.version().feature() != 25
+        || System.getProperty('java.vendor') != 'Oracle Corporation'
+        || new File(System.getProperty('java.home')).canonicalFile != new File(buildHome).canonicalFile) {
+    throw new GradleException('Use ./scripts/rebuild.sh or ./scripts/gradle.sh: Gradle must run on the validated installed Oracle JDK 25, with Oracle JDK 27 selected for tests.')
+}
+if (GradleVersion.current() < GradleVersion.version('9.8.0')) {
+    throw new GradleException('Gradle 9.8.0 or newer is required for Java 27 test toolchains. Use an installed compatible Gradle.')
+}
+[
+        'org.gradle.java.home': buildHome,
+        'org.gradle.java.installations.fromEnv': 'ONE_MB_BUILD_JAVA_HOME,ONE_MB_TEST_JAVA_HOME',
+        'org.gradle.java.installations.paths': '',
+        'org.gradle.java.installations.auto-detect': 'false',
+        'org.gradle.java.installations.auto-download': 'false'
+].each { key, expected ->
+    if (providers.gradleProperty(key).orNull != expected || System.getProperty(key) != expected) {
+        throw new GradleException("Conflicting ${key}; use ./scripts/gradle.sh and ONE_MB_BUILD_JAVA_HOME / ONE_MB_TEST_JAVA_HOME instead of Java property overrides.")
+    }
+}
+
 rootProject.name = '1MB-XRayHeuristics'

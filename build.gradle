@@ -25,6 +25,9 @@ def releaseProperty = { String key ->
 def pluginVersion = releaseProperty('pluginVersion')
 def buildNumber = releaseProperty('buildNumber')
 def javaTarget = Integer.parseInt(releaseProperty('javaTarget'))
+if (javaTarget != 25) {
+    throw new GradleException('This build requires Java 25 bytecode; javaTarget must remain 25.')
+}
 def targetPaperVersion = releaseProperty('paperVersion')
 def targetPaperApiBuild = releaseProperty('paperApiBuild')
 def targetPaperApiChannel = releaseProperty('paperApiChannel')
@@ -53,7 +56,28 @@ version = pluginBuildVersion
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(javaTarget)
+    toolchain.vendor = JvmVendorSpec.ORACLE
 }
+
+def oracleCompiler = javaToolchains.compilerFor {
+    languageVersion = JavaLanguageVersion.of(25)
+    vendor = JvmVendorSpec.ORACLE
+}
+def oracleTestLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(27)
+    vendor = JvmVendorSpec.ORACLE
+}
+def buildJavaHome = file(System.getenv('ONE_MB_BUILD_JAVA_HOME')).canonicalFile
+def testJavaHome = file(System.getenv('ONE_MB_TEST_JAVA_HOME')).canonicalFile
+def verifySelectedTool = { tool, File expectedHome, int major ->
+    def metadata = tool.metadata
+    if (metadata.installationPath.asFile.canonicalFile != expectedHome
+            || metadata.languageVersion.asInt() != major || metadata.vendor != 'Oracle') {
+        throw new GradleException("Unexpected Java toolchain: ${metadata}. Expected Oracle ${major} at ${expectedHome}; use ./scripts/gradle.sh.")
+    }
+}
+verifySelectedTool(oracleCompiler.get(), buildJavaHome, 25)
+verifySelectedTool(oracleTestLauncher.get(), testJavaHome, 27)
 
 repositories {
     mavenCentral()
@@ -121,24 +145,53 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    javaCompiler = oracleCompiler
+    javaCompiler.disallowChanges()
     options.release = javaTarget
+    options.release.disallowChanges()
     options.compilerArgs += ['-Xlint:deprecation', '-Xlint:-options']
 }
 
-tasks.test {
+tasks.withType(Test).configureEach {
+    javaLauncher = oracleTestLauncher
+    javaLauncher.disallowChanges()
+    // Child processes started by tests inherit the same validated test runtime.
+    environment 'JAVA_HOME', testJavaHome.absolutePath
+    environment 'PATH', "${testJavaHome}/bin${File.pathSeparator}${System.getenv('PATH')}"
+    systemProperty 'oneMb.expectedTestJavaHome', testJavaHome.absolutePath
     useJUnitPlatform()
+    jvmArgs '--illegal-final-field-mutation=deny'
 }
 
 tasks.register('testJava27', Test) {
-    description = 'Runs the full test suite on Java 27 using the Java 25 compiled classes.'
+    description = 'Reruns the full suite on Oracle Java 27 with a separate report (the default test task also uses 27).'
     group = 'verification'
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(27)
-    }
-    useJUnitPlatform()
     shouldRunAfter tasks.test
+}
+
+tasks.register('verifyJavaBytecode') {
+    description = 'Verifies every compiled main, test and smoke-probe class targets Java 25 without preview features.'
+    group = 'verification'
+    dependsOn tasks.withType(JavaCompile)
+    doLast {
+        sourceSets.each { sourceSet ->
+            def classes = sourceSet.output.classesDirs.asFileTree.matching { include '**/*.class' }
+            if (classes.isEmpty()) {
+                throw new GradleException("No compiled classes to verify for ${sourceSet.name}")
+            }
+            classes.each { classFile ->
+                classFile.withDataInputStream { input ->
+                    if (input.readInt() != (int) 0xCAFEBABE || input.readUnsignedShort() != 0
+                            || input.readUnsignedShort() != 69) {
+                        throw new GradleException("Expected Java 25 class-file version 69.0: ${classFile}")
+                    }
+                }
+            }
+            println "Verified ${classes.files.size()} ${sourceSet.name} classes: Java 25 bytecode (69.0)"
+        }
+    }
 }
 
 tasks.register('printBuildConfig') {
@@ -148,11 +201,11 @@ tasks.register('printBuildConfig') {
         println "Plugin name: ${internalPluginName}"
         println "Version: ${pluginBuildVersion}"
         println "Java target: ${javaTarget}"
-        println "Build JVM: ${System.getProperty('java.runtime.version')} (${System.getProperty('java.home')})"
+        println "Build JVM: ${System.getProperty('java.runtime.version')} (${System.getProperty('java.vendor')}; ${System.getProperty('java.home')})"
         def compiler = tasks.named('compileJava').get().javaCompiler.get().metadata
-        println "Java compiler: ${compiler.javaRuntimeVersion} (${compiler.installationPath})"
+        println "Java compiler (all sources, --release 25): ${compiler.javaRuntimeVersion} (${compiler.vendor}; ${compiler.installationPath}/bin/javac)"
         def testRuntime = tasks.named('test').get().javaLauncher.get().metadata
-        println "Default test JVM: ${testRuntime.javaRuntimeVersion} (${testRuntime.installationPath})"
+        println "Test JVM (all Test tasks): ${testRuntime.javaRuntimeVersion} (${testRuntime.vendor}; ${testRuntime.installationPath}/bin/java)"
         println "Compiled against Paper API: ${targetPaperApi}"
         println "Declared plugin api-version: ${declaredApiVersion}"
         println "CoreProtect target: ${targetCoreProtectVersion} (API ${targetCoreProtectApiVersion})"
@@ -248,7 +301,7 @@ tasks.register('verifyReleaseMetadata') {
 }
 
 tasks.named('check') {
-    dependsOn tasks.named('verifyReleaseMetadata')
+    dependsOn tasks.named('verifyReleaseMetadata'), tasks.named('verifyJavaBytecode')
 }
 
 tasks.jar {
