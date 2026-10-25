@@ -7,18 +7,19 @@
 - Player-facing name: `1MB XRayHeuristics`
 - Internal plugin name: `xrayheuristics`
 - Main command: `/xrayer`
-- Current release: `2.0.4-032-j25-26.3`
-- Semantic version: `2.0.4`
-- Build number: `032`
+- Current release: `2.0.5-033-j25-26.3`
+- Semantic version: `2.0.5`
+- Build number: `033`
 - Build target: Java `25`
 - Gradle and compiler JDK: installed Oracle JDK `25`
 - Automated test JDK: installed Oracle JDK `27`
 - Maintained test-server runtime: installed Oracle JDK `27`
-- Paper compile target: `26.3.build.41-alpha`
+- Paper compile target: `26.3.build.175-stable`
+- Paper server pin: Minecraft `26.3`, build `175`, channel `STABLE`
 - Declared `plugin.yml` api-version floor: `26.3`
 - CoreProtect compile target: `25.0` with API `13`
 - Minimum CoreProtect API accepted at runtime: `11`
-- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.4-032-j25-26.3.jar`
+- Release artifact: `build/libs/1MB-XRayHeuristics-v2.0.5-033-j25-26.3.jar`
 - Plugin data directory: `plugins/1MB-XRayHeuristics/`
 - Persistent storage backends: `JSON` or `MYSQL`
 - Maintained Java namespace: `com.onemoreblock.coreprotectaddons.xrayheuristics`
@@ -144,15 +145,21 @@ Both test tasks use Oracle 27. Reports are `build/reports/tests/test/` and `buil
 
 Release metadata is centralized in `version.properties`. Update the semantic version and build number there exactly once for a release; repeated build and verification runs then reproduce the same artifact version instead of silently incrementing it.
 
-`./scripts/gradle.sh check` includes `verifyJavaBytecode`, which checks every compiled source set for Java 25 class-file version 69.0, and `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, and public-docs manifest for stale version, build, Java, Paper API, channel, and CoreProtect metadata. A compatibility test reads the actual CoreProtect jar's plugin version and invokes `APIVersion()` to verify both against the release target. The build requires that jar and does not fall back to an older Maven dependency. CoreProtect is not bundled in the release artifact.
+`gradle.lockfile` pins resolved dependencies, including Paper's Adventure `5.2.0`, Gson `2.14.0` and SLF4J `2.0.17`. After intentionally changing a dependency, run `./scripts/rebuild.sh smokeTestJar --write-locks`, inspect the lock changes, then rebuild without `--write-locks`. The build rejects a prerelease Paper channel or a plugin API floor containing a build/channel suffix. `paperServerSha256` records the pinned server checksum from Fill.
+
+For repeatable runtime checks, build the disposable probe with `./scripts/rebuild.sh smokeTestJar`, then run `python3 scripts/test-paper-stable.py`. It creates a fresh loopback server with only CoreProtect, this plugin and the test probe, validates the stable build and checksum, and tests startup, restart/persistence and missing-dependency behavior. See [installation](docs/installation.md#disposable-stable-compatibility-tests) for prerequisites and isolation details. Java 27 tests deny illegal reflective final-field mutation so JSON compatibility regressions fail visibly.
+
+`./scripts/gradle.sh check` includes `verifyJavaBytecode`, which checks every compiled main, test and smoke-probe class for Java 25 class-file version 69.0, and `verifyReleaseMetadata`, which checks the packaged `plugin.yml`, generated `xrayheuristics/build-info.properties`, README, installation/integration docs, agent instructions, current compatibility report and public-docs manifest for stale version, build, Java, Paper API, channel, and CoreProtect metadata. Compatibility tests verify the actual Paper dependency, generated manifest, Java 25 bytecode, and CoreProtect jar version/API against the release target. The build requires that CoreProtect jar and does not fall back to an older Maven dependency. CoreProtect is not bundled in the release artifact.
 
 Official references used for the target are the [Paper project setup guide](https://docs.papermc.io/paper/dev/project-setup/) and [Paper 26.3 API Javadocs](https://jd.papermc.io/paper/26.3/).
 
-The [Paper 26.3 compatibility verification](docs/compatibility-paper-26.3.md) records the current release's exact alpha build, checksums, tests, server smoke checks and remaining manual checks. The [CoreProtect verification](docs/compatibility-coreprotect-25.md) and [JDK 25/26 verification](docs/compatibility-jdk-25-26.md) remain historical records of the preserved baseline.
+The [Paper 26.3 compatibility verification](docs/compatibility-paper-26.3.md) records the current release's exact stable build, checksums, tests, server smoke checks and remaining manual checks. The [CoreProtect verification](docs/compatibility-coreprotect-25.md) and [JDK 25/26 verification](docs/compatibility-jdk-25-26.md) remain historical records of the preserved baseline.
+
+The [2026-09-25 alpha verification](docs/compatibility-paper-26.3-alpha.md) is historical. See [CHANGELOG.md](CHANGELOG.md) for the stable migration and compatibility fixes.
 
 ## Installation Summary
 
-1. Install Paper `26.3` build `41` (`ALPHA`) with Java `27`, matching the maintained test instance.
+1. Install Paper `26.3` build `175` (`STABLE`) with Java `27`, matching the maintained test instance.
 2. Install CoreProtect before this plugin.
 3. Place the built jar in your server's `plugins/` folder.
 4. Start the server so `plugins/1MB-XRayHeuristics/` and its generated files are created.

@@ -7,6 +7,7 @@ package com.onemoreblock.coreprotectaddons.xrayheuristics.event;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.XRayHeuristicsModule;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -18,7 +19,7 @@ public class MiningBlockBreakListener implements Listener {
         this.module = main;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void blockBreakEvent(BlockBreakEvent e) {
         //BLOCK MINING CHECK:
         //Check if the event occurred in one of the configured worlds:

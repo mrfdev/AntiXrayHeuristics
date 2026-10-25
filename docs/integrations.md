@@ -44,14 +44,16 @@ There is no verified PlaceholderAPI expansion registration in the current source
 From the current build files and `plugin.yml`:
 
 - Java target: `25`
-- Build and default test JDK: Oracle JDK `25.0.4.1`
-- Maintained server and additional test runtime: Oracle Java `27+35-2325`
-- Paper compile target: `26.3.build.41-alpha`
+- Gradle and compiler JDK: dynamically selected installed Oracle JDK `25`
+- Automated tests and maintained server runtime: dynamically selected installed Oracle JDK `27`
+- Paper compile target: `26.3.build.175-stable`
 - Declared plugin `api-version`: `26.3`
 
-The declared API floor matches Paper `26.3`; older servers should use the preserved baseline release. Compilation and default tests remain on Java 25, while the maintained local server runs on Java 27. Build `41` is an explicitly selected alpha build, with the compile/test API pinned to the same build and channel.
+The declared API floor matches Paper `26.3`; older servers should use the preserved baseline release. Gradle and all compilation use Oracle Java 25 with `--release 25`; every automated test and the maintained local server use Oracle Java 27. Build `175` is a verified stable release, with the compile/test API pinned to the same build and channel.
 
 The exact compile coordinate, semantic version, build number, Java target, API floor, and CoreProtect target are packaged in `xrayheuristics/build-info.properties`. The namespaced resource path prevents collisions when this feature is later packaged with other CoreProtect add-ons. `/xrayer info`, `/xrayer help`, `/xrayer debug`, startup output, and generated `plugin.yml` consume that release metadata instead of hardcoded release values.
+
+Paper's published dependencies supply Adventure `5.2.0`, Gson `2.14.0` and SLF4J `2.0.17`, with resolution recorded in `gradle.lockfile`. JSON records now deserialize through their existing constructor, preserving field names, null handling and mutable handling counts without reflective writes to final fields on Java 27. The persistence format and MySQL schema are unchanged.
 
 ## Future Unified Host
 

@@ -31,6 +31,7 @@ if (javaTarget != 25) {
 def targetPaperVersion = releaseProperty('paperVersion')
 def targetPaperApiBuild = releaseProperty('paperApiBuild')
 def targetPaperApiChannel = releaseProperty('paperApiChannel')
+def targetPaperServerSha256 = releaseProperty('paperServerSha256')
 def declaredApiVersion = releaseProperty('declaredApiVersion')
 def targetCoreProtectVersion = releaseProperty('coreProtectVersion')
 def targetCoreProtectApiVersion = releaseProperty('coreProtectApiVersion')
@@ -49,6 +50,15 @@ if (!(pluginVersion ==~ /\d+\.\d+\.\d+/)) {
 }
 if (!(buildNumber ==~ /\d{3}/)) {
     throw new GradleException("buildNumber must contain exactly three digits, found '${buildNumber}'")
+}
+if (targetPaperApiChannel != 'stable') {
+    throw new GradleException('The maintained Paper target must use a verified stable release.')
+}
+if (!(targetPaperServerSha256 ==~ /[a-f0-9]{64}/)) {
+    throw new GradleException('paperServerSha256 must be the SHA-256 from the pinned Fill build metadata.')
+}
+if (declaredApiVersion != targetPaperVersion || !(declaredApiVersion ==~ /\d+\.\d+(\.\d+)?/)) {
+    throw new GradleException('declaredApiVersion must match the Minecraft version, without a build or channel suffix.')
 }
 
 group = 'com.onemoreblock'
@@ -92,17 +102,23 @@ configurations {
     implementation.extendsFrom(library)
 }
 
+sourceSets {
+    smokeTest {
+        compileClasspath += sourceSets.main.output
+    }
+}
+configurations.smokeTestCompileOnly.extendsFrom(configurations.compileOnly)
+
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 dependencies {
     compileOnly("io.papermc.paper:paper-api:${targetPaperApi}")
     compileOnly(files(coreProtectJar))
     testImplementation(files(coreProtectJar))
     library("org.apache.commons:commons-dbcp2:2.14.0")
-    compileOnly("net.kyori:adventure-api:4.26.1")
-    compileOnly("net.kyori:adventure-text-serializer-plain:4.26.1")
-    compileOnly("net.kyori:adventure-text-serializer-legacy:4.26.1")
-    compileOnly("org.slf4j:slf4j-api:2.1.0-alpha1")
-    compileOnly("com.google.code.gson:gson:2.13.2")
-    compileOnly("org.jspecify:jspecify:1.0.0")
+    // Paper's published metadata supplies its runtime APIs (Adventure, SLF4J, Gson, JSpecify).
 
     testImplementation("io.papermc.paper:paper-api:${targetPaperApi}")
     testImplementation(platform("org.junit:junit-bom:5.13.4"))
@@ -194,6 +210,22 @@ tasks.register('verifyJavaBytecode') {
     }
 }
 
+tasks.register('smokeTestJar', Jar) {
+    description = 'Builds the isolated Paper compatibility probe; never install it on a live server.'
+    group = 'verification'
+    dependsOn tasks.jar
+    from sourceSets.smokeTest.output
+    archiveFileName.set('CompatibilityProbe.jar')
+    destinationDirectory.set(layout.buildDirectory.dir('smoke'))
+}
+
+tasks.named('processSmokeTestResources') {
+    inputs.property('declaredApiVersion', declaredApiVersion)
+    filesMatching('plugin.yml') {
+        filter ReplaceTokens, tokens: [declaredApiVersion: declaredApiVersion]
+    }
+}
+
 tasks.register('printBuildConfig') {
     dependsOn 'verifyReleaseMetadata'
     doLast {
@@ -241,7 +273,9 @@ tasks.register('verifyReleaseMetadata') {
                         "paper_target: ${targetPaperVersion}",
                         "paper_api: ${targetPaperApi}",
                         "paper_channel: ${targetPaperApiChannel}"
-                ]
+                ],
+                'AGENTS.md': ["`${targetPaperApi}`", 'channel `STABLE`'],
+                'docs/compatibility-paper-26.3.md': ["`${pluginBuildVersion}`", "`${targetPaperApi}`", targetPaperServerSha256]
         ]
 
         requiredSnippets.each { path, snippets ->
@@ -253,12 +287,14 @@ tasks.register('verifyReleaseMetadata') {
             }
         }
 
-        def staleMarkers = ['2.0.0', '26.2.build.', 'buildNumber=028', '2.0.3-031', '25.0-rc1']
+        def staleMarkers = ['2.0.0', '26.2.build.', 'buildNumber=028', '2.0.3-031', '25.0-rc1',
+                            '26.3.build.41-alpha', '2.0.4-032', 'paper_channel: alpha', 'paper_channel: beta', '`ALPHA`', '`BETA`']
         def driftFiles = [
                 file('README.md'),
                 file('docs/installation.md'),
                 file('docs/integrations.md'),
                 file('docs/plugin-docs.yml'),
+                file('AGENTS.md'),
                 file('src/main/resources/plugin.yml'),
                 file('src/main/resources/xrayheuristics/build-info.properties'),
                 file('src/test/java/com/onemoreblock/coreprotectaddons/xrayheuristics/command/InfoSubcommandTest.java'),

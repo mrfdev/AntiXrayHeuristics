@@ -4,8 +4,6 @@
 
 package com.onemoreblock.coreprotectaddons.xrayheuristics.manager;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.XRayHeuristicsModule;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.callback.HandledPlayerListCallback;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.callback.HandledPlayerBelongingsCallback;
@@ -15,6 +13,7 @@ import com.onemoreblock.coreprotectaddons.xrayheuristics.support.DummyEquipment;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.support.DummyInventory;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.util.BukkitSerializer;
 import com.onemoreblock.coreprotectaddons.xrayheuristics.handling.HandledPlayerRecord;
+import com.onemoreblock.coreprotectaddons.xrayheuristics.handling.HandledPlayerJson;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -472,13 +471,12 @@ public class HandledPlayerStore {
 
     private @NonNull String JSONSerializeXrayersData(List<HandledPlayerRecord> xrayers) //Serializes public class ArrayList to JSON String
     {
-        return new Gson().toJson(xrayers);
+        return HandledPlayerJson.serialize(xrayers);
     }
 
     private List<HandledPlayerRecord> JSONDeserializeXrayersData(BufferedReader xrayers) //Serializes from BufferedReader to ArrayList.
     {
-        return new Gson().fromJson(xrayers, new TypeToken<ArrayList<HandledPlayerRecord>>() {
-        }.getType()); //TypeToken gets the type of arraylist of xrayers
+        return HandledPlayerJson.deserialize(xrayers);
     }
 
     //File data manipulation and querying using GSON

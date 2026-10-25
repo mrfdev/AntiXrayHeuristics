@@ -1,0 +1,6 @@
+name: AXHCompatibilityProbe
+version: '1'
+main: com.onemoreblock.coreprotectaddons.xrayheuristics.smoke.CompatibilityProbe
+api-version: '@declaredApiVersion@'
+depend: [xrayheuristics]
+description: Disposable local compatibility checks. Never install on a live server.

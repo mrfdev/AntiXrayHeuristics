@@ -1,96 +1,80 @@
-# Paper 26.3 and Java 27 compatibility verification
+# Paper 26.3 stable compatibility verification
 
-Verified on 2026-09-25 on macOS ARM64 for `1MB-XRayHeuristics-v2.0.4-032-j25-26.3.jar`.
+Verified on 2026-10-11, macOS ARM64, for release `2.0.5-033-j25-26.3`. Minecraft and the declared plugin API floor remain `26.3`. The [2026-09-25 alpha verification](compatibility-paper-26.3-alpha.md) is a dated historical record, not the maintained target.
 
 The build workflow was updated on 2026-10-25: Oracle 25 now compiles every source set and Oracle 27 runs every automated test. See [current build instructions and verification](installation.md#build-from-source). The dated migration results below retain the original JDK versions and test arrangement.
 
-## Preserved baseline and release identity
+## Verified Release and Dependencies
 
-The clean baseline is commit `dc1bc6b826d7f9d13260f6f48f57794936740424`, release `2.0.3-031-j25-26.2`. Annotated tag `v2.0.3-paper-26.2` was pushed before changing release metadata. Its recorded evidence is the [2026-09-15 JDK 25/26 verification](compatibility-jdk-25-26.md): Paper 26.2 build 121 stable, CoreProtect 25.0-rc1 API 13, 11 tests on each JDK, and successful startup, mining, reload, restart and shutdown checks. That record makes no Paper 26.3 claim.
+Discovery started at the live [Paper documentation index](https://docs.papermc.io/llms.txt). The [Fill 26.3 build list](https://fill.papermc.io/v3/projects/paper/versions/26.3/builds) and [build 175 metadata](https://fill.papermc.io/v3/projects/paper/versions/26.3/builds/175) identified build `175`, published `2026-10-11T15:32:14Z`, channel `STABLE`, commit `bd9daa8fba19cb288d690c1621ad1749de3e0a78`. It was the newest stable 26.3 build at selection time. No other Minecraft version was selected.
 
-This upgrade reserves semantic patch `2.0.4` and build `032` exactly once in `version.properties`; repeat builds reuse them. The release tag is `v2.0.4-paper-26.3`. The internal identity `xrayheuristics`, main class, `/xrayer` command, permissions, `plugins/1MB-XRayHeuristics/` data directory, serialization namespace and canonical/legacy Java APIs are unchanged. No gameplay source changes were required. The declared `plugin.yml` API floor is now `26.3`.
+The [Maven version list](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/maven-metadata.xml) explicitly published `26.3.build.175-stable`. Its global `latest` and `release` fields pointed at a prerelease, so those fields were not used to select this target. The [exact POM](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/26.3.build.175-stable/paper-api-26.3.build.175-stable.pom) was inspected before resolving the dependency.
 
-## Exact targets and checksums
-
-| Component | Verified target |
+| Component | Verified version |
 | --- | --- |
-| Gradle | `9.7.1` |
-| Build JVM, compiler and default test JVM | Oracle `25.0.4.1+1-LTS-5` |
-| Additional test JVM and local server runtime | Oracle `27+35-2325` |
-| Plugin bytecode | Java 25, class-file major `69`, no preview features |
-| Paper | `26.3-41-main@a15fed9`, channel `ALPHA` |
-| Compile and test coordinate | `io.papermc.paper:paper-api:26.3.build.41-alpha` |
-| CoreProtect compile/test/runtime target | `25.0`, API `13` |
+| Plugin | `2.0.5-033-j25-26.3` |
+| Paper server | `26.3-175-bd9daa8`, channel `STABLE` |
+| Compile/test dependency | `io.papermc.paper:paper-api:26.3.build.175-stable` |
+| Gradle used | `9.8.1` |
+| Compiler, build JVM and default tests | Oracle `25.0.4.1+1-LTS-5` |
+| Additional tests and disposable server | Oracle `27+35-2325` |
+| Plugin bytecode | Java 25, major `69`, minor `0`, no preview features |
+| CoreProtect compile/test/server | `25.0`, API `13` |
+| Paper-provided Adventure / Gson / SLF4J | `5.2.0` / `2.14.0` / `2.0.17` |
+| Bundled DBCP / Commons Pool | `2.14.0` / `2.13.0` |
 
-Build 41 was the newest 26.3 build at selection time; all available builds were alpha. The experimental target was explicitly authorized. There was no fallback to 26.2. PaperScript downloaded build 41 and matched its SHA-256 to the [official build metadata](https://fill.papermc.io/v3/projects/paper/versions/26.3/builds/41), both during installation and in a separate verification after testing.
+The [official setup guide](https://docs.papermc.io/paper/dev/project-setup/) requires Java 25 or newer. Java 25 compilation and unit tests remain the default; the maintained runtime remains Java 27. This run did not start a Paper server under Java 25.
 
-- Release JAR SHA-256: `854efcbe36117cdc6939ae3f561515b15ff9f8bda1128bbadccba5da54a4b770`
-- Paper server JAR SHA-256: `2b77166ee61886a9bc9ab33dc9e4847fa3538b36d9ba6e5f2fa7ed90973aa748`
-- CoreProtect JAR SHA-256: `097f77f7721fb2728073bae1fbd97916936dc1ff019064a1008b7b6ef036c17f`
+- Plugin JAR: `build/libs/1MB-XRayHeuristics-v2.0.5-033-j25-26.3.jar`
+- Plugin SHA-256: `2c41b266c9c9d9828a0763ce9b9a50f4ccba8807114cf6374a57174e9242d166`
+- Paper SHA-256: `ece5afb6d0cdf0c930489618bf92341e33d2ebcd4f21e6d365daff6ed26dafb0`
+- CoreProtect SHA-256: `097f77f7721fb2728073bae1fbd97916936dc1ff019064a1008b7b6ef036c17f`
 
-## Build and automated results
+There are no paperweight, development-bundle, NMS, or CI workflow dependencies to migrate in this repository. Existing explicit pins for older Paper-provided libraries were removed so compilation follows Paper's published dependencies. `gradle.lockfile` records the resolved compile, test, probe and bundled-library configurations. `version.properties` is the source of truth for the release, stable API pin and official server checksum. Semantic patch `2.0.5` and build `033` were reserved once and reused throughout verification.
+
+## API Review and Compatibility Fixes
+
+The hosted [26.3 Javadocs](https://jd.papermc.io/paper/26.3/) still identified build 157 beta when checked. Both build 175's [source artifact](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/26.3.build.175-stable/paper-api-26.3.build.175-stable-sources.jar) and [Javadoc artifact](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/26.3.build.175-stable/paper-api-26.3.build.175-stable-javadoc.jar) were inspected; the latter identifies `paper-api 26.3.build.175-stable`. No documentation index or full documentation dump was vendored.
+
+Reviewed JavaPlugin enable/disable, event priority and cancellation, BlockBreakEvent, inventory identity guidance, ItemStack serialization, PDC/data components, scheduler thread rules, plugin API-version, deprecations and the [Paper roadmap](https://docs.papermc.io/paper/dev/roadmap/). Relevant published build changes include the Adventure-mode BlockBreakEvent correction in build 139 and component-upgrade fixes in build 171. The plugin uses supported Bukkit/Paper APIs and has no internals to version-gate. Existing ItemStack constructors remain supported, though the roadmap recommends `ItemStack.of` for future development.
+
+Two focused behavior fixes resulted from verification:
+
+1. A real-server regression probe demonstrated that the original listener created a Suspicion Session for an already-cancelled break. It now observes events at `MONITOR` with `ignoreCancelled = true`. Completed mining retains its existing weighting and thresholds; cancelled attempts no longer affect suspicion.
+2. Restart/storage checks exposed Java 27 warnings from Gson reflectively populating final fields in `HandledPlayerRecord`. `HandledPlayerJson` now deserializes via the existing constructor. JSON field names, nullable belongings, default values, handling counts, public fields and stored location/item payloads are preserved. The Java 27 suite and server probe pass with `--illegal-final-field-mutation=deny`, following [OpenJDK JEP 500](https://openjdk.org/jeps/500); no warning-suppression flags are used. The adapter uses Gson's supported [custom deserialization API](https://google.github.io/gson/UserGuide.html#custom-serialization-and-deserialization).
+
+Plugin identity, commands, permissions, data directory, config keys, MySQL schema and canonical/legacy APIs are preserved. No LuckPerms API or built-in LuckPerms command integration exists, and this migration does not introduce one.
+
+## Automated Verification
 
 | Check | Result |
 | --- | --- |
-| `./scripts/rebuild.sh` | Clean compile, package, tests and release/documentation drift checks passed |
-| Java 25 JUnit suite | 11 passed, 0 failures/errors/skipped |
-| `./scripts/test-java27.sh` | 11 passed, 0 failures/errors/skipped, using Java 25 compiled classes |
-| Artifact inspection | One distributable JAR; 58 project classes at major 69; every bundled class compatible with Java 25; no CoreProtect classes bundled |
-| Generated metadata | Descriptor and namespaced build information match version, build, Paper coordinate/channel, API floor and CoreProtect target |
-| Java compiler deprecations | Clean compilation with `-Xlint:deprecation`; no compiler deprecation warnings emitted |
-| Paper startup and restart | Both complete smoke cycles reached readiness and enabled the plugin and CoreProtect hook |
-| Commands | `plugins`, `version xrayheuristics`, `version CoreProtect`, `xrayer info`, `xrayer help`, `xrayer debug`, `xrayer reload`, then `xrayer debug` passed in both cycles |
-| Mining probe | Real world blocks and a synthetic test player exercised the registered listener on the server thread; stone created a Suspicion Session and diamond raised suspicion from `0.0` to `45.0` |
-| Reload and APIs | Suspicion Session and CoreProtect hook survived reload; canonical and legacy plugin APIs were available |
-| Shutdown | Both cycles disabled plugins, saved all three dimensions, drained region I/O and exited `0`; no server errors |
-| Persistent plugin files | Config, locale, weights and JSON hashes identical across the verified restart |
+| `./scripts/rebuild.sh smokeTestJar` | Clean compile, package, unit tests, probe build and documentation drift checks passed |
+| Java 25 JUnit suite | 16 passed, 0 failed/errors/skipped |
+| `./scripts/test-java27.sh` | 16 passed, 0 failed/errors/skipped, strict final-field mutation denial |
+| Artifact inspection | All 59 project classes use Java 25 bytecode; correct manifest/version/API floor; no Paper, CoreProtect or probe classes bundled |
+| Disposable Java 27 Paper startup | Plugin and CoreProtect enabled; 126 probe assertions passed |
+| Restart with existing disposable data | 126 assertions passed; config, locale, weights and populated JSON hashes unchanged |
+| Missing CoreProtect | Paper rejected the plugin with the expected missing dependency diagnostic; server still stopped cleanly |
+| Shutdown | All three runs exited 0, disabled loaded plugins, completed world I/O and released the reserved ports |
+| Maintained local development instance | Build 175 SHA-256 matches Fill; stable channels configured; instance stopped before and after upgrade |
 
-The temporary probe added the copied instance's `spawn` world to the in-memory tracked-world list, restored its block, removed its synthetic session and reloaded the original configuration. Its JAR was removed from the active plugin directory after testing. This is a listener integration check, not a connected-client gameplay test.
+Runtime evidence is retained locally in the ignored directory `servers/paper-26.3-stable-033-6olmf5b6/`: `startup.log`, `restart.log`, `missing-coreprotect.log`, `runtime.txt`, `paper-build.json` and `smoke-results.json`. The failed cancellation probe and pre-fix Gson warning logs are retained in earlier disposable run directories. No test loaded an existing server world or database. Only CoreProtect, the release JAR and the separately built probe were installed. No messaging integration was installed. The shared deployment destination and historical instances were untouched.
 
-The first attempt passed the plugin checks and exited `0`, but the old harness looked for `All dimensions are saved`. Paper 26.3 logs per-dimension I/O completion instead. The harness was updated to require completion for overworld, Nether and End plus region I/O drain, then both complete cycles passed. The first attempt's log is retained separately.
+The probe checks the actual Paper-registered mining listener using synthetic players, uncancelled ore suspicion, ignored players, denied vault/reload/reset/suspicion/debug commands, reload state, canonical and legacy API availability, all 41 stored inventory/equipment slots, foreign PDC, names/lore, a changed stack-size component, a shulker box containing a custom item, absent and corrupt item payloads, asynchronous JSON insert/read/delete, and main-thread callbacks. A populated handled-player fixture survives the restart. Console commands `version`, `xrayer info`, `xrayer help`, `xrayer debug` and `xrayer reload` passed in both successful startup phases.
 
-## Preserved and maintained instances
+Normal startup/restart had no ERROR/SEVERE diagnostics. Remaining warnings were OSHI not knowing the macOS 27 codename, the first-run partial Paper config lacking a version marker, and the intentionally offline loopback server. The plugin's final-field mutation warning is resolved. The missing-dependency run contains the intentionally expected loader error.
 
-All paths below are under `/Users/floris/Projects/Codex/AntiXrayHeuristics/`:
+The maintained `servers/Server-Two-Paper-26.3/` was upgraded while stopped, with the previous Paper JAR backed up by PaperScript. Its `STABLE` channel settings are explicit, its directory/session/ports and Java 27 launcher remain local to this project, and automatic same-version/cross-version upgrades remain disabled. This instance was not started during this migration. Follow [installation](installation.md#disposable-stable-compatibility-tests) to reproduce the disposable checks.
 
-- Preserved original: `servers/Server-Two-Paper-26.2/`
-- Preserved baseline evidence and release copy: `servers/compat-jdk25041-jdk26021-paper121/`
-- Earlier preserved evidence: `servers/compat-coreprotect25-paper121/`
-- New instance: `servers/Server-Two-Paper-26.3/`
-- Compile support: `servers/compile-support/CoreProtect-25.0.jar`
+## Remaining Checks and Existing Limits
 
-The stopped 26.2 directory was copied with APFS file cloning; the original was not modified. It contained an older `2.0.0-025` plugin JAR, while the latest `2.0.3-031` snapshot and evidence were in the compatibility instance. Old launcher/runtime files and replaced plugin JARs remain recoverable inside the new instance's `.upgrade-26.3-backup/`.
+These checks establish build/runtime compatibility for the exercised paths. They do not certify every live staff-handling or transaction path. The following require a real player client, a wider plugin stack or database infrastructure that was not used in this isolated test:
 
-The new instance uses loopback TCP `25743`, disabled query UDP `25744`, disabled RCON TCP `25745`, and session `axh-paper-26.3-25743`. Ports were checked against other project configurations and actual socket availability. Its launcher explicitly exports the installed Java 27 `JAVA_HOME` and `PATH`. PaperScript was initialized from tool code and example defaults only; shared configuration, player data, download caches and old state were not imported. Its state identifies the new directory, 26.3 build 41 and verified checksum; both channels are explicitly `ALPHA`, with automatic version/build upgrades disabled. DiscordSRV is absent.
+1. Join an isolated stable server with a Java player and a `.bedrock` player through the intended Floodgate/Geyser stack. Mine configured ores in tracked/untracked worlds and above/below altitude limits, verify both ignore permissions, and cancel mining through the intended protection plugin. Verify cancelled breaks never raise suspicion and successful mining still does.
+2. With two staff clients, open the vault and confiscated-item view. Exercise normal/shift/double clicks, drag, hotbar/offhand swaps, drop, creative actions, page changes, close, quit and stale views. Revoke permissions while a view is open. Verify authoritative access and that no item can be copied, lost or moved through the GUI unintentionally.
+3. On throwaway player inventories, handle and absolve players with full/partial inventories, armour/offhand items, PDC from other plugins, bundles and filled containers. Repeat concurrent/rapid actions and quit/kick/death/world-change cases; verify each stored item is returned once, overflow is handled correctly, and no record is removed before delivery. Repeat with AutoSell and other inventory plugins if used.
+4. With a disposable MySQL database and deliberately invalid credentials, test initialization, storage, reconnect, failed writes, shutdown during work, and restart recovery. Also force a crash between confiscation, persistence and delivery in both storage modes. No MySQL, crash-recovery or financial/reward transaction was tested here.
+5. Re-test any locally configured commands and third-party integrations separately. The bundled defaults do not call LuckPerms. If an administrator adds LuckPerms commands, this plugin's existing renderer only expands its documented name/count placeholders; it does not implement verified UUID resolution or `{uuid}`. Do not add name-targeted LuckPerms commands. A supported integration must resolve the authoritative local server UUID, preserve Bedrock prefixes during lookup, reject ambiguous/missing records, and retain that UUID during retries without an external identity lookup.
 
-The copied plugin's config, locale and JSON data remain byte-identical to the original 26.2 directory. Its older `weights.yml` serialization aliases were normalized by the existing compatibility reader from `com.greymagic27.util.BlockWeightInfo` to `xrayheuristics:BlockWeightInfo`; all world names, materials, heights and numeric weights remain unchanged. All four files remained stable across the verified restart.
-
-The generated and inherited exploit protections remain safe: piston duplication, headless pistons, permanent block-break exploits, unsafe end portals and tripwire validation bypasses are disabled; the oversized-component sanitizer has no exclusions.
-
-## Local dependency updates
-
-Only dependency JARs were copied from `/Users/floris/MinecraftServer/test-1mb-3.14-mc-26.3/plugins/`. Their actual manifests were inspected. The source files were left intact, and no shared configurations or player databases were imported.
-
-| Dependency | Previous maintained local JAR | New local JAR / manifest version |
-| --- | --- | --- |
-| CoreProtect | `CoreProtect-24.0-dev1.jar` | `CoreProtect-25.0-26.3.jar` / `25.0`, API `13` |
-| CMI | `CMI-9.8.8.1.jar` | `CMI-9.8.10.1.jar` / `9.8.10.1` |
-| CMILib | `CMILib1.5.9.7.jar` | `CMILib1.6.0.0.jar` / `1.6.0.0` |
-| LuckPerms | `LuckPerms-Bukkit-5.5.57.jar` | `LuckPerms-Bukkit-5.5.85.jar` / `5.5.85` |
-| PlaceholderAPI | `PlaceholderAPI-2.12.3-DEV-266.jar` | `PlaceholderAPI-2.12.3.jar` / `2.12.3` |
-
-Vault was retained: `Vault-1.7.4.jar` actually declares `1.7.3-CMI`. All seven runtime plugins enabled. CoreProtect is the only hard dependency of X-ray Heuristics; WorldEdit, WorldGuard, Geyser and Floodgate were not needed for this plugin's smoke coverage. The compile dependency moved from CoreProtect 25.0-rc1 to the supplied 25.0 JAR.
-
-## Notices and remaining checks
-
-Paper's bundled JOML emits an `Unsafe::objectFieldOffset` warning, OSHI cannot map macOS 27.0 to a codename, and LuckPerms' bundled Commodore warns about reflective final-field mutation on Java 27. These are unresolved third-party notices. No JVM flags were added to hide or relax them.
-
-Manual checks remain for connected Java/Bedrock players, staff vault and inventory interactions, metadata-heavy items, MySQL, full CoreProtect database migration behavior and the shared server's complete plugin set. The shared server must remain stopped during artifact replacement and was not used for runtime testing. The intended replacement is only `plugins/1MB-XRayHeuristics-v2.0.2-030-j25-26.2.jar` with the exact verified `1MB-XRayHeuristics-v2.0.4-032-j25-26.3.jar`; preserve recoverable backups and verify its checksum after deployment.
-
-## Evidence and official review
-
-The gitignored new instance retains `build-java25.log`, `test-java27.log`, `build-evidence/`, `artifact-check.json`, `paper-build-41.json`, `paper-builds-at-selection.json`, `upgrade-dependencies.json`, `java-27-startup.log`, `java-27-restart.log`, `java-27-initial-shutdown-marker-attempt.log`, `smoke-results.json`, `run-smoke.py`, probe source and its inactive JAR. Build reports are also under `build/reports/tests/test/` and `build/reports/tests/testJava27/`.
-
-Discovery started with the live [PaperMC LLM index](https://docs.papermc.io/llms.txt). Reviewed [project setup](https://docs.papermc.io/paper/dev/project-setup/), [plugin descriptors](https://docs.papermc.io/paper/dev/plugin-yml/), [runtime requirements](https://docs.papermc.io/paper/getting-started/), [scheduling](https://docs.papermc.io/paper/dev/scheduler/), [roadmap](https://docs.papermc.io/paper/dev/roadmap/), [global configuration](https://docs.papermc.io/paper/reference/global-configuration/), [world configuration](https://docs.papermc.io/paper/reference/world-configuration/) and the [download service](https://docs.papermc.io/misc/downloads-service/). The live documentation still illustrated stable 26.2 in some places; the actual 26.3 descriptor was verified by the successful server enable.
-
-[Maven metadata](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/maven-metadata.xml) confirmed the exact coordinate. The [26.3 Javadocs](https://jd.papermc.io/paper/26.3/) still identified build 40, so build 41's [source artifact](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/26.3.build.41-alpha/paper-api-26.3.build.41-alpha-sources.jar) and [Javadoc artifact](https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/26.3.build.41-alpha/paper-api-26.3.build.41-alpha-javadoc.jar) were also inspected. Reviewed JavaPlugin lifecycle, BlockBreakEvent, EventHandler priority/cancellation behavior, ItemStack APIs, deprecations and published 26.3 build changes. No 26.3 compatibility source migration was required; existing ItemStack constructors remain supported but are marked obsolete in favor of `ItemStack.of`, as discussed in the roadmap. Broader inventory changes are outside this target upgrade.
+Existing implementation limits remain relevant to those manual checks: the handled-player vault identifies inventories by title rather than a custom holder, live-player storage still reads some Player/inventory state inside asynchronous tasks, and storage/delivery does not implement durable idempotent transactions. These are pre-existing design concerns; the synthetic persistence test does not establish their safety. They need focused follow-up before relying on concurrent or failure-prone confiscation/absolution workflows. The [scheduler](https://docs.papermc.io/paper/dev/scheduler/) and [custom InventoryHolder](https://docs.papermc.io/paper/dev/custom-inventory-holder/) guidance remains applicable.

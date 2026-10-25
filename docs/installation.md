@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Paper `26.3` server, pinned to build `41` (`ALPHA`)
+- Paper `26.3` server, pinned to build `175` (`STABLE`)
 - Installed Oracle JDK `25` for Gradle and compilation; installed Oracle JDK `27` for all automated tests and the maintained test server
 - Installed Gradle `9.8.0` or newer for Java 27 toolchains (this Mac has `9.8.2`)
 - CoreProtect installed before `1MB XRayHeuristics`
@@ -10,17 +10,19 @@
 
 Verified build metadata from this repository:
 
-- Current release: `2.0.4-032-j25-26.3`
-- Semantic version: `2.0.4`
-- Build number: `032`
+- Current release: `2.0.5-033-j25-26.3`
+- Semantic version: `2.0.5`
+- Build number: `033`
 - Gradle and compiler JDK: installed Oracle JDK `25`
 - Automated test JDK: installed Oracle JDK `27`
 - Java bytecode target: `25`
 - Maintained server runtime: installed Oracle JDK `27`
-- Paper compile target: `26.3.build.41-alpha`
+- Paper compile target: `26.3.build.175-stable`
 - Declared `plugin.yml` api-version floor: `26.3`
 - CoreProtect compile target: `25.0` with API `13`
 - Minimum runtime CoreProtect API accepted by code: `11`
+
+Paper 26.3 requires Java 25 or newer. This project compiles all plugin, test and smoke-probe sources with Oracle JDK 25 and `--release 25`, while every automated test and maintained test server runs on Oracle JDK 27. The published compile dependency is `io.papermc.paper:paper-api:26.3.build.175-stable`; `plugin.yml` continues to declare the Minecraft version `26.3`.
 
 ## Build From Source
 
@@ -53,14 +55,14 @@ For another jar location, append `-PcoreProtectJar=/absolute/path/to/CoreProtect
 The release jar is:
 
 ```text
-build/libs/1MB-XRayHeuristics-v2.0.4-032-j25-26.3.jar
+build/libs/1MB-XRayHeuristics-v2.0.5-033-j25-26.3.jar
 ```
 
 Release metadata comes from `version.properties`. Increment its semantic version and build number once when preparing a release. Repeated builds keep the same release identity, and `./scripts/gradle.sh check` runs the metadata drift validation.
 
 ### Local verification on 2026-10-25
 
-The results below were collected from the full local working tree, including pre-existing uncommitted Paper migration and smoke-test work. That work is separate from the Java toolchain change.
+The results below cover the combined Java toolchain, Paper migration and smoke-test changes. The Java toolchain setup and the Paper migration are recorded in separate local commits.
 
 These paths record this Mac's selected installations, not configuration values to copy into scripts:
 
@@ -126,7 +128,7 @@ If you changed storage settings, restart fully instead of relying on `/xrayer re
 
 ## Maintained Paper 26.3 Test Instance
 
-`servers/Server-Two-Paper-26.3/` is a separate copy of the stopped `servers/Server-Two-Paper-26.2/`. Keep the original and historical compatibility instances intact for rollback. The new instance binds to `127.0.0.1:25743`; query UDP `25744` and RCON TCP `25745` are reserved but disabled. Recheck all ports before startup. Its session name is `axh-paper-26.3-25743`.
+`servers/Server-Two-Paper-26.3/` is the maintained development instance, originally copied from `servers/Server-Two-Paper-26.2/`. Keep the original and historical compatibility instances intact for rollback. The maintained instance binds to `127.0.0.1:25743`; query UDP `25744` and RCON TCP `25745` are reserved but disabled. Recheck all ports before startup. Its session name is `axh-paper-26.3-25743`.
 
 Build with Java 25 and copy the verified release JAR into the new instance's `plugins/`, replacing only the previous `xrayheuristics` JAR. Start the new instance using its `./1MB-minecraft.sh`, or `./1MB-start.sh` for the distinct tmux session. The launcher selects Java 27 explicitly. From that server directory in Bash, the equivalent validated selection is:
 
@@ -137,8 +139,26 @@ export PATH="$JAVA_HOME/bin:$PATH"
 java -Xms512M -Xmx2G -XX:ActiveProcessorCount=2 -jar Paper-26.3.jar --nogui
 ```
 
-PaperScript has fresh local state, explicit `ALPHA` channels and automatic cross-version/build upgrades disabled. To reproduce the pin from the new instance, use `./paperscript.sh --yes download --version 26.3 --build 41 --channel ALPHA`, then `./paperscript.sh verify`. Check its server directory and checksum before launch. Do not copy launcher state or download caches from another instance.
+PaperScript has local state, explicit `STABLE` channels and automatic cross-version/build upgrades disabled. The maintained instance is installed at build `175`; `./paperscript.sh verify` checks it against Fill. For an intentional upgrade from an older 26.3 build, first verify the instance is stopped, temporarily set `allow_same_version_build_upgrade` to `true`, run `./paperscript.sh --yes download --version 26.3 --build 175 --channel STABLE`, then restore that setting to `false` and run `./paperscript.sh verify`. This PaperScript version checks the same-version setting even for explicit downloads. Keep `running_server_action: abort`, confirm the directory/checksum, and preserve its backup. Do not copy launcher state or download caches from another instance.
 
 Keep DiscordSRV and other messaging integrations inactive. Run the readiness commands above, `/xrayer reload`, and `/xrayer debug` again. Confirm Java 27, the pinned Paper API and an enabled CoreProtect hook, then issue console `stop` and wait for exit. Restart with the existing data and repeat. Keep exploit protections at safe defaults.
 
 The [Paper 26.3 verification](compatibility-paper-26.3.md) records exact results. Earlier verification documents retain their original targets. The shared server at `/Users/floris/MinecraftServer/test-1mb-3.14-mc-26.3/` is only a stopped deployment destination; never launch it for these checks. Replace only JARs with manifest identity `xrayheuristics`, retain recoverable backups outside the active plugin directory, and verify destination checksums and stopped state afterward.
+
+## Disposable Stable Compatibility Tests
+
+Use the tracked runner for migration checks without loading existing worlds, data or optional integrations:
+
+```bash
+./scripts/rebuild.sh smokeTestJar
+./scripts/test-java27.sh
+python3 scripts/test-paper-stable.py
+```
+
+The runner requires Python 3.9+, network access for official Paper metadata/dependencies, the compile-support CoreProtect JAR, and the installed Oracle JDKs used by the build. It calls the same `scripts/java-env.sh` resolver and validator, then launches Oracle 27; `ONE_MB_TEST_JAVA_HOME` can select another installed Oracle 27 home. The selected Java executable, vendor, version and properties are retained in `runtime.txt` and `smoke-results.json`. It reuses the existing locally accepted EULA file from the maintained instance; on another machine pass `--eula-file /path/to/an/already-accepted/eula.txt`. It does not accept a new EULA on the user's behalf.
+
+Every invocation creates a new `servers/paper-26.3-stable-033-*` directory, verifies build `175` is `STABLE`, and verifies its JAR against `paperServerSha256` and Fill. `--paper-jar /path/to/paper-26.3-175.jar` can reuse a cached JAR with the same checks; `--coreprotect-jar` selects another copy of the required CoreProtect release. The runner copies only the three test JARs, creates fresh configuration and worlds, disables metrics/profiling, and uses loopback with an empty enforced whitelist. It starts in offline mode for this clientless test only. Query and RCON remain disabled. Ports `25843`/`25844`/`25845` are checked before each run and after shutdown; use `--port` to select a different three-port range.
+
+The probe calls the actual registered mining listener using synthetic players, checks command denial, round-trips PDC/data components and a shulker-box item, and exercises JSON insert/read/delete callbacks and a persistent record. The runner executes status/help/reload commands, restarts with existing disposable data and compares file hashes, then verifies that removing CoreProtect prevents this plugin from loading. Java 27 runs use `--illegal-final-field-mutation=deny`. Logs and `smoke-results.json` remain in the disposable directory; failures also shut down the process owned by the runner. The test probe is built separately under `build/smoke/` and must never be installed on a live server.
+
+These synthetic checks do not replace a player-client inventory/handling test or a MySQL integration test. Follow the concrete checklist in [the compatibility report](compatibility-paper-26.3.md#remaining-checks-and-existing-limits).
