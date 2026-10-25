@@ -446,15 +446,15 @@ public class HandledPlayerStore {
         }
     }
 
-    private void JSONStoreInFile(String toStore) //Writes JSON content as string to file
+    private boolean JSONStoreInFile(String toStore) //Success includes flushing and closing the writer
     {
-        try {
-            FileWriter writer = new FileWriter(getJsonDataFile());
+        try (FileWriter writer = new FileWriter(getJsonDataFile())) {
             writer.write(toStore);
-            writer.close();
         } catch (IOException e) {
-            log.error("Error: ", e);
+            log.error("Could not write handled-player data to {}.", getJsonDataFile(), e);
+            return false;
         }
+        return true;
     }
 
     private @Nullable BufferedReader JSONGetFromFile() //Gets JSON content from file in BufferedReader format
@@ -514,7 +514,7 @@ public class HandledPlayerStore {
                 timesHandled = xrayer.Handled;
                 //Store List back to file:
                 String serial = JSONSerializeXrayersData(storedXrayersFromJSON);
-                JSONStoreInFile(serial);
+                if (!JSONStoreInFile(serial)) return;
                 break;
             }
         }
@@ -543,7 +543,7 @@ public class HandledPlayerStore {
                 }
                 //Store List back to file:
                 String serial = JSONSerializeXrayersData(storedXrayersFromJSON);
-                JSONStoreInFile(serial);
+                if (!JSONStoreInFile(serial)) return;
             } else //Partial store
             {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -552,7 +552,7 @@ public class HandledPlayerStore {
                 //Add xrayer to List:
                 storedXrayersFromJSON.add(new HandledPlayerRecord(playerUUID, 1, dtf.format(now), serializedPlayerLocation, null));
                 //Store List back to file:
-                JSONStoreInFile(JSONSerializeXrayersData(storedXrayersFromJSON));
+                if (!JSONStoreInFile(JSONSerializeXrayersData(storedXrayersFromJSON))) return;
             }
 
             if (callback != null) {

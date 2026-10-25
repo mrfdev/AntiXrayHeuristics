@@ -99,6 +99,7 @@ repositories {
 
 configurations {
     library
+    mockitoAgent
     implementation.extendsFrom(library)
 }
 
@@ -123,6 +124,8 @@ dependencies {
     testImplementation("io.papermc.paper:paper-api:${targetPaperApi}")
     testImplementation(platform("org.junit:junit-bom:5.13.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    mockitoAgent("org.mockito:mockito-core:5.23.0") { transitive = false }
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -177,6 +180,8 @@ tasks.withType(Test).configureEach {
     systemProperty 'oneMb.expectedTestJavaHome', testJavaHome.absolutePath
     useJUnitPlatform()
     jvmArgs '--illegal-final-field-mutation=deny'
+    // Explicit instrumentation for Bukkit API doubles; no runtime agent attachment.
+    jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
 }
 
 tasks.register('testJava27', Test) {
