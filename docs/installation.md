@@ -143,7 +143,13 @@ PaperScript has local state, explicit `STABLE` channels and automatic cross-vers
 
 Keep DiscordSRV and other messaging integrations inactive. Run the readiness commands above, `/xrayer reload`, and `/xrayer debug` again. Confirm Java 27, the pinned Paper API and an enabled CoreProtect hook, then issue console `stop` and wait for exit. Restart with the existing data and repeat. Keep exploit protections at safe defaults.
 
-The [Paper 26.3 verification](compatibility-paper-26.3.md) records exact results. Earlier verification documents retain their original targets. The shared server at `/Users/floris/MinecraftServer/test-1mb-3.14-mc-26.3/` is only a stopped deployment destination; never launch it for these checks. Replace only JARs with manifest identity `xrayheuristics`, retain recoverable backups outside the active plugin directory, and verify destination checksums and stopped state afterward.
+The [Paper 26.3 verification](compatibility-paper-26.3.md) records exact results. Dated verification documents and deployment receipts retain their original targets as historical evidence.
+
+## Deployment Destinations
+
+The temporary shared test at `/Users/floris/MinecraftServer/test-1mb-3.14-mc-26.3/` has ended and its server directory was removed. There is no configured shared deployment destination. Historical references to that path do not identify an active server, and deployment does not include recreating it.
+
+The project-local development instance described above and the disposable smoke servers described below are separate from the retired shared server. For a future deployment, use the destination identified for that task. Confirm it is stopped, replace only JARs with manifest identity `xrayheuristics`, preserve other plugins and data, retain recoverable backups outside the active plugin directory, and verify the deployed checksum and stopped state afterward. Leave the server stopped unless startup is explicitly requested.
 
 ## Disposable Stable Compatibility Tests
 

@@ -165,7 +165,7 @@ The [2026-09-25 alpha verification](docs/compatibility-paper-26.3-alpha.md) is h
 4. Start the server so `plugins/1MB-XRayHeuristics/` and its generated files are created.
 5. Verify the load with `version xrayheuristics`, `/xrayer info`, and `/xrayer debug`.
 
-Detailed steps are in [docs/installation.md](docs/installation.md).
+Detailed steps are in [docs/installation.md](docs/installation.md). The former shared test server has been removed, and there is no configured shared deployment destination. See [deployment destinations](docs/installation.md#deployment-destinations) for current guidance; dated verification records retain historical paths.
 
 ## Integrations
 
